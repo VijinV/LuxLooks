@@ -4,9 +4,9 @@ const bcrypt = require('bcrypt');
 const productModel = require('../model/productModel');
 const path = require('path');
 const multer = require('multer');
+  
 
-
-// !--------------multer-----------------------------------------------
+// !--------------multer--------------------------------------------
 const Storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, './public/productImages')
@@ -27,9 +27,21 @@ loadDashboard =(req,res)=>{
     res.render('dashboard')
 }
 
-loadProduct =(req,res)=>{
+loadProduct = async(req,res)=>{
+
+
+    const productData = await productModel.find({}).exec((err, product)=>{
+
+        if(product){
+            console.log(product);
+            res.render('product',{product})
+        }else{
+            res.send('error')
+        }
+    })
+
+
     
-    res.render('product')
 }
 
 loadAddProduct =(req,res)=>{
@@ -126,7 +138,6 @@ const addProduct = async (req, res,next) => {
     }
 
 }
-
 
 
 

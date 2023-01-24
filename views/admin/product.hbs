@@ -145,7 +145,7 @@
                   <table class="table">
                     <thead>
                       <tr>
-                        <th>Sl no</th>
+                        <th>Sl No</th>
                         <th>Product Name</th>
                         <th>Image</th>
                         <th>Price</th>
@@ -155,9 +155,10 @@
                       </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">
+                      {{#each product}}
                       <tr>
                         <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>01</strong></td>
-                        <td> Apple</td>
+                        <td>{{name}}</td>
                         <td>
                           <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
                             <li
@@ -189,12 +190,13 @@
                             </li>
                           </ul>
                         </td>
-                        <td>1000</td>
+                        <td>{{price}}</td>
                         <td><button class="btn btn-success">InStock</button>
                             </td>
                         <td>Phone</td>
                        
                       </tr>
+                      {{/each}}
                     </tbody>
                   </table>
 
