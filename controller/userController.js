@@ -1,4 +1,5 @@
 const userSchema = require('../model/userModel')
+const produtModel = require('../model/productModel')
 
 const bcrypt = require('bcrypt')
 
@@ -13,9 +14,21 @@ loadCart=(req,res)=>{
     const session = req.session.user_id
     res.render('cart',{session})
 }
-loadShop=(req,res)=>{
+loadShop= async (req,res)=>{
     const session = req.session.user_id
-    res.render('shop',{session})
+    const productData = await produtModel.find({}).exec((err,product)=>{
+
+        if (product) {
+
+            res.render('shop',{session},{product})
+            
+        } else {
+
+            res.render('shop',{session})
+            
+        }
+    })
+    
 }
 
 loadProduct=(req,res)=>{

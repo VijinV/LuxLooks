@@ -9,7 +9,7 @@ const multer = require('multer');
 // !--------------multer--------------------------------------------
 const Storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, './public/productImages')
+        cb(null, './public/admin/assets/img/products')
     },
     filename:(req,file,cb)=>{
         cb(null,file.fieldname+"_"+Date.now()+path.extname(file.originalname))
@@ -33,10 +33,9 @@ loadProduct = async(req,res)=>{
     const productData = await productModel.find({}).exec((err, product)=>{
 
         if(product){
-            console.log(product);
             res.render('product',{product})
         }else{
-            res.send('error')
+            res.send('404 page not found')
         }
     })
 
@@ -51,8 +50,17 @@ loadAddProduct =(req,res)=>{
 }
 
 loadUsers =(req,res)=>{
+    const userData = userModel.find({}).exec((err, user)=>{
+
+        if (user) {
+
+            res.render('users',{user})
+            
+        }else{
+            res.render('users')
+        }
+    })
     
-    res.render('users')
 }
 
 loadLogin =(req,res)=>{
