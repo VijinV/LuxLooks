@@ -6,7 +6,7 @@ const path = require('path');
 const multer = require('multer');
 
 
-// !--------------multer--------------------------------------------------
+// !--------------multer-----------------------------------------------
 const Storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, './public/productImages')
