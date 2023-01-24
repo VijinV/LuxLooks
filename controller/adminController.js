@@ -8,7 +8,9 @@ const multer = require('multer');
 
 // !--------------multer--------------------------------------------------
 const Storage = multer.diskStorage({
-    destination:"../public/productImages",
+    destination: function (req, file, cb) {
+        cb(null, './public/productImages')
+    },
     filename:(req,file,cb)=>{
         cb(null,file.fieldname+"_"+Date.now()+path.extname(file.originalname))
     }
@@ -108,7 +110,7 @@ const addProduct = async (req, res,next) => {
             name:req.body.product,
             category:req.body.category,
             price:req.body.price,
-            image:req.file.images,
+            image:req.file.filename,
             description:req.body.description,
             isAvailable:true,
         })
@@ -139,4 +141,4 @@ module.exports = {
    addProduct,
    upload
 
-}
+} 
