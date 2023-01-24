@@ -3,6 +3,7 @@ const app = express()
 const path = require('path')
 const hbs = require('express-handlebars')
 const mongoose = require('mongoose')
+const nocache = require('nocache')
 
 // routes setup
 const userRouter = require('./router/userRouter')
@@ -24,7 +25,7 @@ adminRouter.engine('hbs',hbs.engine({extname:'hbs',defaultLayout:'adminLayout',l
 
 // setting up static files
 userRouter.use(express.static(path.join(__dirname,'public/user')));
-adminRouter.use(express.static(path.join(__dirname,'public/admin')));
+app.use(express.static(path.join(__dirname,'public/admin')));
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))

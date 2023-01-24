@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt')
 // page rendering functions
 loadHome=(req,res)=>{
     const session = req.session.user_id
-    res.render('home',{session})
+    res.render('home',{session})    
 }
 
 

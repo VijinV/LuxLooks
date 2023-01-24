@@ -2,10 +2,6 @@ const express = require('express')
 const route = express()
 const session = require('express-session')
 const cookieParser = require('cookie-parser')
-
-// requiring user Schema
-const userSchema = require('../model/userModel') 
-
 // requiring  user controllers
 
 const userController = require('../controller/userController')
@@ -13,6 +9,11 @@ const userController = require('../controller/userController')
 const userAuth = require('../middleware/userAuth')
 
 const config = require('../config/config')
+
+const nocache = require('nocache');
+
+
+route.use(nocache())
 
 route.use(cookieParser())
 
@@ -22,7 +23,7 @@ route.use(session({
     saveUninitialized:true,
     resave:true,
     cookie:{
-        maxAge:config.cookieMaxAge,
+        maxAge:config.maxAge,
         
     }
 }))
