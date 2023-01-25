@@ -141,10 +141,10 @@
                       <small class="text-muted float-end">{{product._id}}</small>
                     </div>
                     <div class="card-body">
-                      <form action="/admin/addProducts" method="post" enctype="multipart/form-data" >
+                      <form action="/admin/update" method="post" >
                         <div class="mb-3">
                           <label class="form-label" for="basic-default-fullname">Product Name</label>
-                          <input type="text" name="product" value="{{product.name}}" class="form-control" id="basic-default-fullname" placeholder="iphone...." />
+                          <input type="text" name="name" value="{{product.name}}" class="form-control" id="basic-default-fullname" placeholder="iphone...." />
                         </div>
                         <div class="mb-3">
                           <label class="form-label" for="basic-default-company">Category</label>
@@ -164,6 +164,18 @@
                               aria-describedby="basic-default-email2"
                             />
                           </div>
+                           <div class="input-group input-group-merge">
+                            <input
+                            value="{{product._id}}"
+                            name="ID"
+                              type="hidden"
+                              id="basic-default-email"
+                              class="form-control"
+                              placeholder="$500"
+                              aria-label="john.doe"
+                              aria-describedby="basic-default-email2"
+                            />
+                          </div>
                           <div class="mb-3">
                           <label class="form-label" for="basic-default-company">Product Images</label>
 
@@ -176,10 +188,9 @@
                           <input
                             name="images"
                             type="file"
-                            value="{{product.image}}"
                             id="basic-default-phone"
                             class="form-control phone-mask"
-                            placeholder="658 799 8941"
+                            placeholder=""
                           />
                         </div>
                         <div class="mb-3">
@@ -192,7 +203,8 @@
                             placeholder="The Best iphone Ever Made.........."
                           ></input>
                         </div>
-                        <button type="submit" class="btn btn-primary">Add Product</button>
+
+                        <button type="submit" class="btn btn-primary">Update Product</button>
                       </form>
                     </div>
                   </div>

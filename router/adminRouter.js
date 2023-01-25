@@ -64,6 +64,8 @@ router.post('/', adminController.verifyLogin)
 router.post('/addProducts',adminController.upload,adminController.addProduct, adminController.loadAddProduct)
 
 
+router.post('/update',adminController.editProduct)
+
 
 
 

@@ -4,9 +4,8 @@ const bcrypt = require('bcrypt');
 const productModel = require('../model/productModel');
 const path = require('path');
 const multer = require('multer');
-const { log } = require('console');
-const { response } = require('../router/userRouter');
-  
+const mongoose = require('mongoose');
+
 
 // !--------------multer--------------------------------------------
 const Storage = multer.diskStorage({
@@ -171,16 +170,15 @@ const loadEditProduct =  (req,res)=>{
     }
 }
 
-const editProduct =(req,res,next) => {
-
+const editProduct = async(req,res,next) => {
     try {
-
-
-
-
-
-
-        
+        await productModel.findByIdAndUpdate({_id: req.body.ID},{$set:{
+            name: req.body.name,
+            category: req.body.category,
+            price: req.body.price,
+            // image:req.file.filename,
+            description: req.body.description
+        }}).then(() => {res.redirect('/admin/products')})  
     } catch (error) {
         console.log(error.message);
     }
