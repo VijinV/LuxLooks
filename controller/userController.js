@@ -16,20 +16,20 @@ loadCart=(req,res)=>{
 }
 const loadShop= (req,res)=>{
     const session = req.session.user_id
-    //  produtModel.find({}).exec((err,product)=>{
+     produtModel.find({}).exec((err,product)=>{
 
-    //     if (product) {
+        if (product) {
 
-    //         res.render('shop',{session},{product})
+            res.render('shop',{session,product})
             
-    //     } else {
+        } else {
 
-    //         res.render('shop',{session})
+            res.render('shop',{session})
             
-    //     }
-    // })
+        }
+    })
 
-    res.render('shop',{session})
+   
     
 }
 

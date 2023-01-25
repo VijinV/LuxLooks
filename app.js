@@ -26,7 +26,7 @@ adminRouter.set('view engine','hbs')
 adminRouter.engine('hbs',hbs.engine({extname:'hbs',handlebars: allowInsecurePrototypeAccess(Handlebars),defaultLayout:'adminLayout',layoutsDir:__dirname+'/views/layout',partialsDir:__dirname+'/views/partials'}))
 
 // setting up static files
-userRouter.use(express.static(path.join(__dirname,'public/user')));
+userRouter.use(express.static(path.join(__dirname,'public')));
 app.use(express.static(path.join(__dirname,'public/admin')));
 
 app.use(express.json())
