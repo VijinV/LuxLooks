@@ -54,10 +54,12 @@ router.get('/logout', adminAuth.logout)
 
 router.get('/editProduct',adminController.loadEditProduct)
 
+router.get('/block',adminController.blockUser)
 
- 
- 
-// post
+router.get('/stock',adminController.inStock)
+
+
+// post 
 
 router.post('/', adminController.verifyLogin)
 

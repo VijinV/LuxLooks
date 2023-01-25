@@ -185,9 +185,54 @@ const editProduct = async(req,res,next) => {
 
 }
 
+const blockUser = async(req,res,next) => {
+ 
+ const userData = await   userModel.findById({_id:req.query.id})
+
+ if(userData.isAvailable){
+   await userModel.findByIdAndUpdate({_id:req.query.id},{$set:{
+        isAvailable:false
+    }})
+    
+ }else{
+
+    await userModel.findByIdAndUpdate({_id:req.query.id},{$set:{
+        isAvailable:true
+    }})
+    
+ }
+ res.redirect('/admin/users')
+
+
+}
+
+const inStock = async (req, res) => {
+
+    const product = await productModel.findById({_id:req.query.id})
+    console.log();
+
+    if (product.isAvailable) {
+
+        await productModel.findByIdAndUpdate({_id:req.query.id},{$set:{
+            isAvailable:false
+        }})
+
+        
+    } else {
+        await productModel.findByIdAndUpdate({_id:req.query.id},{$set:{
+            isAvailable:true
+        }})
+    }
+
+    res.redirect('/admin/products')
+
+}
+
 
 
 module.exports = {
+    inStock,
+    blockUser,
    loadDashboard,
    loadProduct,
    loadAddProduct,

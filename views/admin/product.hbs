@@ -194,10 +194,10 @@
                         </td>
                         <td>{{price}}</td>
                         {{#if isAvailable}}
-                        <td><button class="btn btn-success">InStock</button>
+                        <td><button class="btn btn-success"><a style="text-decoration: none; color: #ffff;" href="/admin/stock?id={{_id}}">In Stock</a></button>
                             </td>
                         {{else}}
-                        <td><button class="btn btn-danger">Out of Stock</button>
+                        <td><button class="btn btn-danger"><a style="color: #fff; text-decoration: none;" href="/admin/stock?id={{_id}}">Out of Stock</a></button>
                             </td>
                         {{/if}}
 
