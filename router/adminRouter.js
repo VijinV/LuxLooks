@@ -52,9 +52,11 @@ router.get('/dashboard', adminAuth.isLogout,adminController.loadDashboard)
 
 router.get('/logout', adminAuth.logout)
 
+router.get('/editProduct',adminController.loadEditProduct)
 
 
-
+ 
+ 
 // post
 
 router.post('/', adminController.verifyLogin)

@@ -4,6 +4,8 @@ const bcrypt = require('bcrypt');
 const productModel = require('../model/productModel');
 const path = require('path');
 const multer = require('multer');
+const { log } = require('console');
+const { response } = require('../router/userRouter');
   
 
 // !--------------multer--------------------------------------------
@@ -147,6 +149,43 @@ const addProduct = async (req, res,next) => {
 
 }
 
+const loadEditProduct =  (req,res)=>{
+
+    try {
+        
+    productModel.findById({_id:req.query.id}).exec((err,product)=>{
+
+        if (product) {
+
+            res.render('editProduct',{product})
+            
+        }
+
+        })
+
+        
+
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+const editProduct =(req,res,next) => {
+
+    try {
+
+
+
+
+
+
+        
+    } catch (error) {
+        console.log(error.message);
+    }
+
+}
 
 
 
@@ -158,6 +197,7 @@ module.exports = {
    loadLogin,
    verifyLogin,
    addProduct,
-   upload
-
+   upload,
+   editProduct,
+   loadEditProduct
 } 

@@ -71,17 +71,17 @@
             <!-- Dashboard -->
             <li class="menu-item">
               <a href="/admin" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                <i class="menu-icon -icons bx bx-home-circle"></i>
                 <div data-i18n="Analytics">Dashboard</div>
               </a>
             </li>
-            <li class="menu-item active ">
+            <li class="menu-item ">
               <a href="/admin/products" class="menu-link">
               <i class="menu-icon bi bi-box2"></i>
                 <div data-i18n="Analytics">Products</div>
               </a>
             </li>
-             <li class="menu-item ">
+             <li class="menu-item active ">
               <a href="/admin/addProducts" class="menu-link">
              <i class=" menu-icon bi bi-plus-square-dotted"></i>
                 <div data-i18n="Analytics">Add Products</div>
@@ -94,13 +94,11 @@
                 <div data-i18n="Analytics">Users</div>
               </a>
             </li>
-
-             <!-- Layouts -->
+ <!-- Layouts -->
             <li class="menu-item">
               <a href="javascript:void(0);" class="menu-link menu-toggle">
                 {{!-- <i class="menu-icon tf-icons bx bx-layout"></i> --}}
-                                <i class="menu-icon bi bi-person-vcard"></i>
-
+                <i class="menu-icon bi bi-person-vcard"></i>
                 <div data-i18n="Layouts">Account</div>
               </a>
 
@@ -130,93 +128,75 @@
             </li>
           </ul>
         </aside>
-
-          <!-- Content wrapper -->
-          <div class="content-wrapper">
-            <!-- Content -->
+<!-- Content -->
 
             <div class="container-xxl flex-grow-1 container-p-y">
-              <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Tables /</span> Basic Tables</h4>
+              <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Products/</span>Edit Products</h4>
+              <!-- Basic Layout -->
+              <div class="row">
+                <div class="col-xl">
+                  <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                      <h5 class="mb-0"></h5>
+                      <small class="text-muted float-end">{{product._id}}</small>
+                    </div>
+                    <div class="card-body">
+                      <form action="/admin/addProducts" method="post" enctype="multipart/form-data" >
+                        <div class="mb-3">
+                          <label class="form-label" for="basic-default-fullname">Product Name</label>
+                          <input type="text" name="product" value="{{product.name}}" class="form-control" id="basic-default-fullname" placeholder="iphone...." />
+                        </div>
+                        <div class="mb-3">
+                          <label class="form-label" for="basic-default-company">Category</label>
+                          <input type="text" value="{{product.category}}" name="category" class="form-control" id="basic-default-company" placeholder="Mobile..." />
+                        </div>
+                        <div class="mb-3">
+                          <label class="form-label" for="basic-default-email">Price</label>
+                          <div class="input-group input-group-merge">
+                            <input
+                            value="{{product.price}}"
+                            name="price"
+                              type="text"
+                              id="basic-default-email"
+                              class="form-control"
+                              placeholder="$500"
+                              aria-label="john.doe"
+                              aria-describedby="basic-default-email2"
+                            />
+                          </div>
+                          <div class="mb-3">
+                          <label class="form-label" for="basic-default-company">Product Images</label>
 
-              <!-- Basic Bootstrap Table -->
-              <div class="card">
-                <h5 class="card-header">Table Basic</h5>
-                <div class="table-responsive text-nowrap">
-                  <table class="table">
-                    <thead>
-                      <tr>
-                        <th>Sl No</th>
-                        <th>Product Name</th>
-                        <th>Image</th>
-                        <th>Price</th>
-                        <th class="ms-1">Status</th>
-                        <th>Category</th>
-                        <th></th>
-                      </tr>
-                    </thead>
-                    <tbody class="table-border-bottom-0">
-                      {{#each product}}
-                      <tr>
-                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>01</strong></td>
-                        <td>{{name}}</td>
-                        <td>
-                            <img src="../assets/img/products/{{image}}  " alt="Avatar" class="rounded-circle" style="width: 50px; height: 50px;" />
-                          {{!-- <img src="/public/productImages/images_1674587879500.jpg"  style="width: 50px; height: 50px;" /> --}}
-                          {{!-- <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
-                            <li
-                              data-bs-toggle="tooltip"
-                              data-popup="tooltip-custom"
-                              data-bs-placement="top"
-                              class="avatar avatar-xs pull-up"
-                              title="Lilian Fuller"
-                            >
-                              <img src="" alt="Avatar" class="rounded-circle" />
-                            </li>
-                            <li
-                              data-bs-toggle="tooltip"
-                              data-popup="tooltip-custom"
-                              data-bs-placement="top"
-                              class="avatar avatar-xs pull-up"
-                              title="Sophia Wilkerson"
-                            >
-                              <img src="../assets/img/avatars/6.png" alt="Avatar" class="rounded-circle" />
-                            </li>
-                            <li
-                              data-bs-toggle="tooltip"
-                              data-popup="tooltip-custom"
-                              data-bs-placement="top"
-                              class="avatar avatar-xs pull-up"
-                              title="Christina Parker"
-                            >
-                              <img src="../assets/img/avatars/7.png" alt="Avatar" class="rounded-circle" />
-                            </li>
-                          </ul> --}}
-                        </td>
-                        <td>{{price}}</td>
-                        {{#if isAvailable}}
-                        <td><button class="btn btn-success">InStock</button>
-                            </td>
-                        {{else}}
-                        <td><button class="btn btn-danger">Out of Stock</button>
-                            </td>
-                        {{/if}}
-
-                        <td>{{category}}</td>
-
-                        <td><button class="btn btn-warning"><a style="text-decoration: none; color: #ffff;" href="/admin/editProduct?id={{_id}}">Edit</a></button></td>
-
-                      </tr>
-                      {{/each}}
-                    </tbody>
-                  </table>
-
+                          <img style="height: 96px;width: 72px;margin-top: 18px;"  src="assets/img/products/{{product.image}}  ">
+                        
+                        </div>
+                        </div>
+                        <div class="mb-3">
+                          <label class="form-label" for="basic-default-phone">Image</label>
+                          <input
+                            name="images"
+                            type="file"
+                            value="{{product.image}}"
+                            id="basic-default-phone"
+                            class="form-control phone-mask"
+                            placeholder="658 799 8941"
+                          />
+                        </div>
+                        <div class="mb-3">
+                          <label class="form-label" for="basic-default-message">Description</label>
+                          <input
+                          name="description"
+                          value="{{product.description}}"
+                            id="basic-default-message"
+                            class="form-control"
+                            placeholder="The Best iphone Ever Made.........."
+                          ></input>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Product</button>
+                      </form>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <!--/ Basic Bootstrap Table -->
-
-            <div class="content-backdrop fade"></div>
-          </div>
-          <!-- Content wrapper -->
-        </div>
-        <!-- / Layout page -->
-      </div>
+            </div>
+            <!-- / Content -->
