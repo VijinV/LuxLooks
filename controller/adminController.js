@@ -55,7 +55,7 @@ loadUsers =(req,res)=>{
         if (user) {
 
             res.render('users',{user})
-            
+             
         }else{
             res.render('users')
         }

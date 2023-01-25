@@ -14,20 +14,22 @@ loadCart=(req,res)=>{
     const session = req.session.user_id
     res.render('cart',{session})
 }
-loadShop= async (req,res)=>{
+const loadShop= (req,res)=>{
     const session = req.session.user_id
-    const productData = await produtModel.find({}).exec((err,product)=>{
+    //  produtModel.find({}).exec((err,product)=>{
 
-        if (product) {
+    //     if (product) {
 
-            res.render('shop',{session},{product})
+    //         res.render('shop',{session},{product})
             
-        } else {
+    //     } else {
 
-            res.render('shop',{session})
+    //         res.render('shop',{session})
             
-        }
-    })
+    //     }
+    // })
+
+    res.render('shop',{session})
     
 }
 
