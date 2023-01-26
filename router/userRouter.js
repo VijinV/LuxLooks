@@ -47,11 +47,17 @@ route.get('/register',userAuth.isLogin,userController.loadRegister)
 
 route.get('/logout',userAuth.logout)
 
+route.get('/productDetails',userController.loadProductDetails,)
+
+route.get('/otp',userController.getOtp)
+
 // post methods
 
-route.post('/register',userController.registerUser,userController.loadHome)
+route.post('/register',userController.saveUser)
 
 route.post('/login',userController.verifyLogin)
+
+route.post('/otp',userController.addUser)
 
 
 
