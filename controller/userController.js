@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt')
 
 
 const message = require('../config/sms')
-const { log } = require('handlebars')
+
 
 // !================================================================================
 
@@ -97,25 +97,28 @@ const getOtp=(req,res)=>{
 // page rendering functions
 loadHome=(req,res)=>{
     const session = req.session.user_id
-    res.render('home',{session})    
+    const login = false
+    res.render('home',{session,login})    
 }
 
 
 loadCart=(req,res)=>{
     const session = req.session.user_id
-    res.render('cart',{session})
+    const login = false
+    res.render('cart',{session,login})
 }
 const loadShop= (req,res)=>{
     const session = req.session.user_id
+    const login = false
      produtModel.find({}).exec((err,product)=>{
 
         if (product) {
 
-            res.render('shop',{session,product})
+            res.render('shop',{session,product,login})
             
         } else {
 
-            res.render('shop',{session})
+            res.render('shop',{session,login})
             
         }
     })
@@ -126,24 +129,28 @@ const loadShop= (req,res)=>{
 
 loadProduct=(req,res)=>{
     const session = req.session.user_id
-    res.render('productDetails',{session})
+    const login = false
+    res.render('productDetails',{session,login})
 }
 
 loadContact=(req,res)=>{
     const session = req.session.user_id
-    res.render('contact',{session})
+    const login = false
+    res.render('contact',{session,login})
 }
 
 loadLogin=(req,res)=>{
-    res.render('login',)
+    const login = true
+    res.render('login',{login})
 }
 
 loadRegister=(req,res)=>{
-    res.render('register',)
+    const login = true
+    res.render('register',{login})
 }
 
 loadProductDetails = async(req,res)=>{
-
+    const login = false
    try {
 	 const session = req.session.user_id
 
@@ -151,7 +158,7 @@ loadProductDetails = async(req,res)=>{
 	
 	   const product =await produtModel.findById({_id:req.query.id})
 	
-	    res.render('productDetails',{product,session})
+	    res.render('productDetails',{product,session,login})
 } catch (error) {
 
     console.log(error.message);
@@ -173,7 +180,9 @@ const registerUser =async (req,res,next)=>{
             isAdmin: false,
             isAvailable:true
         })
-        await user.save().then(()=>console.log("user Saved successfully"))
+        await user.save().then(()=>{
+            req.session.user_id = req.body.name
+        })
 
         next()
 

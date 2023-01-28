@@ -12,6 +12,11 @@ const config = require('../config/config')
 
 const nocache = require('nocache');
 
+// ! sms
+
+const sms = require('fast2sms')
+const otp = Math.floor(1000 + Math.random() * 9000)
+// !================================================
 
 route.use(nocache())
 
@@ -49,15 +54,18 @@ route.get('/logout',userAuth.logout)
 
 route.get('/productDetails',userController.loadProductDetails,)
 
-route.get('/otp',userController.getOtp)
+// route.get('/otp',userController.getOtp)
 
 // post methods
 
-route.post('/register',userController.saveUser)
+route.post('/register',userController.registerUser,userController.loadHome)
 
 route.post('/login',userController.verifyLogin)
 
-route.post('/otp',userController.addUser)
+route.get('/otp')
+
+
+
 
 
 

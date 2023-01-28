@@ -1,25 +1,21 @@
-const accountSid = "ACea127b36d8d84e595ae6350f5e30a5f2";
-const authToken = "6eac483dcb28adbd88924a76f4d2a442";
-const verifySid = "VAd5a3e056c95bb955802a7a794361e98f";
-const client = require("twilio")(accountSid, authToken);
+const fast2sms = require('fast-two-sms');
 
-const express = require('express')
-
-
-module.exports={
-  sentotp :(number) =>{
-    client.verify.v2 
-  .services(verifySid)
-  .verifications.create({ to: `+91 ${number} `, channel: "sms" })
- },
-    check: async (otpCode,number) => {
-          try{
-    const status = await client.verify.v2
-              .services(verifySid)
-              .verificationChecks.create({ to: `+91 ${number}`, code: otpCode });
-               return status
-          }catch(err){
-              console.log(err);
-          }   
-      }
+    const sendMessage = function(mobile,res){
+    let randomOTP = Math.floor(Math.random()*10000)
+    var options = {
+        authorization:"0HjvrhqJABd2itKeTUGDfgS7luM36WcNYwyIVPLx15ZoC4QXbsjzNEOoGtw20XV9TkLUP3vR7eQKrnb4",
+        message:`your OTP verification code is ${randomOTP}`,
+        numbers:[mobile]
     }
+    //send this message
+    fast2sms.sendMessage(options)
+    .then((response)=>{
+        console.log("otp sent successfully")
+    }).catch((error)=>{
+        console.log(error)
+    })
+    return randomOTP;
+  }
+
+
+  

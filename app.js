@@ -1,4 +1,5 @@
 const express = require('express')
+require('dotenv').config()
 const app = express()
 const path = require('path')
 const hbs = require('express-handlebars')
@@ -45,10 +46,12 @@ app.use('/admin',adminRouter)
 // database connection
 
 mongoose.set('strictQuery',true)
-mongoose.connect('mongodb://127.0.0.1:27017/LuxLooks',()=>console.log('Database connection established'))
+mongoose.connect(process.env.MONGODB_CONNECT,()=>console.log('Database connection established'))
 
 
 
 app.listen('5000',()=>{
     console.log("server listening on port 5000");
 })
+
+

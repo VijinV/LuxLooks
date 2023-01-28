@@ -12,7 +12,8 @@ const adminAuth = require('../middleware/adminAuth')
 
 const nocache = require('nocache');
 
-const fileUpload = require('../util/multer')
+const fileUpload = require('../util/multer');
+const { route } = require('./userRouter');
 
 
 router.use(nocache())
@@ -59,6 +60,8 @@ router.get('/block',adminController.blockUser)
 router.get('/stock',adminController.inStock)
 
 
+
+
 // post 
 
 router.post('/', adminController.verifyLogin)
@@ -67,15 +70,6 @@ router.post('/addProducts',adminController.upload,adminController.addProduct, ad
 
 
 router.post('/update',adminController.editProduct)
-
-
-
-
-
-
-
-
-
 
 
 module.exports = router

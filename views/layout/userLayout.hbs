@@ -42,19 +42,21 @@
 <body class="animsition">
 
 
-{{#if session}}
+{{#if login}}
+{{>noNav}}
+{{else if session }}
 {{>loginNav}}
 {{else}}
 {{>userPartials}}
-
 {{/if}}
 
 {{{body}}}
 
-{{#if admin}}
-{{>adminFooter}}
+{{#if login}}
+{{>noNav}}
 {{else}}
 {{>userFooter}}
+
 {{/if}}
 
 

@@ -1,11 +1,9 @@
 const userModel = require('../model/userModel')
-const ProductModel = require('../model/productModel')
 const bcrypt = require('bcrypt');
 const productModel = require('../model/productModel');
 const path = require('path');
 const multer = require('multer');
 const mongoose = require('mongoose');
-
 
 // !--------------multer--------------------------------------------
 const Storage = multer.diskStorage({
@@ -17,7 +15,7 @@ const Storage = multer.diskStorage({
     }
 })
 
-const upload =multer({
+const upload = multer({
     storage:Storage
 }).single('images')
 
@@ -98,19 +96,19 @@ try {
                 
             } else {
 
-                res.render('login',{message:'You are not an administrator'})
+                res.render('login',{message:'You are not an administrator',logout:true})
                 
             }
             
         } else {
 
-            res.render('login',{message:'password is invalid'})
+            res.render('login',{message:'password is invalid',logout:true})
             
         }
         
     } else {
         
-        res.render('login',{message:'Account not found'})
+        res.render('login',{message:'Account not found',logout:true})
 
     }
 
