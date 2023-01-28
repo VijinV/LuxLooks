@@ -1,76 +1,67 @@
-const express = require('express')
-const route = express()
-const session = require('express-session')
-const cookieParser = require('cookie-parser')
+const express = require("express");
+const route = express();
+const session = require("express-session");
+const cookieParser = require("cookie-parser");
 // requiring  user controllers
 
-const userController = require('../controller/userController')
+const userController = require("../controller/userController");
 
-const userAuth = require('../middleware/userAuth')
+const userAuth = require("../middleware/userAuth");
 
-const config = require('../config/config')
+const config = require("../config/config");
 
-const nocache = require('nocache');
+const nocache = require("nocache");
 
 // ! sms
 
-const sms = require('fast2sms')
-const otp = Math.floor(1000 + Math.random() * 9000)
+const sms = require("fast2sms");
+const otp = Math.floor(1000 + Math.random() * 9000);
 // !================================================
 
-route.use(nocache())
+route.use(nocache());
 
-route.use(cookieParser())
+route.use(cookieParser());
 
 //session
-route.use(session({
-    secret:config.secretKey,
-    saveUninitialized:true,
-    resave:true,
-    cookie:{
-        maxAge:config.maxAge,
-        
-    }
-}))
+route.use(
+  session({
+    secret: config.secretKey,
+    saveUninitialized: true,
+    resave: true,
+    cookie: {
+      maxAge: config.maxAge,
+    },
+  })
+);
 
- 
 // get methods
 
-route.get('/',userController.loadHome)
+route.get("/", userController.loadHome);
 
-route.get('/product',userController.loadProduct)
+route.get("/product", userController.loadProduct);
 
-route.get('/cart',userController.loadCart)
+route.get("/cart", userController.loadCart);
 
-route.get('/contact',userController.loadContact)
+route.get("/contact", userController.loadContact);
 
-route.get('/shop',userController.loadShop)
+route.get("/shop", userController.loadShop);
 
-route.get('/login',userAuth.isLogin,userController.loadLogin)
+route.get("/login", userAuth.isLogin, userController.loadLogin);
 
-route.get('/register',userAuth.isLogin,userController.loadRegister)
+route.get("/register", userAuth.isLogin, userController.loadRegister);
 
-route.get('/logout',userAuth.logout)
+route.get("/logout", userAuth.logout);
 
-route.get('/productDetails',userController.loadProductDetails,)
+route.get("/productDetails", userController.loadProductDetails);
 
 // route.get('/otp',userController.getOtp)
 
 // post methods
 
-route.post('/register',userController.registerUser,userController.loadHome)
+route.post("/register", userController.registerUser, userController.loadHome);
 
-route.post('/login',userController.verifyLogin)
+route.post("/login", userController.verifyLogin);
 
-route.get('/otp')
+route.get("/otp");
 
-
-
-
-
-
-
-
-
-
-module.exports = route
+module.exports = route;

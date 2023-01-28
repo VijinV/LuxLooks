@@ -1,244 +1,217 @@
-const userModel = require('../model/userModel')
-const bcrypt = require('bcrypt');
-const productModel = require('../model/productModel');
-const path = require('path');
-const multer = require('multer');
-const mongoose = require('mongoose');
+const userModel = require("../model/userModel");
+const bcrypt = require("bcrypt");
+const productModel = require("../model/productModel");
+const path = require("path");
+const multer = require("multer");
+const mongoose = require("mongoose");
 
 // !--------------multer--------------------------------------------
 const Storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, './public/admin/assets/img/products')
-    },
-    filename:(req,file,cb)=>{
-        cb(null,file.fieldname+"_"+Date.now()+path.extname(file.originalname))
-    }
-})
+  destination: function (req, file, cb) {
+    cb(null, "./public/admin/assets/img/products");
+  },
+  filename: (req, file, cb) => {
+    cb(
+      null,
+      file.fieldname + "_" + Date.now() + path.extname(file.originalname)
+    );
+  },
+});
 
 const upload = multer({
-    storage:Storage
-}).single('images')
+  storage: Storage,
+}).single("images");
 
 // !----------------------------------------------------------------
 
 // get meathodes
-loadDashboard =(req,res)=>{
-    res.render('dashboard')
-}
+loadDashboard = (req, res) => {
+  res.render("dashboard");
+};
 
-loadProduct = async(req,res)=>{
+loadProduct = async (req, res) => {
+  const productData = await productModel.find({}).exec((err, product) => {
+    if (product) {
+      res.render("product", { product });
+    } else {
+      res.send("404 page not found");
+    }
+  });
+};
 
+loadAddProduct = (req, res) => {
+  res.render("addProduct");
+};
 
-    const productData = await productModel.find({}).exec((err, product)=>{
+loadUsers = (req, res) => {
+  const userData = userModel.find({}).exec((err, user) => {
+    if (user) {
+      res.render("users", { user });
+    } else {
+      res.render("users");
+    }
+  });
+};
 
-        if(product){
-            res.render('product',{product})
-        }else{
-            res.send('404 page not found')
-        }
-    })
-
-
-    
-}
-
-loadAddProduct =(req,res)=>{
- 
-
-    res.render('addProduct')
-}
-
-loadUsers =(req,res)=>{
-    const userData = userModel.find({}).exec((err, user)=>{
-
-        if (user) {
-
-            res.render('users',{user})
-             
-        }else{
-            res.render('users')
-        }
-    })
-    
-}
-
-loadLogin =(req,res)=>{
-    const logout = true;
-    res.render('login',{logout})
-}
-
+loadLogin = (req, res) => {
+  const logout = true;
+  res.render("login", { logout });
+};
 
 // post meathode
 
+const verifyLogin = async (req, res) => {
+  try {
+    const email = req.body.email;
 
-const verifyLogin = async (req,res)=>{
-
-try {
-
-    const email = req.body.email
-
-    const userData = await userModel.findOne({ email: email})
-
-    
+    const userData = await userModel.findOne({ email: email });
 
     if (userData) {
-        const passwordMatch = await bcrypt.compare(req.body.password,userData.password)
-    
+      const passwordMatch = await bcrypt.compare(
+        req.body.password,
+        userData.password
+      );
 
-        if (passwordMatch) {
+      if (passwordMatch) {
+        if (userData.isAdmin) {
+          req.session.admin_id = userData._id;
+          req.session.admin_name = userData.name;
 
-            if (userData.isAdmin) {
-
-                req.session.admin_id = userData._id
-                req.session.admin_name = userData.name
-
-                res.redirect('/admin')
-                
-            } else {
-
-                res.render('login',{message:'You are not an administrator',logout:true})
-                
-            }
-            
+          res.redirect("/admin");
         } else {
-
-            res.render('login',{message:'password is invalid',logout:true})
-            
+          res.render("login", {
+            message: "You are not an administrator",
+            logout: true,
+          });
         }
-        
+      } else {
+        res.render("login", { message: "password is invalid", logout: true });
+      }
     } else {
-        
-        res.render('login',{message:'Account not found',logout:true})
-
+      res.render("login", { message: "Account not found", logout: true });
     }
-
-    
-} catch (error) {
-
+  } catch (error) {
     console.log(error.message);
-    
-}
-}
+  }
+};
 
+const addProduct = async (req, res, next) => {
+  try {
+    const product = new productModel({
+      name: req.body.product,
+      category: req.body.category,
+      price: req.body.price,
+      image: req.file.filename,
+      description: req.body.description,
+      isAvailable: true,
+    });
 
-const addProduct = async (req, res,next) => {
+    await product.save().then(() => console.log("Product Saved"));
 
-    try {
+    next();
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
-        const product = new productModel({
-            name:req.body.product,
-            category:req.body.category,
-            price:req.body.price,
-            image:req.file.filename,
-            description:req.body.description,
-            isAvailable:true,
-        })
-        
-       await product.save().then(() => console.log('Product Saved'))
+const loadEditProduct = (req, res) => {
+  try {
+    productModel.findById({ _id: req.query.id }).exec((err, product) => {
+      if (product) {
+        res.render("editProduct", { product });
+      }
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
-       next()
-        
-    } catch (error) {
-
-        console.log(error.message);
-        
-    }
-
-}
-
-const loadEditProduct =  (req,res)=>{
-
-    try {
-        
-    productModel.findById({_id:req.query.id}).exec((err,product)=>{
-
-        if (product) {
-
-            res.render('editProduct',{product})
-            
-        }
-
-        })
-
-        
-
-
-    } catch (error) {
-        console.log(error.message);
-    }
-}
-
-const editProduct = async(req,res,next) => {
-    try {
-        await productModel.findByIdAndUpdate({_id: req.body.ID},{$set:{
+const editProduct = async (req, res, next) => {
+  try {
+    await productModel
+      .findByIdAndUpdate(
+        { _id: req.body.ID },
+        {
+          $set: {
             name: req.body.name,
             category: req.body.category,
             price: req.body.price,
             // image:req.file.filename,
-            description: req.body.description
-        }}).then(() => {res.redirect('/admin/products')})  
-    } catch (error) {
-        console.log(error.message);
-    }
+            description: req.body.description,
+          },
+        }
+      )
+      .then(() => {
+        res.redirect("/admin/products");
+      });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
-}
+const blockUser = async (req, res, next) => {
+  const userData = await userModel.findById({ _id: req.query.id });
 
-const blockUser = async(req,res,next) => {
- 
- const userData = await   userModel.findById({_id:req.query.id})
-
- if(userData.isAvailable){
-   await userModel.findByIdAndUpdate({_id:req.query.id},{$set:{
-        isAvailable:false
-    }})
-    
- }else{
-
-    await userModel.findByIdAndUpdate({_id:req.query.id},{$set:{
-        isAvailable:true
-    }})
-    
- }
- res.redirect('/admin/users')
-
-
-}
+  if (userData.isAvailable) {
+    await userModel.findByIdAndUpdate(
+      { _id: req.query.id },
+      {
+        $set: {
+          isAvailable: false,
+        },
+      }
+    );
+  } else {
+    await userModel.findByIdAndUpdate(
+      { _id: req.query.id },
+      {
+        $set: {
+          isAvailable: true,
+        },
+      }
+    );
+  }
+  res.redirect("/admin/users");
+};
 
 const inStock = async (req, res) => {
+  const product = await productModel.findById({ _id: req.query.id });
+  console.log();
 
-    const product = await productModel.findById({_id:req.query.id})
-    console.log();
+  if (product.isAvailable) {
+    await productModel.findByIdAndUpdate(
+      { _id: req.query.id },
+      {
+        $set: {
+          isAvailable: false,
+        },
+      }
+    );
+  } else {
+    await productModel.findByIdAndUpdate(
+      { _id: req.query.id },
+      {
+        $set: {
+          isAvailable: true,
+        },
+      }
+    );
+  }
 
-    if (product.isAvailable) {
-
-        await productModel.findByIdAndUpdate({_id:req.query.id},{$set:{
-            isAvailable:false
-        }})
-
-        
-    } else {
-        await productModel.findByIdAndUpdate({_id:req.query.id},{$set:{
-            isAvailable:true
-        }})
-    }
-
-    res.redirect('/admin/products')
-
-}
-
-
+  res.redirect("/admin/products");
+};
 
 module.exports = {
-    inStock,
-    blockUser,
-   loadDashboard,
-   loadProduct,
-   loadAddProduct,
-   loadUsers,
-   loadLogin,
-   verifyLogin,
-   addProduct,
-   upload,
-   editProduct,
-   loadEditProduct
-} 
+  inStock,
+  blockUser,
+  loadDashboard,
+  loadProduct,
+  loadAddProduct,
+  loadUsers,
+  loadLogin,
+  verifyLogin,
+  addProduct,
+  upload,
+  editProduct,
+  loadEditProduct,
+};
