@@ -53,9 +53,13 @@ router.get("/block", adminController.blockUser);
 
 router.get("/stock", adminController.inStock);
 
+router.get('/category', adminController.loadCategory)
+
 // post
 
 router.post("/", adminController.verifyLogin);
+
+router.post ('/addCategory', adminController.addCategory,adminController.loadCategory)
 
 router.post(
   "/addProducts",

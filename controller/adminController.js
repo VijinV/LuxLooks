@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const productModel = require("../model/productModel");
 const path = require("path");
 const multer = require("multer");
+const categoryModel = require("../model/categoryModel");
 
 // !--------------multer-------------------------------------------
 const Storage = multer.diskStorage({
@@ -200,6 +201,41 @@ const inStock = async (req, res) => {
   res.redirect("/admin/products");
 };
 
+
+addCategory = async (req, res,next) => {
+
+
+    const category = new categoryModel({
+        name : req.body.name
+    })
+
+    await category.save().then(()=>{console.log('category saved successfully')})
+
+    next()
+ 
+}
+
+loadCategory = async (req, res) => {
+ const newcategory = await categoryModel.find({}).exec((err, category) =>{
+
+    if(category){
+        res.render('category', {category})
+    }else{
+
+        console.log('no category found');
+
+    }
+    
+ })
+}
+
+
+ 
+
+
+
+
+
 module.exports = {
   inStock,
   blockUser,
@@ -213,4 +249,6 @@ module.exports = {
   upload,
   editProduct,
   loadEditProduct,
+  loadCategory,
+  addCategory
 };

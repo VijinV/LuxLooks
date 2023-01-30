@@ -82,14 +82,13 @@ const registerUser = async (req, res, next) => {
     if (userData || userData1) {
       res.render("register", { message: "This Account is already registered" });
     } else {
-     
       newUser = {
         name: req.body.name,
         email: req.body.email,
         mobile: req.body.mobile,
         password: req.body.password,
         isAdmin: false,
-      }
+      };
 
       next();
     }
@@ -99,11 +98,9 @@ const registerUser = async (req, res, next) => {
 };
 
 loadOtp = async (req, res) => {
+  const userData = newUser;
 
-const userData = newUser
-
-  const mobile = userData.mobile
- 
+  const mobile = userData.mobile;
 
   newOtp = message.sendMessage(mobile, res);
 
@@ -115,7 +112,7 @@ const userData = newUser
 const verifyLogin = async (req, res, next) => {
   try {
     const email = req.body.email;
-    
+
     const userData = await userSchema.findOne({ email });
     if (userData) {
       const passwordMatch = await bcrypt.compare(
@@ -146,45 +143,40 @@ const verifyLogin = async (req, res, next) => {
 
 const verifyOtp = async (req, res, next) => {
   try {
-    const otp = req.body.newotp
+    const otp = req.body.newotp;
 
-
-   
     console.log(req.body.otp);
 
     if (otp === req.body.otp) {
+      const password = await bcrypt.hash(req.body.password, 10);
 
-       
-        const password = await bcrypt.hash(req.body.password, 10);
+      const user = new userSchema({
+        name: req.body.name,
+        email: req.body.email,
+        mobile: req.body.mobile,
+        password: password,
+        isAdmin: false,
+        isAvailable: true,
+      });
 
-        const user = new userSchema({
-            name: req.body.name,
-            email: req.body.email,
-            mobile: req.body.mobile,
-            password: password,
-            isAdmin: false,
-            isAvailable:true
-        })
+      console.log(user);
 
-        console.log(user);
+      await user.save().then(() => console.log("register successful"));
 
-        await user.save().then(()=>console.log('register successful'))
-
-        if (user) {
-            res.render('login')           
-        } else {
-
-            res.render('otp',{message:'invalid otp'})
-            
-        }
-    }else{
-        console.log('otp not match');
+      if (user) {
+        res.render("login");
+      } else {
+        res.render("otp", { message: "invalid otp" });
+      }
+    } else {
+      console.log("otp not match");
     }
-
   } catch (error) {
     console.log(error.message);
   }
 };
+
+
 
 module.exports = {
   loadProductDetails,
