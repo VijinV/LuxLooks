@@ -1,98 +1,28 @@
+let newOtp;
 const userSchema = require("../model/userModel");
 const produtModel = require("../model/productModel");
 
 const bcrypt = require("bcrypt");
 
 const message = require("../config/sms");
+const { log } = require("handlebars");
 
-// !================================================================================
+let newUser;
 
-const getOtp = (req, res) => {
-  res.render("otp");
+// page rendering functions
+
+loadHome = (req, res) => {
+  const session = req.session.user_id;
+  const login = false;
+  res.render("home", { session, login });
 };
-//   ?================================================================
-const saveUser = async (req, res) => {
-  console.log("1");
-  const check = req.body.email;
-  const storeuser = {
-    username: req.body.name,
-    email: req.body.email,
-    number: req.body.mobile,
-    password: req.body.password,
-  };
-  req.session.storeuser = storeuser;
-
-  console.log(storeuser);
-  console.log(req.body.mobile);
-
-  //  ?================================================================
-
-  const email = await userSchema.find({ email: req.body.email });
-  const number = await userSchema.find({ number: req.body.mobile });
-  console.log(number);
-  console.log(email);
-  if (email.length == 0) {
-    if (number.length != 0) {
-      req.session.message = "Number already exist";
-      return res.redirect("/register");
-    } else {
-      try {
-        await message.sentotp(req.session.storeuser.number);
-        res.redirect("./otp");
-      } catch {
-        console.log("err");
-      }
-    }
-  } else {
-    req.session.message = "Email already exist";
-    return res.redirect("/register");
-  }
-};
-
-const addUser = async (req, res) => {
-    try {
-      const storeuser = new Register({
-        username: req.session.storeuser.username,
-        email: req.session.storeuser.email,
-        number: req.session.storeuser.number,
-        password: req.session.storeuser.password,
-      });
-      const otp = req.body.otp;
-
-      if (otp.length == 0) {
-        req.session.message = "Enter otp";
-        return res.redirect("/otp");
-      } else {
-        const check = await message.check(otp, req.session.storeuser.number);
-        if (check.status == "approved") {
-          storeuser.password = await bcrypt.hash(storeuser.password, 10);
-          await storeuser.save();
-          //req.session.storeuser=null
-          req.session.message = "";
-          res.redirect("./login");
-        } else {
-          req.session.message = "Invalid otp";
-          res.redirect("/otp");
-        }
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  },
-  // !================================================================================
-
-  // page rendering functions
-  loadHome = (req, res) => {
-    const session = req.session.user_id;
-    const login = false;
-    res.render("home", { session, login });
-  };
 
 loadCart = (req, res) => {
   const session = req.session.user_id;
   const login = false;
   res.render("cart", { session, login });
 };
+
 const loadShop = (req, res) => {
   const session = req.session.user_id;
   const login = false;
@@ -146,30 +76,47 @@ loadProductDetails = async (req, res) => {
 
 const registerUser = async (req, res, next) => {
   try {
-    const password = await bcrypt.hash(req.body.password, 10);
-    const user = new userSchema({
-      name: req.body.name,
-      email: req.body.email,
-      mobile: req.body.mobile,
-      password: password,
-      isAdmin: false,
-      isAvailable: true,
-    });
-    await user.save().then(() => {
-      req.session.user_id = req.body.name;
-    });
+    const userData = await userSchema.findOne({ email: req.body.email });
+    const userData1 = await userSchema.findOne({ mobile: req.body.mobile });
 
-    next();
+    if (userData || userData1) {
+      res.render("register", { message: "This Account is already registered" });
+    } else {
+     
+      newUser = {
+        name: req.body.name,
+        email: req.body.email,
+        mobile: req.body.mobile,
+        password: req.body.password,
+        isAdmin: false,
+      }
+
+      next();
+    }
   } catch (error) {
     console.log(error.message);
   }
 };
 
+loadOtp = async (req, res) => {
+
+const userData = newUser
+
+  const mobile = userData.mobile
+ 
+
+  newOtp = message.sendMessage(mobile, res);
+
+  console.log(newOtp);
+
+  res.render("otp", { newOtp, userData });
+};
+
 const verifyLogin = async (req, res, next) => {
   try {
     const email = req.body.email;
+    
     const userData = await userSchema.findOne({ email });
-
     if (userData) {
       const passwordMatch = await bcrypt.compare(
         req.body.password,
@@ -197,6 +144,48 @@ const verifyLogin = async (req, res, next) => {
   }
 };
 
+const verifyOtp = async (req, res, next) => {
+  try {
+    const otp = req.body.newotp
+
+
+   
+    console.log(req.body.otp);
+
+    if (otp === req.body.otp) {
+
+       
+        const password = await bcrypt.hash(req.body.password, 10);
+
+        const user = new userSchema({
+            name: req.body.name,
+            email: req.body.email,
+            mobile: req.body.mobile,
+            password: password,
+            isAdmin: false,
+            isAvailable:true
+        })
+
+        console.log(user);
+
+        await user.save().then(()=>console.log('register successful'))
+
+        if (user) {
+            res.render('login')           
+        } else {
+
+            res.render('otp',{message:'invalid otp'})
+            
+        }
+    }else{
+        console.log('otp not match');
+    }
+
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 module.exports = {
   loadProductDetails,
   loadHome,
@@ -208,7 +197,6 @@ module.exports = {
   loadRegister,
   registerUser,
   verifyLogin,
-  saveUser,
-  getOtp,
-  addUser,
+  loadOtp,
+  verifyOtp,
 };

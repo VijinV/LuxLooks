@@ -3,9 +3,8 @@ const bcrypt = require("bcrypt");
 const productModel = require("../model/productModel");
 const path = require("path");
 const multer = require("multer");
-const mongoose = require("mongoose");
 
-// !--------------multer--------------------------------------------
+// !--------------multer-------------------------------------------
 const Storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "./public/admin/assets/img/products");

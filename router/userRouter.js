@@ -58,10 +58,12 @@ route.get("/productDetails", userController.loadProductDetails);
 
 // post methods
 
-route.post("/register", userController.registerUser, userController.loadHome);
+route.post("/register", userController.registerUser, userController.loadOtp);
 
 route.post("/login", userController.verifyLogin);
 
-route.get("/otp");
+route.get("/otp",userController.loadOtp);
+
+route.post('/otp',userController.verifyOtp)
 
 module.exports = route;
