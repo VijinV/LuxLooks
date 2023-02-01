@@ -5,7 +5,8 @@ const produtModel = require("../model/productModel");
 const bcrypt = require("bcrypt");
 
 const message = require("../config/sms");
-const { log } = require("handlebars");
+
+const addressModel = require("../model/addressModel");
 
 let newUser;
 
@@ -176,9 +177,17 @@ const verifyOtp = async (req, res, next) => {
   }
 };
 
+loadAddress = (req,res) => {
+
+  res.render('address')
+}
+
+
+
 
 
 module.exports = {
+  loadAddress,
   loadProductDetails,
   loadHome,
   loadContact,

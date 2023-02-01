@@ -54,6 +54,8 @@ route.get("/logout", userAuth.logout);
 
 route.get("/productDetails", userController.loadProductDetails);
 
+route.get("/address",userController.loadAddress)
+
 // route.get('/otp',userController.getOtp)
 
 // post methods

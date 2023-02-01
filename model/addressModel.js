@@ -1,21 +1,13 @@
 const mongoose = require('mongoose');
 
-const Schema = mongoose.Schema();
+const Schema = mongoose.Schema;
 
 const addressSchema = new  Schema({
     userId:{
         type:mongoose.Types.ObjectId,
         ref:'User'
     },
-    fristname:{
-        type:String,
-        required:true
-    },
-    lastname:{
-        type:String,
-        required:true
-    },
-    country:{
+        name:{
         type:String,
         required:true
     },
@@ -37,7 +29,7 @@ const addressSchema = new  Schema({
     },
     mobile:{
         type:Number,
-        required
+        required:true
 
     }
 
