@@ -4,6 +4,7 @@ const productModel = require("../model/productModel");
 const path = require("path");
 const multer = require("multer");
 const categoryModel = require("../model/categoryModel");
+const { log } = require("console");
 
 // !--------------multer-------------------------------------------
 const Storage = multer.diskStorage({
@@ -39,8 +40,18 @@ loadProduct = async (req, res) => {
   });
 };
 
-loadAddProduct = (req, res) => {
-  res.render("addProduct");
+loadAddProduct = async (req, res) => {
+  
+try {
+	  categoryModel.find({}).exec((err, category) => {
+        res.render("addProduct",{category});
+      })
+	  
+} catch (error) {
+
+    console.log(error.message);
+	
+}
 };
 
 loadUsers = (req, res) => {
@@ -204,19 +215,26 @@ const inStock = async (req, res) => {
 
 addCategory = async (req, res,next) => {
 
+  const category = await categoryModel.findOne({name: req.body.name});
 
-    const category = new categoryModel({
-        name : req.body.name
-    })
+if (!category) {
+	    const category = new categoryModel({
+	        name : req.body.name
+	    })
+	
+	    await category.save().then(()=>{console.log('category saved successfully')})
+	
+	    next()
+} else {
 
-    await category.save().then(()=>{console.log('category saved successfully')})
+    res.redirect('/admin/category')
+	
+}
 
-    next()
- 
 }
 
 loadCategory = async (req, res) => {
- const newcategory = await categoryModel.find({}).exec((err, category) =>{
+    categoryModel.find({}).exec((err, category) =>{
 
     if(category){
         res.render('category', {category})
@@ -229,14 +247,23 @@ loadCategory = async (req, res) => {
  })
 }
 
+deleteCategory = async (req, res) => {
 
- 
+    // console.log(req.query);
+    
+    await categoryModel.findByIdAndDelete({_id: req.query.id});
+
+    res.redirect('/admin/category');
+
+
+}
 
 
 
 
 
 module.exports = {
+  deleteCategory,
   inStock,
   blockUser,
   loadDashboard,

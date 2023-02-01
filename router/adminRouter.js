@@ -55,6 +55,8 @@ router.get("/stock", adminController.inStock);
 
 router.get('/category', adminController.loadCategory)
 
+router.get('/deleteCategory', adminController.deleteCategory)
+
 // post
 
 router.post("/", adminController.verifyLogin);
