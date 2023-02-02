@@ -40,7 +40,7 @@ route.get("/", userController.loadHome);
 
 route.get("/product", userController.loadProduct);
 
-route.get("/cart", userController.loadCart);
+route.get("/cart",userAuth.isLogout, userController.loadCart);
 
 route.get("/contact", userController.loadContact);
 
@@ -54,11 +54,25 @@ route.get("/logout", userAuth.logout);
 
 route.get("/productDetails", userController.loadProductDetails);
 
-route.get("/address",userController.loadAddress)
+route.get("/checkout",userAuth.isLogout,userController.loadCheckout)
+
+route.get("/addToCart", userAuth.isLogout,userController.addToCart)
+
+route.get('/deleteCart', userController.deleteCart)
+
+route.post('/placeOrder',userController.placeOrder)
+
+route.get('/orderSuccess', userController.loadOrderSuccess)
+
+route.get('/orderSummary', userController.loadOrderSummary)
+
+route.get('/addToWishlist', userController.addToWishlist)
 
 // route.get('/otp',userController.getOtp)
 
 // post methods
+
+route.post ("/addAddress", userController.addAddress)
 
 route.post("/register", userController.registerUser, userController.loadOtp);
 

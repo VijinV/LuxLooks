@@ -1,12 +1,11 @@
-let newOtp;
-const userSchema = require("../model/userModel");
-const produtModel = require("../model/productModel");
-
 const bcrypt = require("bcrypt");
+let newOtp;
 
+const userSchema = require("../model/userModel");
 const message = require("../config/sms");
-
-const addressModel = require("../model/addressModel");
+const productModel = require("../model/productModel");
+const Address = require("../model/addressModel");
+const Order = require("../model/orderModel");
 
 let newUser;
 
@@ -15,19 +14,141 @@ let newUser;
 loadHome = (req, res) => {
   const session = req.session.user_id;
   const login = false;
-  res.render("home", { session, login });
+
+  productModel.find({}).exec((err, product) => {
+    if (product) {
+      res.render("home", { session, product, login });
+    } else {
+      res.render("home", { session, login });
+    }
+  });
+}
+// !================================================================
+const loadCart = async (req, res) => {
+  try {
+    const login = false;
+    userSession = req.session;
+    const userData = await userSchema.findById({ _id: userSession.user_id });
+    const completeUser = await userData.populate("cart.item.productId");
+ 
+    res.render("cart", {
+      login,
+      id:userSession.user_id,
+      cartProducts: completeUser.cart.item,
+      total:completeUser.totalPrice
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
-loadCart = (req, res) => {
-  const session = req.session.user_id;
-  const login = false;
-  res.render("cart", { session, login });
+
+const addToCart = async (req, res, next) => {
+  try {
+
+    const productId = req.query.id;
+    userSession = req.session;
+    const userData = await userSchema.findById({ _id: userSession.user_id });
+    const productData = await productModel.findById({ _id: productId });
+      await userData.addToCart(productData);
+          res.redirect("/shop");
+  } catch (error) {
+    console.log(error.message);
+  }
 };
+
+const deleteCart = async (req, res, next) => {
+  try {
+    const productId = req.query.id;
+    userSession = req.session;
+    const userData = await userSchema.findById({ _id: userSession.user_id });
+    await userData.removefromCart(productId);
+    res.redirect("/cart");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+
+
+
+// !================================================================
+
+
+const addToWishlist = async (req, res) => {
+  try {
+    const productId = req.query.id;
+    userSession = req.session;
+    const userData = await userSchema.findById({ _id: userSession.user_id });
+    const productData = await productModel.findById({ _id: productId });
+    userData.addToWishlist(productData);
+    res.redirect("/shop");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+loadWishlist = async (req, res) => {
+
+
+  try {
+    const userData = await userSchema.findById({ _id: userSession.user_id });
+    const completeUser = await userData.populate("wishlist.item.productId");
+    console.log(completeUser);
+    res.render("wishlist", {
+      isLoggedin,
+      id: userSession.userId,
+      wishlistProducts: completeUser.wishlist,
+    });
+
+    next()
+  } catch (error) {
+
+    console.log(error.message);
+    
+  }
+
+
+
+
+};
+
+
+
+const addCartDeleteWishlist = async (req, res) => {
+  try {
+    userSession = req.session;
+    const productId = req.query.id;
+    const userData = await User.findById({ _id: userSession.userId });
+    const productData = await Product.findById({ _id: productId });
+    const add = await userData.addToCart(productData);
+    if (add) {
+      await userData.removefromWishlist(productId);
+    }
+    res.redirect("/wishlist");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const deleteWishlist = async (req, res) => {
+  try {
+    const productId = req.query.id;
+    userSession = req.session;
+    const userData = await User.findById({ _id: userSession.userId });
+    await userData.removefromWishlist(productId);
+    res.redirect("/wishlist");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+// !================================================================
 
 const loadShop = (req, res) => {
   const session = req.session.user_id;
   const login = false;
-  produtModel.find({}).exec((err, product) => {
+  productModel.find({}).exec((err, product) => {
     if (product) {
       res.render("shop", { session, product, login });
     } else {
@@ -35,7 +156,7 @@ const loadShop = (req, res) => {
     }
   });
 };
-
+ 
 loadProduct = (req, res) => {
   const session = req.session.user_id;
   const login = false;
@@ -63,9 +184,9 @@ loadProductDetails = async (req, res) => {
   try {
     const session = req.session.user_id;
 
-    console.log(req.query.id);
+    // console.log(req.query.id);
 
-    const product = await produtModel.findById({ _id: req.query.id });
+    const product = await productModel.findById({ _id: req.query.id });
 
     res.render("productDetails", { product, session, login });
   } catch (error) {
@@ -135,7 +256,7 @@ const verifyLogin = async (req, res, next) => {
         res.render("login", { message: "Invalid password" });
       }
     } else {
-      res.render("login", { message: "Accout not found" });
+      res.render("login", { message: "Account not found" });
     }
   } catch (error) {
     console.log(error.message);
@@ -160,8 +281,6 @@ const verifyOtp = async (req, res, next) => {
         isAvailable: true,
       });
 
-      console.log(user);
-
       await user.save().then(() => console.log("register successful"));
 
       if (user) {
@@ -177,17 +296,150 @@ const verifyOtp = async (req, res, next) => {
   }
 };
 
-loadAddress = (req,res) => {
+loadCheckout = async (req,res) => {
 
-  res.render('address')
+  Address.find({}).exec((err, address) => {
+
+    res.render('checkout',{add:address})
+
+  })
+
+}
+
+
+addAddress =async (req,res) => {
+try {
+	  const userSession = req.session
+    const addressData = Address({
+      name:req.body.name,
+      userId:userSession.user_id,
+      address:req.body.address,
+      city:req.body.city,
+      state:req.body.state,
+      zip:req.body.zip,
+      mobile:req.body.mobile,
+    })
+
+    await addressData.save().then(()=>console.log('Address saved'))
+      res.render('checkout')
+    
+	
+} catch (error) {
+	console.log(error.message);
+}
+}
+
+placeOrder = async (req, res) => {
+try {
+  userSession = req.session;
+
+
+    // if (userSession.user_id) {
+    //   const userData = await userSchema.findById({ _id: userSession.user_id });
+    //   const completeUser = await userData.populate("cart.item.productId");
+    //   // console.log('CompleteUser: ', completeUser
+
+    //   console.log(completeUser);
+
+    //   const address = await Address.findById({ _id: req.body.address});
+
+    //   if (completeUser.cart.totalPrice > 0) {
+    //     const order = Order({
+    //       userId: userSession.userId,
+    //       payment: req.body.payment,
+    //       name:address.name,
+    //       country: address.country,
+    //       address: address.address,
+    //       city: address.city,
+    //       state: address.state,
+    //       zip: address.zip,
+    //       mobile: address.mobile,
+    //       products: completeUser.cart,
+    //     });
+    //     const orderProductStatus = [];
+    //     for (const key of order.products.item) {
+    //       orderProductStatus.push(0);
+    //     }
+    //     order.productReturned = orderProductStatus;
+
+    //     const orderData = await order.save();
+    //     // console.log(orderData)
+    //     userSession.currentOrder = orderData._id;
+
+    //     req.session.currentOrder = order._id;
+
+    //     const ordern = await Order.findById({ _id: userSession.currentOrder });
+    //     const productDetails = await Product.find({ is_available: 1 });
+    //     for (let i = 0; i < productDetails.length; i++) {
+    //       for (let j = 0; j < ordern.products.item.length; j++) {
+    //         if (
+    //           productDetails[i]._id.equals(ordern.products.item[j].productId)
+    //         ) {
+    //           productDetails[i].sales += ordern.products.item[j].qty;
+    //         }
+    //       }
+    //       productDetails[i].save();
+    //     }
+
+        
+
+        if (req.body.payment == "cod") {
+          res.redirect("/orderSuccess");
+        
+        } else {
+          res.redirect("/checkout");
+        }
+      // } else {
+      //   res.redirect("/shop");
+      // }
+    // } else {
+    //   res.redirect("/login");
+    // }
+  
+} catch (error) {
+  
+}
+
 }
 
 
 
 
 
+
+
+
+
+
+
+
+loadOrderSummary = (req, res) => {
+
+res.render('ordersummary')
+
+};
+
+loadOrderSuccess = (req, res) => {
+
+  res.render('orderSuccess')
+
+}
+
+
+
+
+
+
+
 module.exports = {
-  loadAddress,
+  addToWishlist,
+  addCartDeleteWishlist,
+  deleteWishlist,
+  loadOrderSuccess,
+  loadOrderSummary,
+  placeOrder,
+  addAddress,
+  loadCheckout,
   loadProductDetails,
   loadHome,
   loadContact,
@@ -200,4 +452,6 @@ module.exports = {
   verifyLogin,
   loadOtp,
   verifyOtp,
+  addToCart,
+  deleteCart
 };

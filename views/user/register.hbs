@@ -24,35 +24,39 @@
               <p class="text-white-50 mb-5">{{message}}</p>
 
                 <div class="form-outline form-white mb-4">
-                <input type="text" style="color: #e5e1e1; background: transparent; border:solid #112c43; " id="typeEmailX" class="form-control form-control-lg" name="name" />
+                <input type="text" onkeyup="validateName()" style="color: #e5e1e1; background: transparent; border:solid #112c43; " id="usrname" class="form-control form-control-lg" name="name" />
 
                 <label class="form-label" for="typeEmailX">Name</label>
+                <small style="color: red;" id="nameerror"></small>
               </div>
-
-
               <div class="form-outline form-white mb-4">
-               <input type="email" style="color: #e5e1e1; background: transparent; border:solid #112c43; " id="typeEmailX" class="form-control form-control-lg" name="email" />
+               <input onkeyup="validateEmail()" type="email" style="color: #e5e1e1; background: transparent; border:solid #112c43; " id="email" class="form-control form-control-lg" name="email" />
                 <label class="form-label" for="typeEmailX">Email</label>
+                 <small style="color: red;" id="emialerror"></small>
               </div>
               <div class="form-outline form-white mb-4">
-                <input type="number" style="color: #e5e1e1; background: transparent; border:solid #112c43; " id="typeEmailX" class="form-control form-control-lg" name="mobile" />
+                <input onkeyup="validatePhoneNumber()" type="number" style="color: #e5e1e1; background: transparent; border:solid #112c43; " id="phone" class="form-control form-control-lg" name="mobile" />
                 <label class="form-label" for="typeEmailX">Phone No</label>
+                 <small style="color: red;" id="phoneerror"></small>
               </div>
 
               <div class="form-outline form-white mb-4">
-               <input type="password" style="color: #e5e1e1; background: transparent; border:solid #112c43; " id="typeEmailX" class="form-control form-control-lg" name="password" />
+               <input onkeyup="validatePassword()" type="password" style="color: #e5e1e1; background: transparent; border:solid #112c43; " id="password" class="form-control form-control-lg" name="password" />
                 <label class="form-label" for="typePasswordX">Password</label>
+                 <small style="color: red;" id="passworderror"></small>
               </div>
 
                <div class="form-outline form-white mb-4">
-                <input type="password" style="color: #e5e1e1; background: transparent; border:solid #112c43; " id="typeEmailX" class="form-control form-control-lg" />
-                <label class="form-label" for="typePasswordX">Confirm Password</label>
+                <input onkeyup="validateConfirmPassword()" type="password" style="color: #e5e1e1; background: transparent; border:solid #112c43; " id="typeEmailX" class="form-control form-control-lg" />
+                <label class="form-label" for="confirmpass">Confirm Password</label>
+                 <small style="color: red;" id="confirmpasserror"></small>
               </div>
 
 
               <p class="small mb-5 pb-lg-2"><a class="text-white-50" href="#!">Already have an account ?</a></p>
 
-              <button class="btn btn-outline-light btn-lg px-5" type="submit">Sign up</button>
+              <button onclick="validateSubmit()" class="btn btn-outline-light btn-lg px-5" type="submit">Sign up</button>
+               <small style="color: red;" id="submiterror"></small>
               </form>
               </div>
           </div>

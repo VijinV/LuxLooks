@@ -1,136 +1,132 @@
-const mongoose = require("mongoose");
-
-const ProductModel = require("../model/productModel");
-
-const Schema = mongoose.Schema;
-
-const userSchema = new Schema({
+const mongoose = require('mongoose')
+const Product = require('../model/productModel')
+const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    required: true
   },
   email: {
     type: String,
-    required: true,
-    unique: true,
+    required: true
   },
   mobile: {
-    type: String,
-    required: true,
-    unique: true,
+    type: Number,
+    required: true
   },
   password: {
     type: String,
-    required: true,
+    required: true
+  },
+  password2: {
+    type: String
   },
   isAdmin: {
-    type: Boolean,
-    required: true,
+    type: Number, 
+    // required: true
   },
   isAvailable: {
-    type: Boolean,
-    default: false,
+    type: Number
   },
   cart: {
     item: [
       {
         productId: {
           type: mongoose.Types.ObjectId,
-          ref: "Product",
-          required: true,
+          ref: 'Product',
+          required: true
         },
         qty: {
           type: Number,
-          required: true,
+          required: true
         },
         price: {
-          type: Number,
-          required: true,
-        },
-      },
+          type: Number
+        }
+      }
     ],
     totalPrice: {
       type: Number,
-      required: true,
-    },
+      default: 0
+    }
   },
   wishlist: {
-    item: [
-      {
-        productId: {
-          type: mongoose.Types.ObjectId,
-          ref: "Product",
-          required: true,
-        },
-        price: {
-          type: Number,
-          required: true,
-        },
+    item: [{
+      productId: {
+        type: mongoose.Types.ObjectId,
+        ref: 'products',
+        required: true
       },
-    ],
-  },
-});
+      price: {
+        type: Number
+      }
+    }]
+  }
+})
+
+
+
 
 userSchema.methods.addToCart = function (product) {
-  const cart = this.cart;
+  const cart = this.cart
   const isExisting = cart.item.findIndex((objInItems) => {
     return (
       new String(objInItems.productId).trim() == new String(product._id).trim()
-    );
-  });
+    )
+  })
   if (isExisting >= 0) {
-    cart.item[isExisting].qty += 1;
+    cart.item[isExisting].qty += 1
   } else {
-    cart.item.push({ productId: product._id, qty: 1, price: product.price });
+    cart.item.push({ productId: product._id, qty: 1, price: product.price })
   }
-  cart.totalPrice += product.price;
-  console.log("User in schema:", this);
-  return this.save();
-};
+  cart.totalPrice += product.price
+  console.log('User in schema:', this)
+  return this.save()
+}
+
+
 
 userSchema.methods.removefromCart = async function (productId) {
-  const cart = this.cart;
+  const cart = this.cart
   const isExisting = cart.item.findIndex(
     (objInItems) =>
       new String(objInItems.productId).trim() === new String(productId).trim()
-  );
+  )
   if (isExisting >= 0) {
-    const product = await ProductModel.findById(productId);
-    cart.totalPrice -= product.price * cart.item[isExisting].qty;
-    cart.item.splice(isExisting, 1);
-    console.log("User in schema:", this);
-    return this.save();
+    const prod = await Product.findById(productId)
+    cart.totalPrice -= prod.price * cart.item[isExisting].qty
+    cart.item.splice(isExisting, 1)
+    console.log('User in schema:', this)
+    return this.save()
   }
-};
+}
+
+
 
 userSchema.methods.addToWishlist = function (product) {
-  const wishlist = this.wishlist;
-  const isExisting = wishlist.item.findIndex((objInItems) => {
-    return (
-      new String(objInItems.productId).trim() == new String(product._id).trim()
-    );
-  });
+  const wishlist = this.wishlist
+  const isExisting = wishlist.item.findIndex(objInItems => {
+    return new String(objInItems.productId).trim() == new String(product._id).trim()
+  })
   if (isExisting >= 0) {
   } else {
     wishlist.item.push({
       productId: product._id,
-      price: product.price,
-    });
+      price: product.price
+    })
   }
-  return this.save();
-};
+  return this.save()
+}
+
+
 
 userSchema.methods.removefromWishlist = async function (productId) {
-  const wishlist = this.wishlist;
-  const isExisting = wishlist.item.findIndex(
-    (objInItems) =>
-      new String(objInItems.productId).trim() === new String(productId).trim()
-  );
+  const wishlist = this.wishlist
+  const isExisting = wishlist.item.findIndex(objInItems => new String(objInItems.productId).trim() === new String(productId).trim())
   if (isExisting >= 0) {
-    await ProductModel.findById(productId);
-    wishlist.item.splice(isExisting, 1);
-    return this.save();
+    await Product.findById(productId)
+    wishlist.item.splice(isExisting, 1)
+    return this.save()
   }
-};
+}
 
-module.exports = mongoose.model("Users", userSchema);
+module.exports = mongoose.model('User', userSchema)
