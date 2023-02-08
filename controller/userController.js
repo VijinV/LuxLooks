@@ -82,6 +82,7 @@ const addToWishlist = async (req, res) => {
     userSession = req.session;
     const userData = await userSchema.findById({ _id: userSession.user_id });
     const productData = await productModel.findById({ _id: productId });
+
     userData.addToWishlist(productData);
     res.redirect("/shop");
   } catch (error) {
@@ -93,16 +94,14 @@ loadWishlist = async (req, res) => {
 
 
   try {
+    userSession = req.session
     const userData = await userSchema.findById({ _id: userSession.user_id });
     const completeUser = await userData.populate("wishlist.item.productId");
-    console.log(completeUser);
     res.render("wishlist", {
-      isLoggedin,
-      id: userSession.userId,
-      wishlistProducts: completeUser.wishlist,
+      id: userSession.user_id,
+      wishlistProducts: completeUser.wishlist.item,
     });
 
-    next()
   } catch (error) {
 
     console.log(error.message);
@@ -454,5 +453,6 @@ module.exports = {
   loadOtp,
   verifyOtp,
   addToCart,
-  deleteCart
+  deleteCart,
+  loadWishlist,
 };

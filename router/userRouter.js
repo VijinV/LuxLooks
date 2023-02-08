@@ -68,6 +68,8 @@ route.get('/orderSummary', userController.loadOrderSummary)
 
 route.get('/addToWishlist', userController.addToWishlist)
 
+route.get('/wishlist', userController.loadWishlist)
+
 // route.get('/otp',userController.getOtp)
 
 // post methods

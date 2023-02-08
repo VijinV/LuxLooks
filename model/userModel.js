@@ -54,7 +54,7 @@ const userSchema = new mongoose.Schema({
       {
         productId: {
           type: mongoose.Types.ObjectId,
-          ref: "products",
+          ref: "Product",
           required: true,
         },
         price: {
