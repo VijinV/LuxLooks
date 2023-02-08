@@ -1,5 +1,5 @@
 
-    <div class="container" id="container">
+    {{!-- <div class="container" id="container">
         <div class="form-container sign-up-container">
             <form action="/register" method="post">
                 <h1>Create Account</h1>
@@ -11,36 +11,21 @@
                 <input type="password"name ="c-password" placeholder="Confirm-Password" />
                 <button type="submit">Sign Up</button>
             </form>
-        </div>
+        </div> --}}
         <div class="form-container sign-in-container">
-            <form action="/login" method="post">
-                <h1>Sign in</h1>
+            <form action="/verifyForgetOtp" method="post">
+                <h1>OTP Verification</h1>
               
-                <span>or use your account</span>
 
                 <span>{{message}}</span>
-                <input type="email" name="email" placeholder="Email" />
-                <input type="password" name="password" placeholder="Password" />
-                <a href="/forgetPassword">Forgot your password?</a>
-                <button type="submit">Login</button>
+                <input type="text" name="otp" placeholder="Otp" />
+                <input type="hidden" value={{newOtp}} name="newotp">
+              <input type="hidden" name="id" value={{userData._id}}>
+                <button type="submit">Verify Otp</button>
             </form>
         </div>
-        <div class="overlay-container">
-            <div class="overlay">
-                <div class="overlay-panel overlay-left">
-                    <h1>Hello friend!</h1>
-                    <p>Login to your account</p>
-                    <button class="ghost" id="signIn">Login</button>
-                </div>
-                <div class="overlay-panel overlay-right">
-                    <h1>Welcome Back!</h1>
-                    <p>Dont have an account? <br> Join us now</p>
-                    <button class="ghost" id="signUp">Sign Up</button>
-                </div>
-            </div>
-        </div>
+        
     </div>
-    {{!-- <script src="main.js"></script> --}}
 
 
 <style>
@@ -109,7 +94,9 @@ a {
     display: flex;
     flex-direction: column;
     padding: 0 50px;
-    height: 100%;
+    position: absolute;
+    top: 32%;
+    left: 33%;
     justify-content: center;
     align-items: center;
     text-align: center;
@@ -177,7 +164,6 @@ button.ghost {
 }
 
 .sign-in-container {
-    left: 0;
     width: 50%;
     z-index: 2;
 }
@@ -271,18 +257,3 @@ button.ghost {
     transform: translateX(20%);
 }
 </style>
-
-<script>
-  const signUpButton = document.getElementById('signUp');
-const signInButton = document.getElementById('signIn');
-const container = document.getElementById('container');
-
-signUpButton.addEventListener('click', () => container.classList.add('right-panel-active'));
-
-signInButton.addEventListener('click', () => container.classList.remove('right-panel-active'));
-
-
-//this is a challenge that was posted a while ago and I found a way arround it with somehelp from youtube; This is my code but not my idea.
-</script>
-
-</html>

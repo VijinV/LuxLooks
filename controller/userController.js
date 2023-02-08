@@ -174,10 +174,10 @@ loadLogin = (req, res) => {
   res.render("login", { login });
 };
 
-loadRegister = (req, res) => {
-  const login = true;
-  res.render("register", { login });
-};
+// loadRegister = (req, res) => {
+//   const login = true;
+//   res.render("register", { login });
+// };
 
 loadProductDetails = async (req, res) => {
   const login = false;
@@ -221,14 +221,19 @@ const registerUser = async (req, res, next) => {
 
 loadOtp = async (req, res) => {
   const userData = newUser;
-
+  const login = true
   const mobile = userData.mobile;
 
   newOtp = message.sendMessage(mobile, res);
 
   console.log(newOtp);
+  setTimeout(()=>{
+    newOtp = null;
+  
+  },1)
 
-  res.render("otp", { newOtp, userData });
+  res.render("otp", { newOtp, userData
+      ,login });
 };
 
 const verifyLogin = async (req, res, next) => {
@@ -265,32 +270,38 @@ const verifyLogin = async (req, res, next) => {
 
 const verifyOtp = async (req, res, next) => {
   try {
-    const otp = req.body.newotp;
+    var otp = req.body.newotp;
 
-    console.log(req.body.otp);
 
-    if (otp === req.body.otp) {
-      const password = await bcrypt.hash(req.body.password, 10);
 
-      const user = new userSchema({
-        name: req.body.name,
-        email: req.body.email,
-        mobile: req.body.mobile,
-        password: password,
-        isAdmin: false,
-        isAvailable: true,
-      });
+console.log(otp);
 
-      await user.save().then(() => console.log("register successful"));
-
-      if (user) {
-        res.render("login");
+      if (otp === req.body.otp) {
+        const password = await bcrypt.hash(req.body.password, 10);
+  
+        const user = new userSchema({
+          name: req.body.name,
+          email: req.body.email,
+          mobile: req.body.mobile,
+          password: password,
+          isAdmin: false,
+          isAvailable: true,
+        });
+  
+        await user.save().then(() => console.log("register successful"));
+  
+        if (user) {
+          res.render("login",{login:true});
+        } else {
+          res.render("otp", { message: "invalid otp" });
+        }
       } else {
-        res.render("otp", { message: "invalid otp" });
+        console.log("otp not match");
       }
-    } else {
-      console.log("otp not match");
-    }
+
+    
+
+    
   } catch (error) {
     console.log(error.message);
   }
@@ -305,6 +316,7 @@ loadCheckout = async (req,res) => {
   })
 
 }
+
 
 
 addAddress =async (req,res) => {
@@ -403,16 +415,6 @@ try {
 }
 
 
-
-
-
-
-
-
-
-
-
-
 loadOrderSummary = (req, res) => {
 
 res.render('ordersummary')
@@ -426,12 +428,105 @@ loadOrderSuccess = (req, res) => {
 }
 
 
+const loadForgetPassword = (req, res) => {
+  res.render('forgetpassword',{login:true})
+}
+
+const forgetPassword = async (req, res) => {
+  try {
+
+    const mobile = req.body.mobile
+    const user = await userSchema.findOne({ mobile: mobile})
+   if (user) {
+     newOtp = message.sendMessage(mobile,res)
+     console.log('Forget tp',newOtp);   
+     res.render('forgetOtp',{newOtp,userData:user,login:true,})
+   } else {
+    res.render('forgetpassword',{message:"No user found"})
+   }
+
+    
+  } catch (error) {
+
+    console.log(error.message);
+    
+  }
+}
+
+const verifyForgetPassword = (req, res) => {
+    
+   try {
+
+     const otp = req.body.otp
+     const newOtp = req.body.newotp
+
+     const id = req.body.id
+
+     if (otp == newOtp) {
+
+      res.render('changePassword',{id,login:true})
+      
+     } else {
+
+      res.render('forgetOtp',{id:id,login:true,message:'Invalid OTP'})
+      
+     }
+    
+   } catch (error) {
+    
+   }
+}
+
+
+const changePassword = async (req, res) =>{
+
+  const id = req.body.id;
+  console.log(id);
+
+  const currentPassword = req.body.currentPassword;
+
+  console.log(currentPassword);
+
+  const userData = await userSchema.findById({_id:id})
+
+  console.log(userData);
+
+  const passwordMatch =await bcrypt.compare(req.body.currentPassword,userData.password)
+
+  console.log(passwordMatch);
+
+  if(passwordMatch){
+ 
+    const newPass = await bcrypt.hash(req.body.password,1) 
+    const user = await userSchema.findByIdAndUpdate({_id:id}, {$set:{
+
+      password:newPass
+
+
+    }}).then(()=>{
+      res.render('login',{login:true,message:'Password Changed successfully'})
+    })
+
+  }else{
+    console.log('not updated');
+  }
+ 
+}
+
+
+
+
+
 
 
 
 
 
 module.exports = {
+  changePassword,
+  verifyForgetPassword,
+  forgetPassword,
+  loadForgetPassword,
   addToWishlist,
   addCartDeleteWishlist,
   deleteWishlist,
@@ -447,7 +542,7 @@ module.exports = {
   loadCart,
   loadShop,
   loadLogin,
-  loadRegister,
+  // loadRegister,
   registerUser,
   verifyLogin,
   loadOtp,

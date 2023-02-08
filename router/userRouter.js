@@ -48,7 +48,7 @@ route.get("/shop", userController.loadShop);
 
 route.get("/login", userAuth.isLogin, userController.loadLogin);
 
-route.get("/register", userAuth.isLogin, userController.loadRegister);
+// route.get("/register", userAuth.isLogin, userController.loadRegister);
 
 route.get("/logout", userAuth.logout);
 
@@ -70,9 +70,17 @@ route.get('/addToWishlist', userController.addToWishlist)
 
 route.get('/wishlist', userController.loadWishlist)
 
+route.get('/forgetPassword', userController.loadForgetPassword)
+
 // route.get('/otp',userController.getOtp)
 
 // post methods
+
+route.post('/forgetPassword', userController.forgetPassword)
+
+route.post('/verifyForgetOtp',userController.verifyForgetPassword)
+
+route.post('/changePassword', userController.changePassword)
 
 route.post ("/addAddress", userController.addAddress)
 
