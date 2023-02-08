@@ -9,7 +9,6 @@ const Order = require("../model/orderModel");
 
 let newUser;
 
-// page rendering functions
 
 loadHome = (req, res) => {
   const session = req.session.user_id;
@@ -30,12 +29,12 @@ const loadCart = async (req, res) => {
     userSession = req.session;
     const userData = await userSchema.findById({ _id: userSession.user_id });
     const completeUser = await userData.populate("cart.item.productId");
- 
+
     res.render("cart", {
       login,
       id:userSession.user_id,
       cartProducts: completeUser.cart.item,
-      total:completeUser.totalPrice
+      total:completeUser.cart.totalPrice
     });
   } catch (error) {
     console.log(error);
@@ -61,6 +60,7 @@ const deleteCart = async (req, res, next) => {
   try {
     const productId = req.query.id;
     userSession = req.session;
+
     const userData = await userSchema.findById({ _id: userSession.user_id });
     await userData.removefromCart(productId);
     res.redirect("/cart");
@@ -78,6 +78,7 @@ const deleteCart = async (req, res, next) => {
 const addToWishlist = async (req, res) => {
   try {
     const productId = req.query.id;
+    console.log(pro);
     userSession = req.session;
     const userData = await userSchema.findById({ _id: userSession.user_id });
     const productData = await productModel.findById({ _id: productId });

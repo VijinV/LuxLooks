@@ -248,8 +248,6 @@ loadCategory = async (req, res) => {
 }
 
 deleteCategory = async (req, res) => {
-
-    // console.log(req.query);
     
     await categoryModel.findByIdAndDelete({_id: req.query.id});
 
