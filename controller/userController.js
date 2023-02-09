@@ -6,6 +6,9 @@ const message = require("../config/sms");
 const productModel = require("../model/productModel");
 const Address = require("../model/addressModel");
 const Order = require("../model/orderModel");
+const addressModel = require("../model/addressModel");
+const userModel = require("../model/userModel");
+const orderModel = require("../model/orderModel");
 
 let newUser;
 
@@ -271,9 +274,6 @@ const verifyLogin = async (req, res, next) => {
 const verifyOtp = async (req, res, next) => {
   try {
     var otp = req.body.newotp;
-
-
-
 console.log(otp);
 
       if (otp === req.body.otp) {
@@ -309,17 +309,20 @@ console.log(otp);
 
 loadCheckout = async (req,res) => {
 
-  Address.find({}).exec((err, address) => {
+  const userId = req.session.user_id;
 
-    res.render('checkout',{add:address})
+  const user = await userSchema.findById({_id: userId})
 
-  })
+  const completeUser = await user.populate("cart.item.productId");
+
+  const address = await addressModel.find({userId:userId})
+  res.render('checkout',{add:address, totalPrice:completeUser.cart.totalPrice})
 
 }
 
 
 
-addAddress =async (req,res) => {
+const addAddress =async (req,res) => {
 try {
 	  const userSession = req.session
     const addressData = Address({
@@ -333,85 +336,12 @@ try {
     })
 
     await addressData.save().then(()=>console.log('Address saved'))
-      res.render('checkout')
+      res.redirect('/checkout')
     
 	
 } catch (error) {
 	console.log(error.message);
 }
-}
-
-placeOrder = async (req, res) => {
-try {
-  userSession = req.session;
-
-
-    // if (userSession.user_id) {
-    //   const userData = await userSchema.findById({ _id: userSession.user_id });
-    //   const completeUser = await userData.populate("cart.item.productId");
-    //   // console.log('CompleteUser: ', completeUser
-
-    //   console.log(completeUser);
-
-    //   const address = await Address.findById({ _id: req.body.address});
-
-    //   if (completeUser.cart.totalPrice > 0) {
-    //     const order = Order({
-    //       userId: userSession.userId,
-    //       payment: req.body.payment,
-    //       name:address.name,
-    //       country: address.country,
-    //       address: address.address,
-    //       city: address.city,
-    //       state: address.state,
-    //       zip: address.zip,
-    //       mobile: address.mobile,
-    //       products: completeUser.cart,
-    //     });
-    //     const orderProductStatus = [];
-    //     for (const key of order.products.item) {
-    //       orderProductStatus.push(0);
-    //     }
-    //     order.productReturned = orderProductStatus;
-
-    //     const orderData = await order.save();
-    //     // console.log(orderData)
-    //     userSession.currentOrder = orderData._id;
-
-    //     req.session.currentOrder = order._id;
-
-    //     const ordern = await Order.findById({ _id: userSession.currentOrder });
-    //     const productDetails = await Product.find({ is_available: 1 });
-    //     for (let i = 0; i < productDetails.length; i++) {
-    //       for (let j = 0; j < ordern.products.item.length; j++) {
-    //         if (
-    //           productDetails[i]._id.equals(ordern.products.item[j].productId)
-    //         ) {
-    //           productDetails[i].sales += ordern.products.item[j].qty;
-    //         }
-    //       }
-    //       productDetails[i].save();
-    //     }
-
-        
-
-        if (req.body.payment == "cod") {
-          res.redirect("/orderSuccess");
-        
-        } else {
-          res.redirect("/checkout");
-        }
-      // } else {
-      //   res.redirect("/shop");
-      // }
-    // } else {
-    //   res.redirect("/login");
-    // }
-  
-} catch (error) {
-  
-}
-
 }
 
 
@@ -513,7 +443,151 @@ const changePassword = async (req, res) =>{
  
 }
 
+const loadEditAddress = async (req, res) => {
 
+  const addressId = req.query.id
+
+  console.log(addressId);
+
+  const address =await  Address.findById({_id: addressId}).exec((err,address)=>{
+    console.log(address);
+
+    res.render('editaddress', {address,addressId})
+  })
+
+ 
+
+
+}
+
+
+const editAddress = async (req, res) => {
+
+  const addressId = req.body.id
+
+  console.log(addressId);
+
+   await Address.findByIdAndUpdate({_id: addressId},{$set:{
+    name: req.body.name,
+    address: req.body.address,
+    city: req.body.city,
+    state: req.body.state,
+    zip: req.body.zip,
+    mobile: req.body.mobile,
+  }}).then(()=>console.log('address updated'))
+
+  res.redirect('/checkout')
+
+}
+
+const deleteAddress = async  (req,res) => {
+   
+
+  const  id = req.query.id
+
+  await Address.findByIdAndDelete({_id: id}).then(()=>console.log('address deleted'))
+
+  res.redirect('/checkout')
+
+
+}
+
+
+const placeOrder = async (req, res) => {
+  try {
+    userSession = req.session;
+
+    const addressId = req.body.addressId;
+
+    console.log('addressId ',addressId);
+
+
+    const userData = await userModel.findById({_id:userSession.user_id})
+
+    const completeUser = await userData.populate("cart.item.productId");
+
+    if(completeUser){
+
+
+      const address = await Address.findById({_id:addressId})
+
+      console.log('address',address);
+
+     if(req.body.payment == 'cod'){
+      if(address){
+
+        const order = await orderModel({
+
+          userId : userSession.user_id,
+
+          payment:req.body.payment,
+
+          name:address.name,
+
+          address: address.address,
+          city :address.city,
+          state :address.state,
+          zip :address.zip,
+          mobile :address.mobile,
+          products:completeUser.cart,
+        })
+
+        order.save().then(()=>console.log('order saved'))
+
+        console.log('order saved');
+
+
+        res.render('orderSuccess')
+
+
+      }else{
+
+        console.log('order not saved');
+
+      }
+     }else{
+      console.log('payment is ',req.body,payment);
+     }
+
+
+    }else{
+
+
+
+    }
+  
+  } catch (error) {
+    
+  }
+  
+  } 
+
+  const loadOrderDetails = async (req, res) => {
+
+    const userId = req.session.user_id
+
+    const user = await userModel.findById({_id: userId})
+
+    const orderDetails = await orderModel.find({userId: userId})
+
+    const order = await orderDetails.populate("products.item.productId" )
+
+    // const completeUser = await userData.populate("cart.item.productId");
+
+    console.log('orderDetails',order);
+
+
+
+
+    res.render('orderDetails')
+  }
+
+
+  const cancelOrder = (req, res) => {
+
+
+  }
+  
 
 
 
@@ -523,6 +597,10 @@ const changePassword = async (req, res) =>{
 
 
 module.exports = {
+  cancelOrder,
+  loadOrderDetails,
+  deleteAddress,
+  loadEditAddress,
   changePassword,
   verifyForgetPassword,
   forgetPassword,
@@ -534,6 +612,7 @@ module.exports = {
   loadOrderSummary,
   placeOrder,
   addAddress,
+  editAddress,
   loadCheckout,
   loadProductDetails,
   loadHome,
@@ -550,4 +629,5 @@ module.exports = {
   addToCart,
   deleteCart,
   loadWishlist,
+  addAddress
 };

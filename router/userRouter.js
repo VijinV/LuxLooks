@@ -72,10 +72,18 @@ route.get('/wishlist', userController.loadWishlist)
 
 route.get('/forgetPassword', userController.loadForgetPassword)
 
+route.get('/editAddress', userController.loadEditAddress)
+
+route.get('/deleteAddress', userController.deleteAddress)
+
+route.get('/OrderDetails', userController.loadOrderDetails)
+
+// route.get('editAddress', userController.editAddress)
+
 // route.get('/otp',userController.getOtp)
 
 // post methods
-
+route.post('/editAddress', userController.editAddress)
 route.post('/forgetPassword', userController.forgetPassword)
 
 route.post('/verifyForgetOtp',userController.verifyForgetPassword)

@@ -16,11 +16,6 @@ const orderSchema = new mongoose.Schema({
     type: String,
     required: true
   },
- 
-  country: {
-    type: String,
-    required: true
-  },
   address: {
     type: String,
     required: true
@@ -78,22 +73,5 @@ const orderSchema = new mongoose.Schema({
 
 })
 
-orderSchema.methods.addToOrders = function (product) {
-  const products = this.products
-  const isExisting = products.item.findIndex(objInItems => {
-    return new String(objInItems.productId).trim() == new String(product._id).trim()
-  })
-  if (isExisting >= 0) {
-    cart.products[isExisting].qty += 1
-  } else {
-    cart.products.push({
-      productId: product._id,
-      qty: 1
-    })
-  }
-  cart.totalPrice += product.price
-  console.log('User in schema:', this)
-  return this.save()
-}
 
 module.exports = mongoose.model('Orders', orderSchema)
