@@ -1,13 +1,13 @@
 <!-- breadcrumb -->
 	<div class="container">
 		<div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
-			<a href="#" class="stext-109 cl8 hov-cl1 trans-04">
+			<a href="/" class="stext-109 cl8 hov-cl1 trans-04">
 				Home
 				<i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
 			</a>
 
 			<span class="stext-109 cl4">
-				Shoping Cart
+				Wishlist
 			</span>
 		</div>
 	</div>
@@ -29,22 +29,23 @@
 									<th class="column-5"></th>
 								</tr>
 
-								{{#each wishlistProducts}}
+								{{#each products}}
 
 								<tr class="table_row">
 									<td class="column-1">
 										<div class="how-itemcart1">
-											<img src="admin/assets/img/products/{{wishlistProducts.image}}" alt="IMG">
+											<img src="admin/assets/img/products/{{productId.image}}" alt="IMG">
 										</div>
 									</td>
-									<td class="column-2">{{wishlistProducts.name}}</td>
-									<td class="column-3">{{wishlistProducts.price}}</td>
+									<td class="column-2">{{productId.name}}</td>
+									<td class="column-3">{{productId.price}}</td>
 									
 							<td class="column-5"><button class="btn btn-secondary"><a style="text-decoration: none; color: #ffff;" href="/addCartDeleteWishlist?id={{productId._id}}">Add To Cart</a></button></td>
 
 
-							<td class="column-5"><button class="btn btn-danger"><a style="text-decoration: none; color: #ffff;" href="/deleteCart?id={{productId._id}}">Delete</a></button></td>
-														{{!-- <td class="column-5"><input type="text" value={{productId._id}}></td> --}}
+							<td class="column-5"><button class="btn btn-danger"><a style="text-decoration: none; color: #ffff;" href="/deleteWishlist?id={{productId._id}}">Delete</a></button></td>
+
+
 
 								</tr>
 
@@ -54,19 +55,7 @@
 							</table>
 						</div>
 
-						<div class="flex-w flex-sb-m bor15 p-t-18 p-b-15 p-lr-40 p-lr-15-sm">
-							<div class="flex-w flex-m m-r-20 m-tb-5">
-								<input class="stext-104 cl2 plh4 size-117 bor13 p-lr-20 m-r-10 m-tb-5" type="text" name="coupon" placeholder="Coupon Code">
-									
-								<div class="flex-c-m stext-101 cl2 size-118 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-5">
-									Apply coupon
-								</div>
-							</div>
-
-							<div class="flex-c-m stext-101 cl2 size-119 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-10">
-								Update Cart
-							</div>
-						</div>
+						
 					</div>
 				</div>
 

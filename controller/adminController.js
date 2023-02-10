@@ -79,7 +79,7 @@ const verifyLogin = async (req, res) => {
 
     if (userData) {
       const passwordMatch = await bcrypt.compare(
-        req.body.password,
+        req.body.password, 
         userData.password
       );
 

@@ -63,8 +63,8 @@ const orderSchema = new mongoose.Schema({
   },
 
   status: {
-    type: String,
-    default: 'Attempted'
+    type: Boolean,
+    default: true
   }
   , 
   productReturned: [{

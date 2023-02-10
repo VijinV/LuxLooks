@@ -15,7 +15,7 @@ const isLogout = (req, res, next) => {
     if (req.session.user_id) {
       next();
     } else {
-      res.render("login");
+      res.render("login",{login:true,});
     }
   } catch (error) {
     console.log(error.message);

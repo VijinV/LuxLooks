@@ -8,9 +8,7 @@ const secret = otplib.authenticator.generateSecret();
 const token = otplib.authenticator.generate(secret);
 
 
-
 const sendMessage = function (mobile, res, next) {
-//  let randomOTP = Math.floor(Math.random() * 10000);
   var options = {
     authorization :process.env.SMS_API,
     message: `your OTP verification code is ${token}`,

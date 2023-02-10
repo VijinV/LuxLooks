@@ -12,7 +12,6 @@
 		</div>
 	</div>
 		
-
 	<!-- Shoping Cart -->
 	<form class="bg0 p-t-75 p-b-85">
 		<div class="container">
@@ -29,7 +28,7 @@
 									<th class="column-5"></th>
 								</tr>
 
-								{{#each cartProducts}}
+								{{#each order}}
 
 								<tr class="table_row">
 									<td class="column-1">
@@ -40,20 +39,18 @@
 									<td class="column-2">{{productId.name}}</td>
 									<td class="column-3">{{productId.price}}</td>
 									<td class="column-4">
-										<div class="wrap-num-product flex-w m-l-auto m-r-0">
-											<div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
-												<i class="fs-16 zmdi zmdi-minus"></i>
-											</div>
 
-											<input class="mtext-104 cl3 txt-center num-product" type="text" name="num-product1" value={{qty}}>
+										{{payment}}
 
-											<div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
-												<i class="fs-16 zmdi zmdi-plus"></i>
-											</div>
-										</div>
+										hi
+										
 									</td>
 
-							<td class="column-5"><button class="btn btn-danger"><a style="text-decoration: none; color: #ffff;" href="/deleteCart?id={{productId._id}}">Delete</a></button></td>
+									<td>
+										{{time}}
+									</td>
+
+							<td class="column-5"><button class="btn btn-danger"><a style="text-decoration: none; color: #ffff;" href="/deleteCart?id={{productId._id}}">Cancel</a></button></td>
 														{{!-- <td class="column-5"><input type="text" value={{productId._id}}></td> --}}
 
 								</tr>
@@ -166,4 +163,8 @@
 				</div> --}}
 			</div>
 		</div>
-	</form>
+	</form> 
+
+
+
+	

@@ -78,8 +78,16 @@ route.get('/deleteAddress', userController.deleteAddress)
 
 route.get('/OrderDetails', userController.loadOrderDetails)
 
-// route.get('editAddress', userController.editAddress)
+route.get('/deleteWishlist',userController.deleteWishlist)
 
+route.get('/addCartDeleteWishlist',userController.addCartDeleteWishlist)
+
+route.get('/userProfile',userController.loadUserProfile)
+
+ 
+
+// route.get('editAddress', userController.editAddress)
+  
 // route.get('/otp',userController.getOtp)
 
 // post methods

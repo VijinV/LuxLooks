@@ -12,7 +12,6 @@ const orderModel = require("../model/orderModel");
 
 let newUser;
 
-
 loadHome = (req, res) => {
   const session = req.session.user_id;
   const login = false;
@@ -24,7 +23,7 @@ loadHome = (req, res) => {
       res.render("home", { session, login });
     }
   });
-}
+};
 // !================================================================
 const loadCart = async (req, res) => {
   try {
@@ -35,25 +34,23 @@ const loadCart = async (req, res) => {
 
     res.render("cart", {
       login,
-      id:userSession.user_id,
+      id: userSession.user_id,
       cartProducts: completeUser.cart.item,
-      total:completeUser.cart.totalPrice
+      total: completeUser.cart.totalPrice,
     });
   } catch (error) {
     console.log(error);
   }
 };
 
-
 const addToCart = async (req, res, next) => {
   try {
-
     const productId = req.query.id;
     userSession = req.session;
     const userData = await userSchema.findById({ _id: userSession.user_id });
     const productData = await productModel.findById({ _id: productId });
-      await userData.addToCart(productData);
-          res.redirect("/shop");
+    await userData.addToCart(productData);
+    res.redirect("/shop");
   } catch (error) {
     console.log(error.message);
   }
@@ -72,16 +69,12 @@ const deleteCart = async (req, res, next) => {
   }
 };
 
-
-
-
 // !================================================================
-
 
 const addToWishlist = async (req, res) => {
   try {
     const productId = req.query.id;
-    console.log(pro);
+    console.log(product);
     userSession = req.session;
     const userData = await userSchema.findById({ _id: userSession.user_id });
     const productData = await productModel.findById({ _id: productId });
@@ -94,36 +87,26 @@ const addToWishlist = async (req, res) => {
 };
 
 loadWishlist = async (req, res) => {
-
-
   try {
-    userSession = req.session
+    userSession = req.session;
     const userData = await userSchema.findById({ _id: userSession.user_id });
     const completeUser = await userData.populate("wishlist.item.productId");
+
     res.render("wishlist", {
       id: userSession.user_id,
-      wishlistProducts: completeUser.wishlist.item,
+      products: completeUser.wishlist.item,
     });
-
   } catch (error) {
-
     console.log(error.message);
-    
   }
-
-
-
-
 };
-
-
 
 const addCartDeleteWishlist = async (req, res) => {
   try {
     userSession = req.session;
     const productId = req.query.id;
-    const userData = await User.findById({ _id: userSession.userId });
-    const productData = await Product.findById({ _id: productId });
+    const userData = await userModel.findById({ _id: userSession.user_id });
+    const productData = await productModel.findById({ _id: productId });
     const add = await userData.addToCart(productData);
     if (add) {
       await userData.removefromWishlist(productId);
@@ -138,7 +121,7 @@ const deleteWishlist = async (req, res) => {
   try {
     const productId = req.query.id;
     userSession = req.session;
-    const userData = await User.findById({ _id: userSession.userId });
+    const userData = await userModel.findById({ _id: userSession.user_id });
     await userData.removefromWishlist(productId);
     res.redirect("/wishlist");
   } catch (error) {
@@ -159,7 +142,7 @@ const loadShop = (req, res) => {
     }
   });
 };
- 
+
 loadProduct = (req, res) => {
   const session = req.session.user_id;
   const login = false;
@@ -224,19 +207,17 @@ const registerUser = async (req, res, next) => {
 
 loadOtp = async (req, res) => {
   const userData = newUser;
-  const login = true
+  const login = true;
   const mobile = userData.mobile;
 
   newOtp = message.sendMessage(mobile, res);
 
   console.log(newOtp);
-  setTimeout(()=>{
+  setTimeout(() => {
     newOtp = null;
-  
-  },1)
+  }, 1);
 
-  res.render("otp", { newOtp, userData
-      ,login });
+  res.render("otp", { newOtp, userData, login });
 };
 
 const verifyLogin = async (req, res, next) => {
@@ -256,15 +237,15 @@ const verifyLogin = async (req, res, next) => {
           req.session.user_name = userData.name;
           res.redirect("/");
         } else {
-          res.render("login", {
+          res.render("login", {login:true,
             message: "You are Blocked by the administrator",
           });
         }
       } else {
-        res.render("login", { message: "Invalid password" });
+        res.render("login", {login:true, message: "Invalid password" });
       }
     } else {
-      res.render("login", { message: "Account not found" });
+      res.render("login", { login:true,message: "Account not found" });
     }
   } catch (error) {
     console.log(error.message);
@@ -274,142 +255,113 @@ const verifyLogin = async (req, res, next) => {
 const verifyOtp = async (req, res, next) => {
   try {
     var otp = req.body.newotp;
-console.log(otp);
+    console.log(otp);
 
-      if (otp === req.body.otp) {
-        const password = await bcrypt.hash(req.body.password, 10);
-  
-        const user = new userSchema({
-          name: req.body.name,
-          email: req.body.email,
-          mobile: req.body.mobile,
-          password: password,
-          isAdmin: false,
-          isAvailable: true,
-        });
-  
-        await user.save().then(() => console.log("register successful"));
-  
-        if (user) {
-          res.render("login",{login:true});
-        } else {
-          res.render("otp", { message: "invalid otp" });
-        }
+    if (otp === req.body.otp) {
+      const password = await bcrypt.hash(req.body.password, 10);
+
+      const user = new userSchema({
+        name: req.body.name,
+        email: req.body.email,
+        mobile: req.body.mobile,
+        password: password,
+        isAdmin: false,
+        isAvailable: true,
+      });
+
+      await user.save().then(() => console.log("register successful"));
+
+      if (user) {
+        res.render("login", { login: true });
       } else {
-        console.log("otp not match");
+        res.render("otp", { message: "invalid otp" });
       }
-
-    
-
-    
+    } else {
+      console.log("otp not match");
+    }
   } catch (error) {
     console.log(error.message);
   }
 };
 
-loadCheckout = async (req,res) => {
-
+loadCheckout = async (req, res) => {
   const userId = req.session.user_id;
 
-  const user = await userSchema.findById({_id: userId})
+  const user = await userSchema.findById({ _id: userId });
 
   const completeUser = await user.populate("cart.item.productId");
 
-  const address = await addressModel.find({userId:userId})
-  res.render('checkout',{add:address, totalPrice:completeUser.cart.totalPrice})
+  const address = await addressModel.find({ userId: userId });
+  res.render("checkout", {
+    add: address,
+    totalPrice: completeUser.cart.totalPrice,
+  });
+};
 
-}
-
-
-
-const addAddress =async (req,res) => {
-try {
-	  const userSession = req.session
+const addAddress = async (req, res) => {
+  try {
+    const userSession = req.session;
     const addressData = Address({
-      name:req.body.name,
-      userId:userSession.user_id,
-      address:req.body.address,
-      city:req.body.city,
-      state:req.body.state,
-      zip:req.body.zip,
-      mobile:req.body.mobile,
-    })
+      name: req.body.name,
+      userId: userSession.user_id,
+      address: req.body.address,
+      city: req.body.city,
+      state: req.body.state,
+      zip: req.body.zip,
+      mobile: req.body.mobile,
+    });
 
-    await addressData.save().then(()=>console.log('Address saved'))
-      res.redirect('/checkout')
-    
-	
-} catch (error) {
-	console.log(error.message);
-}
-}
-
+    await addressData.save().then(() => console.log("Address saved"));
+    res.redirect("/checkout");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
 loadOrderSummary = (req, res) => {
-
-res.render('ordersummary')
-
+  res.render("ordersummary");
 };
 
 loadOrderSuccess = (req, res) => {
-
-  res.render('orderSuccess')
-
-}
-
+  res.render("orderSuccess");
+};
 
 const loadForgetPassword = (req, res) => {
-  res.render('forgetpassword',{login:true})
-}
+  res.render("forgetpassword", { login: true });
+};
 
 const forgetPassword = async (req, res) => {
   try {
-
-    const mobile = req.body.mobile
-    const user = await userSchema.findOne({ mobile: mobile})
-   if (user) {
-     newOtp = message.sendMessage(mobile,res)
-     console.log('Forget tp',newOtp);   
-     res.render('forgetOtp',{newOtp,userData:user,login:true,})
-   } else {
-    res.render('forgetpassword',{message:"No user found"})
-   }
-
-    
+    const mobile = req.body.mobile;
+    const user = await userSchema.findOne({ mobile: mobile });
+    if (user) {
+      newOtp = message.sendMessage(mobile, res);
+      console.log("Forget tp", newOtp);
+      res.render("forgetOtp", { newOtp, userData: user, login: true });
+    } else {
+      res.render("forgetpassword", { message: "No user found" });
+    }
   } catch (error) {
-
     console.log(error.message);
-    
   }
-}
+};
 
 const verifyForgetPassword = (req, res) => {
-    
-   try {
+  try {
+    const otp = req.body.otp;
+    const newOtp = req.body.newotp;
 
-     const otp = req.body.otp
-     const newOtp = req.body.newotp
+    const id = req.body.id;
 
-     const id = req.body.id
+    if (otp == newOtp) {
+      res.render("changePassword", { id, login: true });
+    } else {
+      res.render("forgetOtp", { id: id, login: true, message: "Invalid OTP" });
+    }
+  } catch (error) {}
+};
 
-     if (otp == newOtp) {
-
-      res.render('changePassword',{id,login:true})
-      
-     } else {
-
-      res.render('forgetOtp',{id:id,login:true,message:'Invalid OTP'})
-      
-     }
-    
-   } catch (error) {
-    
-   }
-}
-
-
-const changePassword = async (req, res) =>{
-
+const changePassword = async (req, res) => {
   const id = req.body.id;
   console.log(id);
 
@@ -417,81 +369,84 @@ const changePassword = async (req, res) =>{
 
   console.log(currentPassword);
 
-  const userData = await userSchema.findById({_id:id})
+  const userData = await userSchema.findById({ _id: id });
 
   console.log(userData);
 
-  const passwordMatch =await bcrypt.compare(req.body.currentPassword,userData.password)
+  const passwordMatch = await bcrypt.compare(
+    req.body.currentPassword,
+    userData.password
+  );
 
   console.log(passwordMatch);
 
-  if(passwordMatch){
- 
-    const newPass = await bcrypt.hash(req.body.password,1) 
-    const user = await userSchema.findByIdAndUpdate({_id:id}, {$set:{
-
-      password:newPass
-
-
-    }}).then(()=>{
-      res.render('login',{login:true,message:'Password Changed successfully'})
-    })
-
-  }else{
-    console.log('not updated');
+  if (passwordMatch) {
+    const newPass = await bcrypt.hash(req.body.password, 1);
+    const user = await userSchema
+      .findByIdAndUpdate(
+        { _id: id },
+        {
+          $set: {
+            password: newPass,
+          },
+        }
+      )
+      .then(() => {
+        res.render("login", {
+          login: true,
+          message: "Password Changed successfully",
+        });
+      });
+  } else {
+    console.log("not updated");
   }
- 
-}
+};
 
 const loadEditAddress = async (req, res) => {
-
-  const addressId = req.query.id
+  const addressId = req.query.id;
 
   console.log(addressId);
 
-  const address =await  Address.findById({_id: addressId}).exec((err,address)=>{
-    console.log(address);
+  const address = await Address.findById({ _id: addressId }).exec(
+    (err, address) => {
+      console.log(address);
 
-    res.render('editaddress', {address,addressId})
-  })
-
- 
-
-
-}
-
+      res.render("editaddress", { address, addressId });
+    }
+  );
+};
 
 const editAddress = async (req, res) => {
-
-  const addressId = req.body.id
+  const addressId = req.body.id;
 
   console.log(addressId);
 
-   await Address.findByIdAndUpdate({_id: addressId},{$set:{
-    name: req.body.name,
-    address: req.body.address,
-    city: req.body.city,
-    state: req.body.state,
-    zip: req.body.zip,
-    mobile: req.body.mobile,
-  }}).then(()=>console.log('address updated'))
+  await Address.findByIdAndUpdate(
+    { _id: addressId },
+    {
+      $set: {
+        name: req.body.name,
+        address: req.body.address,
+        city: req.body.city,
+        state: req.body.state,
+        zip: req.body.zip,
+        mobile: req.body.mobile,
+      },
+    }
+  ).then(() => console.log("address updated"));
 
-  res.redirect('/checkout')
+  res.redirect("/checkout");
+};
 
-}
+const deleteAddress = async (req, res) => {
+  const id = req.query.id;
 
-const deleteAddress = async  (req,res) => {
-   
+  await Address.findByIdAndDelete({ _id: id }).then(() =>
+    console.log("address deleted")
+  );
 
-  const  id = req.query.id
-
-  await Address.findByIdAndDelete({_id: id}).then(()=>console.log('address deleted'))
-
-  res.redirect('/checkout')
-
-
-}
-
+  res.redirect("/checkout");
+};
 
 const placeOrder = async (req, res) => {
   try {
@@ -499,104 +454,99 @@ const placeOrder = async (req, res) => {
 
     const addressId = req.body.addressId;
 
-    console.log('addressId ',addressId);
+    console.log("addressId ", addressId);
 
-
-    const userData = await userModel.findById({_id:userSession.user_id})
+    const userData = await userModel.findById({ _id: userSession.user_id });
 
     const completeUser = await userData.populate("cart.item.productId");
 
-    if(completeUser){
+    if (completeUser) {
+      const address = await Address.findById({ _id: addressId });
 
+      console.log("address", address);
 
-      const address = await Address.findById({_id:addressId})
+      if (req.body.payment == "cod") {
+        if (address) {
+          const order = await orderModel({
+            userId: userSession.user_id,
 
-      console.log('address',address);
+            payment: req.body.payment,
 
-     if(req.body.payment == 'cod'){
-      if(address){
+            name: address.name,
 
-        const order = await orderModel({
+            address: address.address,
+            city: address.city,
+            state: address.state,
+            zip: address.zip,
+            mobile: address.mobile,
+            products: completeUser.cart,
+          });
 
-          userId : userSession.user_id,
+          order.save().then(() => console.log("order saved"));
 
-          payment:req.body.payment,
+          console.log("order saved");
 
-          name:address.name,
-
-          address: address.address,
-          city :address.city,
-          state :address.state,
-          zip :address.zip,
-          mobile :address.mobile,
-          products:completeUser.cart,
-        })
-
-        order.save().then(()=>console.log('order saved'))
-
-        console.log('order saved');
-
-
-        res.render('orderSuccess')
-
-
-      }else{
-
-        console.log('order not saved');
-
+          res.render("orderSuccess");
+        } else {
+          console.log("order not saved");
+        }
+      } else {
+        console.log("payment is ", req.body, payment);
       }
-     }else{
-      console.log('payment is ',req.body,payment);
-     }
-
-
-    }else{
-
-
-
+    } else {
     }
-  
-  } catch (error) {
-    
-  }
-  
-  } 
+  } catch (error) {}
+};
 
-  const loadOrderDetails = async (req, res) => {
+// TODO: loadOrderDetails not completed yet ................
 
-    const userId = req.session.user_id
+const loadOrderDetails = async (req, res) => {
+  const userId = req.session.user_id;
 
-    const user = await userModel.findById({_id: userId})
+  const user = await userModel.findById({ _id: userId });
 
-    const orderDetails = await orderModel.find({userId: userId})
+  const orderDetails = await orderModel.find({ userId: userId }).exec((err,item)=>{
 
-    const order = await orderDetails.populate("products.item.productId" )
+    console.log(item)
 
-    // const completeUser = await userData.populate("cart.item.productId");
-
-    console.log('orderDetails',order);
+  })
 
 
 
-
-    res.render('orderDetails')
-  }
+  // const orderId = orderDetails._id
 
 
-  const cancelOrder = (req, res) => {
+  // console.log(orderId);
+
+  // const order = await orderDetails.populate("products.item.productId");
+
+  // console.log(order.payment, ";;;;;;;;;;;;;", order.createdAt);
+
+  res.render("ordersummary", {
+    // order: order.products.item,
+    // payment: order.payment,
+    // time: order.createdAt, 
+  });
+
+  // const completeOrder = await orderDetails.pop
+
+  // const order = await orderDetails.populate("products.item.productId")
+
+  // const completeUser = await userData.populate("cart.item.productId");
 
 
-  }
-  
+};
 
+// TODO: cancel order has not completed yet ................
 
+const cancelOrder = (req, res) => {};
 
-
-
-
-
+const loadUserProfile = (req, res) => {
+  res.render("userProfile");
+};
 
 module.exports = {
+  loadUserProfile,
   cancelOrder,
   loadOrderDetails,
   deleteAddress,
@@ -629,5 +579,5 @@ module.exports = {
   addToCart,
   deleteCart,
   loadWishlist,
-  addAddress
+  addAddress,
 };
