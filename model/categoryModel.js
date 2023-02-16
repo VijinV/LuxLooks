@@ -7,6 +7,7 @@ const categorySchema = new Schema({
         type: String,
         require:true,
         unique:true,
+        uppercase:true,
     }
 })
 

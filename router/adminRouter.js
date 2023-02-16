@@ -8,12 +8,11 @@ const config = require("../config/config");
 
 const session = require("express-session");
 
-const adminAuth = require("../middleware/adminAuth");
+const adminAuth = require("../middleware/adminAuth");  
 
 const nocache = require("nocache");
 
-const fileUpload = require("../util/multer");
-const { route } = require("./userRouter");
+const multer = require("../util/multer");
 
 router.use(nocache());
 
@@ -61,15 +60,19 @@ router.get('/deleteCategory', adminController.deleteCategory)
 
 router.post("/", adminController.verifyLogin);
 
-router.post ('/addCategory', adminController.addCategory,adminController.loadCategory)
+// router.post ('/addCategory', adminController.addCategory,adminController.loadCategory)
+
+
+router.post('/category',adminController.addCategory)
+
 
 router.post(
   "/addProducts",
-  adminController.upload,
+  multer.upload.array("images"),
   adminController.addProduct,
   adminController.loadAddProduct
 );
 
-router.post("/update", adminController.editProduct);
+router.post("/update", multer.upload.array("images"), adminController.editProduct);
 
-module.exports = router;
+module.exports = router; 

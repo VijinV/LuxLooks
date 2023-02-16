@@ -171,10 +171,10 @@
          {{!-- <button><a href="admin/category">Category</a></button> --}}
         </div>
         <div class="card-body">
-          <form
-            action="/admin/addCategory"
-            method="post"
-          >
+          {{!-- <form
+            {{!-- action="/admin/addCategory" --}}
+            {{!-- method="post" --}}
+          > --}}
             <div class="mb-3">
               <label class="form-label" for="basic-default-fullname">Category
                 Name</label>
@@ -182,12 +182,12 @@
                 type="text"
                 name="name"
                 class="form-control"
-                id="basic-default-fullname"
+                id="input" 
                 placeholder="iphone...."
               />
             </div>
-            <button type="submit" class="btn btn-primary">Add Category</button>
-          </form>
+            <button onclick="addCategoryButton()"  class="btn btn-primary">Add Category</button>
+          {{!-- </form> --}}
         </div>
       </div>
     </div>
@@ -204,11 +204,12 @@
                         <th></th>
                       </tr>
                     </thead>
-                    <tbody class="table-border-bottom-0">
+                    <tbody id="cat"   class="table-border-bottom-0">
                       {{#each category}}
                       <tr>
-                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{@index}}</strong></td>
-                        <td>{{name}}</td>
+                        <td id="cat"><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{@index}}</strong></td>
+
+                        <td>{{name}}</td> 
 
                         <td><button class="btn btn-danger"><a style="text-decoration: none; color: #ffff;" href="/admin/deleteCategory?id={{_id}}">Delete</a></button></td>
 
@@ -222,3 +223,51 @@
               <!--/ Basic Bootstrap Table -->
 </div>
 <!-- / Content -->
+
+<script>
+
+  const input = document.querySelector("#input")
+  //const addCategoryButton = document.querySelector("button")
+  let catBody = document.querySelector("cat")
+
+  async function addCategoryButton(){
+   await fetch("http://localhost:5000/admin/category",{
+      method: "POST",
+      headers:{
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        name: input.value ,
+      }),
+      
+    }).then((res)=>res.json())
+    .then((data)=> displayCategory())
+    
+    .catch((err)=>console.log(err.message))
+
+
+  }
+
+  async function displayCategory(){
+    await fetch("http://localhost:5000/admin/category")
+    .then((res)=>res.json())
+    .then((data)=>console.log(data))
+    .then((data)=> {
+let section = ''
+      data.forEach((ele)=>{
+        section += `<tr>
+                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>${ele.index}</strong></td>
+
+                        <td>${ele.name}</td> 
+
+                        <td><button class="btn btn-danger"><a style="text-decoration: none; color: #ffff;" href="/admin/deleteCategory?id={{_id}}">Delete</a></button></td>
+
+                      </tr>`
+      })
+
+     catBody.innerHTML(section)
+      
+    }) 
+  }
+
+</script>

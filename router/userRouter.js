@@ -84,7 +84,9 @@ route.get('/addCartDeleteWishlist',userController.addCartDeleteWishlist)
 
 route.get('/userProfile',userController.loadUserProfile)
 
- 
+ route.get('/editProfile',userController.loadEditUserProfile)
+
+ route.get('/cancelOrder',userController.cancelOrder)
 
 // route.get('editAddress', userController.editAddress)
   
@@ -92,6 +94,7 @@ route.get('/userProfile',userController.loadUserProfile)
 
 // post methods
 route.post('/editAddress', userController.editAddress)
+
 route.post('/forgetPassword', userController.forgetPassword)
 
 route.post('/verifyForgetOtp',userController.verifyForgetPassword)
@@ -107,5 +110,7 @@ route.post("/login", userController.verifyLogin);
 route.get("/otp",userController.loadOtp);
 
 route.post('/otp',userController.verifyOtp)
+
+route.post('/editUser',userController.editUserProfile)
 
 module.exports = route;

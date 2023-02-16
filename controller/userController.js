@@ -237,15 +237,16 @@ const verifyLogin = async (req, res, next) => {
           req.session.user_name = userData.name;
           res.redirect("/");
         } else {
-          res.render("login", {login:true,
+          res.render("login", {
+            login: true,
             message: "You are Blocked by the administrator",
           });
         }
       } else {
-        res.render("login", {login:true, message: "Invalid password" });
+        res.render("login", { login: true, message: "Invalid password" });
       }
     } else {
-      res.render("login", { login:true,message: "Account not found" });
+      res.render("login", { login: true, message: "Account not found" });
     }
   } catch (error) {
     console.log(error.message);
@@ -482,6 +483,8 @@ const placeOrder = async (req, res) => {
             products: completeUser.cart,
           });
 
+          console.log(completeUser.cart.item);
+
           order.save().then(() => console.log("order saved"));
 
           console.log("order saved");
@@ -498,54 +501,94 @@ const placeOrder = async (req, res) => {
   } catch (error) {}
 };
 
-// TODO: loadOrderDetails not completed yet ................
+// TODO:  Change the printing of the orders ................
 
 const loadOrderDetails = async (req, res) => {
-  const userId = req.session.user_id;
-
+  // const userId = req.session.user_id;
+  const userId = "63e33b2fa89d21fe4d73cbec";
+  console.log(userId);
   const user = await userModel.findById({ _id: userId });
 
-  const orderDetails = await orderModel.find({ userId: userId }).exec((err,item)=>{
-
-    console.log(item)
-
-  })
-
-
-
-  // const orderId = orderDetails._id
-
-
-  // console.log(orderId);
-
-  // const order = await orderDetails.populate("products.item.productId");
-
-  // console.log(order.payment, ";;;;;;;;;;;;;", order.createdAt);
-
-  res.render("ordersummary", {
-    // order: order.products.item,
-    // payment: order.payment,
-    // time: order.createdAt, 
-  });
-
-  // const completeOrder = await orderDetails.pop
-
-  // const order = await orderDetails.populate("products.item.productId")
-
-  // const completeUser = await userData.populate("cart.item.productId");
+  const orderDetails = await orderModel
+    .find({ userId: userId })
+    .exec((err, data) => {
+      res.render("ordersummary", {
+        order: data,
+      });
+    });
+}
 
 
-};
+// const loadOrderDetails = async (req, res) => {
+//   // const userId = req.session.user_id;
+//   const userId = "63e33b2fa89d21fe4d73cbec";
+//   console.log(userId);
+//   const user = await userModel.findById({ _id: userId });
+
+//   const orderDetails = await orderModel
+//     .find({ userId: userId })
+//     .exec((err, data) => {
+//       res.render("ordersummary", {
+//         order: data,
+//       });
+//     });
+// };
 
 // TODO: cancel order has not completed yet ................
 
-const cancelOrder = (req, res) => {};
+const cancelOrder = async (req, res) => {
+  await orderModel.findOneAndUpdate(
+    { _id: req.query.id },
+    {
+      $set: {
+        status: false,
+      },
+    }
+  );
+  console.log('cancelled order');
+  res.redirect('/OrderDetails')
+};
 
-const loadUserProfile = (req, res) => {
-  res.render("userProfile");
+//!================================================================
+
+const loadUserProfile = async (req, res) => {
+  const session = req.session;
+
+  userSchema.findById({ _id: session.user_id }).exec((err, user) => {
+    res.render("userProfile", { user });
+  });
+};
+
+const loadEditUserProfile = async (req, res) => {
+  const session = req.session;
+
+  userSchema.findById({ _id: session.user_id }).exec((err, user) => {
+    res.render("editUserProfile", { user });
+  });
+};
+
+const editUserProfile = async (req, res) => {
+  const id = req.session.user_id;
+
+  const user = await userSchema
+    .findByIdAndUpdate(
+      { _id: id },
+      {
+        $set: {
+          name: req.body.name,
+          dob: req.body.dob,
+        },
+      }
+    )
+    .then(() => {
+      res.redirect("/editProfile");
+    })
+    .then(() => console.log("edited"));
 };
 
 module.exports = {
+  loadEditUserProfile,
+  editUserProfile,
   loadUserProfile,
   cancelOrder,
   loadOrderDetails,
@@ -571,7 +614,6 @@ module.exports = {
   loadCart,
   loadShop,
   loadLogin,
-  // loadRegister,
   registerUser,
   verifyLogin,
   loadOtp,

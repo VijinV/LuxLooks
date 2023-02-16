@@ -56,6 +56,17 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/", userRouter);
 app.use("/admin", adminRouter);
 
+// error handlers
+
+app.use((req, res, next) => {
+  res.status(404).render('admin/404.hbs')
+})
+
+app.use((ere,req, res, next) => {
+  res.status(500).render('admin/404.hbs')
+})
+
+
 // database connection
 
 mongoose.set("strictQuery", true);

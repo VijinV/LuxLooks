@@ -17,6 +17,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  dob:{
+    type:String
+  },
   password2: {
     type: String,
   },

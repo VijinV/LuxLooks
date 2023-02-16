@@ -4,31 +4,22 @@ const productModel = require("../model/productModel");
 const path = require("path");
 const multer = require("multer");
 const categoryModel = require("../model/categoryModel");
-const { log } = require("console");
+const upload = require('../util/multer')
 
-// !--------------multer-------------------------------------------
-const Storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "./public/admin/assets/img/products");
-  },
-  filename: (req, file, cb) => {
-    cb(
-      null,
-      file.fieldname + "_" + Date.now() + path.extname(file.originalname)
-    );
-  },
-});
 
-const upload = multer({
-  storage: Storage,
-}).single("images");
-
-// !----------------------------------------------------------------
 
 // get meathodes
 loadDashboard = (req, res) => {
-  res.render("dashboard");
+ try {
+
+  
+   res.render("dashboard");
+ } catch (error) {
+
+ }
 };
+
+
 
 loadProduct = async (req, res) => {
   const productData = await productModel.find({}).exec((err, product) => {
@@ -54,8 +45,8 @@ try {
 }
 };
 
-loadUsers = (req, res) => {
-  const userData = userModel.find({}).exec((err, user) => {
+const loadUsers = (req, res) => {
+  const userData = userModel.find({}).sort({_id:-1}).exec((err, user) => {
     if (user) {
       res.render("users", { user });
     } else {
@@ -108,12 +99,14 @@ const verifyLogin = async (req, res) => {
 
 const addProduct = async (req, res, next) => {
   try {
+    const images = req.files
     const product = new productModel({
       name: req.body.product,
       category: req.body.category,
       price: req.body.price,
-      image: req.file.filename,
+      image: images.map((x) => x.filename),
       description: req.body.description,
+      quantity:req.body.qty,
       isAvailable: true,
     });
 
@@ -139,6 +132,9 @@ const loadEditProduct = (req, res) => {
 
 const editProduct = async (req, res, next) => {
   try {
+
+    console.log(req.file.filename);
+
     await productModel
       .findByIdAndUpdate(
         { _id: req.body.ID },
@@ -147,7 +143,7 @@ const editProduct = async (req, res, next) => {
             name: req.body.name,
             category: req.body.category,
             price: req.body.price,
-            // image:req.file.filename,
+            image:req.file.filename,
             description: req.body.description,
           },
         }
@@ -213,7 +209,9 @@ const inStock = async (req, res) => {
 };
 
 
-addCategory = async (req, res,next) => {
+const addCategory = async (req, res,next) => {
+
+  console.log(req.body.name);
 
   const category = await categoryModel.findOne({name: req.body.name});
 
@@ -221,11 +219,13 @@ if (!category) {
 	    const category = new categoryModel({
 	        name : req.body.name
 	    })
-	
+	 
 	    await category.save().then(()=>{console.log('category saved successfully')})
 	
 	    next()
 } else {
+
+  console.log('not found category');
 
     res.redirect('/admin/category')
 	
@@ -237,6 +237,8 @@ loadCategory = async (req, res) => {
     categoryModel.find({}).exec((err, category) =>{
 
     if(category){
+      // res.json(category)
+
         res.render('category', {category})
     }else{
 
@@ -271,7 +273,6 @@ module.exports = {
   loadLogin,
   verifyLogin,
   addProduct,
-  upload,
   editProduct,
   loadEditProduct,
   loadCategory,

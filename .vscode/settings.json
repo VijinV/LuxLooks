@@ -2,13 +2,16 @@
     "cSpell.words": [
         "addcart",
         "addressid",
+        "categorybody",
         "completuser",
         "confirmpass",
         "confirmpasserror",
         "editaddress",
         "emailerror",
         "emialerror",
+        "fieldname",
         "forgetpassword",
+        "fullname",
         "Loggedin",
         "loginerror",
         "mobileerror",
@@ -25,10 +28,12 @@
         "plen",
         "removefrom",
         "Shoping",
+        "simage",
         "stext",
         "subjecterror",
         "submiterror",
         "userid",
-        "usrname"
+        "usrname",
+        "webp"
     ]
 }
