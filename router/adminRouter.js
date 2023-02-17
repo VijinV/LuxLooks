@@ -56,6 +56,10 @@ router.get('/category', adminController.loadCategory)
 
 router.get('/deleteCategory', adminController.deleteCategory)
 
+router.get('/order', adminController.loadOrders)
+
+router.get('/cancelOrder', adminController.cancelOrder)
+
 // post
 
 router.post("/", adminController.verifyLogin);

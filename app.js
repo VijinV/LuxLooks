@@ -5,6 +5,7 @@ const path = require("path");
 const hbs = require("express-handlebars");
 const mongoose = require("mongoose");
 const nocache = require("nocache");
+const cors = require('cors');
 
 const Handlebars = require("handlebars");
 const {
@@ -16,6 +17,8 @@ const userRouter = require("./router/userRouter");
 const adminRouter = require("./router/adminRouter");
 
 // setting up view engine for user routes
+
+app.use(cors())
 
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "hbs");

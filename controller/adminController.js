@@ -6,9 +6,11 @@ const multer = require("multer");
 const categoryModel = require("../model/categoryModel");
 const upload = require('../util/multer')
 
+const orderModel = require("../model/orderModel");
 
 
-// get meathodes
+
+// get methods
 loadDashboard = (req, res) => {
  try {
 
@@ -258,11 +260,42 @@ deleteCategory = async (req, res) => {
 
 }
 
+const loadOrders = async (req,res) => {
+
+  const orderDetails = await orderModel
+  .find({})
+  .exec((err, data) => {
+    res.render("order", {
+      order: data,
+    });
+  });
+
+
+}
+
+const cancelOrder = async (req, res) => {
+
+  await orderModel.findOneAndUpdate(
+    { _id: req.query.id },
+    {
+      $set: {
+        status: false,
+      },
+    }
+  );
+  console.log('cancelled order');
+  res.redirect('/admin/order')
+
+
+}
+
 
 
 
 
 module.exports = {
+  cancelOrder,
+  loadOrders,
   deleteCategory,
   inStock,
   blockUser,

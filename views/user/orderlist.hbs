@@ -22,10 +22,10 @@
 						<div class="wrap-table-shopping-cart">
 							<table class="table-shopping-cart">
 								<tr class="table_head">
-									<th class="column-1"></th>
+									<th class="column-1">Product</th>
 									<th class="column-2">Name</th>
 									<th class="column-3">Price</th>
-									<th class="column-4">Status</th>
+									<th class="column-4">Quantity</th>
 									<th class="column-5"></th>
 								</tr>
 
@@ -34,16 +34,18 @@
 								<tr class="table_row">
 									<td class="column-1">
 										<div class="how-itemcart1">
-											<img src="admin/assets/img/products/{{order.image}}" alt="IMG">
+											<img src="admin/assets/img/products/{{productId.image}}" alt="IMG">
 										</div>
 									</td>
-									<td class="column-2">{{order.name}}</td>
-									<td class="column-3">{{order._createdAt}}</td>
+									<td class="column-2">{{productId.name}}</td>
+									<td class="column-3">{{productId.price}}</td>
 									<td class="column-4">
-										<button class="btn btn-danger"><a style="text-decoration: none; color: bisque;" href="/cancelOrder">Cancel</a></button>
+										{{qty}}
 									</td>
 
-							<td class="column-5"><button class="btn btn-danger"><a style="text-decoration: none; color: #ffff;" href="/deleteCart?id={{productId._id}}">Delete</a></button></td>
+							{{!-- <td class="column-5"><button class="btn btn-danger"><a style="text-decoration: none; color: #ffff;" href="/deleteCart?id={{productId._id}}">Delete</a></button></td> --}}
+
+							
 														{{!-- <td class="column-5"><input type="text" value={{productId._id}}></td> --}}
 
 								</tr>
@@ -54,10 +56,10 @@
 							</table>
 						</div>
 
+						\
 					</div>
 				</div>
 
-				
 			</div>
 		</div>
 	</form>

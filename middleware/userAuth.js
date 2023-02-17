@@ -24,8 +24,8 @@ const isLogout = (req, res, next) => {
 
 const logout = (req, res) => {
   try {
-    req.session.destroy();
-    res.redirect("/");
+    req.session.user_id = null
+    res.redirect("/"); 
   } catch (error) {
     console.log(error.message);
   }

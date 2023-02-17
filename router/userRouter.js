@@ -36,9 +36,9 @@ route.use(
 
 // get methods
 
-route.get("/", userController.loadHome);
+route.get("/",userController.loadHome);
 
-route.get("/product", userController.loadProduct);
+route.get("/product",userAuth.isLogout, userController.loadProduct);
 
 route.get("/cart",userAuth.isLogout, userController.loadCart);
 
@@ -58,42 +58,44 @@ route.get("/checkout",userAuth.isLogout,userController.loadCheckout)
 
 route.get("/addToCart", userAuth.isLogout,userController.addToCart)
 
-route.get('/deleteCart', userController.deleteCart)
+route.get('/deleteCart', userAuth.isLogout,userController.deleteCart)
 
-route.post('/placeOrder',userController.placeOrder)
+route.post('/placeOrder',userAuth.isLogout,userController.placeOrder)
 
-route.get('/orderSuccess', userController.loadOrderSuccess)
+route.get('/orderSuccess',userAuth.isLogout, userController.loadOrderSuccess)
 
-route.get('/orderSummary', userController.loadOrderSummary)
+route.get('/orderSummary',userAuth.isLogout, userController.loadOrderSummary)
 
-route.get('/addToWishlist', userController.addToWishlist)
+route.get('/addToWishlist',userAuth.isLogout, userController.addToWishlist)
 
-route.get('/wishlist', userController.loadWishlist)
+route.get('/wishlist',userAuth.isLogout, userController.loadWishlist)
 
 route.get('/forgetPassword', userController.loadForgetPassword)
 
-route.get('/editAddress', userController.loadEditAddress)
+route.get('/editAddress', userAuth.isLogout,userController.loadEditAddress)
 
-route.get('/deleteAddress', userController.deleteAddress)
+route.get('/deleteAddress',userAuth.isLogout, userController.deleteAddress)
 
-route.get('/OrderDetails', userController.loadOrderDetails)
+route.get('/OrderDetails',userAuth.isLogout, userController.loadOrderDetails)
 
-route.get('/deleteWishlist',userController.deleteWishlist)
+route.get('/deleteWishlist',userAuth.isLogout,userController.deleteWishlist)
 
-route.get('/addCartDeleteWishlist',userController.addCartDeleteWishlist)
+route.get('/addCartDeleteWishlist',userAuth.isLogout,userController.addCartDeleteWishlist)
 
-route.get('/userProfile',userController.loadUserProfile)
+route.get('/userProfile',userAuth.isLogout,userController.loadUserProfile)
 
- route.get('/editProfile',userController.loadEditUserProfile)
+ route.get('/editProfile',userAuth.isLogout,userController.loadEditUserProfile)
 
- route.get('/cancelOrder',userController.cancelOrder)
+ route.get('/cancelOrder',userAuth.isLogout,userController.cancelOrder)
+
+ route.get('/viewOrder',userAuth.isLogout,userController.viewOrders)
 
 // route.get('editAddress', userController.editAddress)
   
 // route.get('/otp',userController.getOtp)
 
 // post methods
-route.post('/editAddress', userController.editAddress)
+route.post('/editAddress', userAuth.isLogout,userController.editAddress)
 
 route.post('/forgetPassword', userController.forgetPassword)
 
@@ -101,7 +103,7 @@ route.post('/verifyForgetOtp',userController.verifyForgetPassword)
 
 route.post('/changePassword', userController.changePassword)
 
-route.post ("/addAddress", userController.addAddress)
+route.post ("/addAddress", userAuth.isLogout,userController.addAddress)
 
 route.post("/register", userController.registerUser, userController.loadOtp);
 
@@ -111,6 +113,9 @@ route.get("/otp",userController.loadOtp);
 
 route.post('/otp',userController.verifyOtp)
 
-route.post('/editUser',userController.editUserProfile)
+route.post('/editUser',userAuth.isLogout,userController.editUserProfile)
+
+route.post('/razorpay',userAuth.isLogout, userController.payment)
+
 
 module.exports = route;
