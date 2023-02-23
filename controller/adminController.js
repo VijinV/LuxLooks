@@ -23,14 +23,21 @@ loadDashboard = (req, res) => {
 
 
 
-loadProduct = async (req, res) => {
-  const productData = await productModel.find({}).exec((err, product) => {
-    if (product) {
-      res.render("product", { product });
-    } else {
-      res.send("404 page not found");
-    }
-  });
+const loadProduct = async (req, res) => {
+  try {
+   
+    productModel.find({}).exec((err, product) => {
+      if (product) {
+        res.render("product", { product });
+        console.log(product);
+      }
+    });
+    
+  } catch (error) {
+
+    console.log(error);
+    
+  }
 };
 
 loadAddProduct = async (req, res) => {
@@ -224,7 +231,14 @@ if (!category) {
 	 
 	    await category.save().then(()=>{console.log('category saved successfully')})
 	
-	    next()
+
+              res.writeHead(200, { "Content-Type": "text/html" });
+  res.write(
+    '<tr><td id="cat"><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong></strong></td><td>hello</td> <td><button class="btn btn-danger"><a style="text-decoration: none; color: #ffff;" href="/admin/deleteCategory?id={{_id}}">Delete</a></button></td></tr>'
+  );
+  res.end();
+	    // next()
+
 } else {
 
   console.log('not found category');

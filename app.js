@@ -25,7 +25,7 @@ app.set("view engine", "hbs");
 // setting up user views files
 userRouter.set("views", path.join(__dirname, "views/user"));
 userRouter.set("view engine", "hbs");
-userRouter.engine(
+app.engine(
   "hbs",
   hbs.engine({
     extname: "hbs",
@@ -33,6 +33,17 @@ userRouter.engine(
     defaultLayout: "userLayout",
     layoutsDir: __dirname + "/views/layout",
     partialsDir: __dirname + "/views/partials",
+    helpers:{
+      limit:function(ary, max, options) {
+        if(!ary || ary.length == 0)
+            return options.inverse(this);
+    
+        var result = [ ];
+        for(var i = 0; i < max && i < ary.length; ++i)
+            result.push(options.fn(ary[i]));
+        return result.join('');
+    }
+    }
   })
 );
 // setting up view engine for admin routes
@@ -64,8 +75,8 @@ app.use("/admin", adminRouter);
 app.use((req, res, next) => {
   res.status(404).render('admin/404.hbs')
 })
-
-app.use((ere,req, res, next) => {
+ 
+app.use((err,req, res, next) => {
   res.status(500).render('admin/404.hbs')
 })
 

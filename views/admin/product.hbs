@@ -172,10 +172,11 @@
                     <tbody class="table-border-bottom-0">
                       {{#each product}}
                       <tr>
-                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>01</strong></td>
+                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{@index}}</strong></td>
                         <td>{{name}}</td>
                         <td>
-                            <img src="../assets/img/products/{{image}}  " alt="Avatar" class="rounded-circle" style="width: 50px; height: 50px;" />
+                          {{#each image}}
+                            <img src="../assets/img/products/{{this}}  " alt="Avatar" class="rounded-circle" style="width: 50px; height: 50px;" />
                           {{!-- <img src="/public/productImages/images_1674587879500.jpg"  style="width: 50px; height: 50px;" /> --}}
                           {{!-- <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
                             <li
@@ -206,6 +207,7 @@
                               <img src="../assets/img/avatars/7.png" alt="Avatar" class="rounded-circle" />
                             </li>
                           </ul> --}}
+                          {{/each}}
                         </td>
 
                         <td>{{price}}</td>

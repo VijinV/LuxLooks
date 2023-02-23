@@ -12,6 +12,10 @@ const config = require("../config/config");
 
 const nocache = require("nocache");
 
+const userMulter = require("../util/userMulter")
+
+const multer = require("../util/multer");
+
 // ! sms
 
 const sms = require("fast2sms");
@@ -56,7 +60,7 @@ route.get("/productDetails", userController.loadProductDetails);
 
 route.get("/checkout",userAuth.isLogout,userController.loadCheckout)
 
-route.get("/addToCart", userAuth.isLogout,userController.addToCart)
+route.post("/addToCart", userAuth.isLogout,userController.addToCart) ////////////////?
 
 route.get('/deleteCart', userAuth.isLogout,userController.deleteCart)
 
@@ -66,7 +70,7 @@ route.get('/orderSuccess',userAuth.isLogout, userController.loadOrderSuccess)
 
 route.get('/orderSummary',userAuth.isLogout, userController.loadOrderSummary)
 
-route.get('/addToWishlist',userAuth.isLogout, userController.addToWishlist)
+route.post('/addToWishlist',userAuth.isLogout, userController.addToWishlist)
 
 route.get('/wishlist',userAuth.isLogout, userController.loadWishlist)
 
@@ -90,8 +94,10 @@ route.get('/userProfile',userAuth.isLogout,userController.loadUserProfile)
 
  route.get('/viewOrder',userAuth.isLogout,userController.viewOrders)
 
+
+ route.get('/editMobile',userController.editMobile)
+
 // route.get('editAddress', userController.editAddress)
-  
 // route.get('/otp',userController.getOtp)
 
 // post methods
@@ -113,7 +119,7 @@ route.get("/otp",userController.loadOtp);
 
 route.post('/otp',userController.verifyOtp)
 
-route.post('/editUser',userAuth.isLogout,userController.editUserProfile)
+route.post('/editUser',userAuth.isLogout,userMulter.upload,userController.editUserProfile)
 
 route.post('/razorpay',userAuth.isLogout, userController.payment)
 

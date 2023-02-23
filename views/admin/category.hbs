@@ -188,12 +188,13 @@
               <input
                 type="text"
                 name="name"
+                
                 class="form-control"
-                id="input" 
+                id="category" 
                 placeholder="iphone...."
               />
             </div>
-            <button onclick="addCategoryButton()"  class="btn btn-primary">Add Category</button>
+            <button onclick="addCat()" class="btn btn-primary">Add Category</button>
           {{!-- </form> --}}
         </div>
       </div>
@@ -222,6 +223,9 @@
 
                       </tr>
                       {{/each}}
+                      <div id="input-container">
+
+                      </div>
                     </tbody>
                   </table>
 
@@ -231,7 +235,7 @@
 </div>
 <!-- / Content -->
 
-<script>
+{{!-- <script>
 
   const input = document.querySelector("#input")
   //const addCategoryButton = document.querySelector("button")
@@ -277,4 +281,33 @@ let section = ''
     }) 
   }
 
+</script> --}}
+<script>
+  const form = document.getElementById('add-category-form');
+  const categoryInput = document.getElementById('category-input');
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const category = categoryInput.value;
+
+    // Send an AJAX request to the server
+    fetch('/add-category', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ category })
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+      // Display the new category on the page
+      const categoryList = document.getElementById('category-list');
+      const newCategoryItem = document.createElement('li');
+      newCategoryItem.textContent = data.name;
+      categoryList.appendChild(newCategoryItem);
+    })
+    .catch(error => console.error(error));
+  });
 </script>

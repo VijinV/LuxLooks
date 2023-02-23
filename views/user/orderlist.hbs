@@ -34,7 +34,9 @@
 								<tr class="table_row">
 									<td class="column-1">
 										<div class="how-itemcart1">
-											<img src="admin/assets/img/products/{{productId.image}}" alt="IMG">
+											{{#limit productId.image 1}}
+											<img src="admin/assets/img/products/{{this}}" alt="IMG">
+											{{/limit}}
 										</div>
 									</td>
 									<td class="column-2">{{productId.name}}</td>

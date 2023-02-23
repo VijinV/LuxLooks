@@ -28,9 +28,7 @@ loadHome = (req, res) => {
       }
     });
   } catch (error) {
-
-    console.log(error.message)
-    
+    console.log(error.message);
   }
 };
 // !================================================================
@@ -55,12 +53,12 @@ const loadCart = async (req, res) => {
 
 const addToCart = async (req, res, next) => {
   try {
-    const productId = req.query.id;
+    const productId = req.body.id;
+    console.log(productId);
     userSession = req.session;
     const userData = await userSchema.findById({ _id: userSession.user_id });
     const productData = await productModel.findById({ _id: productId });
     await userData.addToCart(productData);
-    res.redirect("/shop");
   } catch (error) {
     console.log(error.message);
   }
@@ -70,7 +68,6 @@ const deleteCart = async (req, res, next) => {
   try {
     const productId = req.query.id;
     userSession = req.session;
-
     const userData = await userSchema.findById({ _id: userSession.user_id });
     await userData.removefromCart(productId);
     res.redirect("/cart");
@@ -83,12 +80,11 @@ const deleteCart = async (req, res, next) => {
 
 const addToWishlist = async (req, res) => {
   try {
-    const productId = req.query.id;
-    console.log(product);
+    const productId = req.body.id;
+    console.log(productId);
     userSession = req.session;
     const userData = await userSchema.findById({ _id: userSession.user_id });
     const productData = await productModel.findById({ _id: productId });
-
     userData.addToWishlist(productData);
     res.redirect("/shop");
   } catch (error) {
@@ -152,6 +148,7 @@ const loadShop = (req, res) => {
       res.render("shop", { session, login });
     }
   });
+  
 };
 
 loadProduct = (req, res) => {
@@ -503,15 +500,20 @@ const placeOrder = async (req, res) => {
         });
 
         console.log(completeUser.cart.item);
-
-        console.log("order saved");
       } else {
         console.log("order not saved");
       }
 
       if (req.body.payment == "cod") {
         res.render("orderSuccess", { session: req.session.user_id });
-        order.save().then(() => console.log("order saved"));
+        order
+          .save()
+          .then(() => {
+            userData.placeOrder();
+          })
+          .then(() => {
+            console.log("order saved");
+          });
       } else {
         res.render("razorpay", {
           total: completeUser.cart.totalPrice,
@@ -527,10 +529,9 @@ const placeOrder = async (req, res) => {
 // TODO:  Change the printing of the orders ................
 
 const loadOrderDetails = async (req, res) => {
-  // const userId = req.session.user_id;
-  const userId = "63e33b2fa89d21fe4d73cbec";
+  const userId = req.session.user_id;
   console.log(userId);
-  const user = await userModel.findById({ _id: userId });
+  await userModel.findById({ _id: userId });
 
   const orderDetails = await orderModel
     .find({ userId: userId })
@@ -570,7 +571,6 @@ const cancelOrder = async (req, res) => {
 };
 
 const viewOrders = async (req, res) => {
-  console.log("viewing");
 
   const order = await orderModel.findOne({ _id: req.query.id });
 
@@ -589,6 +589,7 @@ const loadUserProfile = async (req, res) => {
 
   userSchema.findById({ _id: session.user_id }).exec((err, user) => {
     res.render("userProfile", { user, session: req.session.user_id });
+    console.log(user.image);
   });
 };
 
@@ -600,9 +601,8 @@ const loadEditUserProfile = async (req, res) => {
   });
 };
 
-const editUserProfile = async (req, res) => {
+const editUserProfile = async (req, res) => {   
   const id = req.session.user_id;
-
   await userSchema
     .findByIdAndUpdate(
       { _id: id },
@@ -610,6 +610,7 @@ const editUserProfile = async (req, res) => {
         $set: {
           name: req.body.name,
           dob: req.body.dob,
+          image: req.file.filename,
         },
       }
     )
@@ -640,7 +641,29 @@ const payment = async (req, res) => {
   });
 };
 
+const editMobile = async (req, res) => {
+  console.log(req.session.user_id);
+  const user = await userModel.findById({ _id: req.session.user_id });
+  newOtp = message.sendMessage(user.mobile, res);
+  console.log(newOtp);
+
+  res.writeHead(200, { "Content-Type": "text/html" });
+  res.write(
+    '<input class = "form-control" id="otp"  type="text" name="new-input"> <button onclick="checkOtp()" type="button" class="text-primary">Submit Otp</button>'
+  );
+  res.end();
+};
+
+const checkOtp = (req, res) => {
+  const otp = req.body.otp;
+  if (otp == newOtp) {
+    return true;
+  }
+};
+
 module.exports = {
+  checkOtp,
+  editMobile,
   payment,
   viewOrders,
   loadEditUserProfile,
