@@ -89,10 +89,12 @@ route.get('/addCartDeleteWishlist',userAuth.isLogout,userController.addCartDelet
 route.get('/userProfile',userAuth.isLogout,userController.loadUserProfile)
 
  route.get('/editProfile',userAuth.isLogout,userController.loadEditUserProfile)
-
+ 
  route.get('/cancelOrder',userAuth.isLogout,userController.cancelOrder)
 
  route.get('/viewOrder',userAuth.isLogout,userController.viewOrders)
+
+ route.get('/address',userAuth.isLogout,userController.loadAddress)
 
 
  route.get('/editMobile',userController.editMobile)

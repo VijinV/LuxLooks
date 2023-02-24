@@ -158,10 +158,19 @@
                         <div class="mb-3">
                           <label class="form-label" for="basic-default-fullname">Product Name</label>
                           <input type="text" name="name" value="{{product.name}}" class="form-control" id="basic-default-fullname" placeholder="iphone...." />
+                          
                         </div>
                         <div class="mb-3">
                           <label class="form-label" for="basic-default-company">Category</label>
-                          <input type="text" value="{{product.category}}" name="category" class="form-control" id="basic-default-company" placeholder="Mobile..." />
+                          {{!-- <input type="text" value="{{product.category}}" name="category" class="form-control" id="basic-default-company" placeholder="Mobile..." /> --}}
+
+                          <select name="category"  id="defaultSelect" class="form-select">
+                            <option value={{product.category}} selected>{{product.category}}</option>
+                        {{#each category}}
+                          <option value={{name}}>{{name}}</option>
+                        {{/each}}
+                         
+                        </select>
                         </div>
                         <div class="mb-3">
                           <label class="form-label" for="basic-default-email">Price</label>
@@ -189,23 +198,47 @@
                               aria-describedby="basic-default-email2"
                             />
                           </div>
+                          
                           <div class="mb-3">
                           <label class="form-label" for="basic-default-company">Product Images</label>
+                          {{#each product.image}}
 
-                          <img style="height: 96px;width: 72px;margin-top: 18px;"  src="assets/img/products/{{product.image}}  ">
-                        
+                          <img style="height: 96px;width: 72px;margin-top: 18px;"  src="assets/img/products/{{this}}  ">
+                        {{/each}}
                         </div>
                         </div>
                         <div class="mb-3">
                           <label class="form-label" for="basic-default-phone">Image</label>
                           <input
-                            name="images"
+                            name="image"
                             type="file"
                             id="basic-default-phone"
                             class="form-control phone-mask"
-                            value="{{product.image}}"
+                            {{!-- value="{{}}" --}}
                           />
                         </div>
+                        <div class="mb-3">
+                          <label class="form-label" for="basic-default-phone">Image</label>
+                          <input
+                            name="image"
+                            type="file"
+                            id="basic-default-phone"
+                            class="form-control phone-mask"
+                            {{!-- value="{{}}" --}}
+                          />
+                        </div>
+                        <div class="mb-3">
+                          <label class="form-label" for="basic-default-phone">Image</label>
+                          <input
+                            name="image"
+                            type="file"
+                            id="basic-default-phone"
+                            class="form-control phone-mask"
+                            {{!-- value="{{}}" --}}
+                          />
+                        </div>
+                       
+                        
                         <div class="mb-3">
                           <label class="form-label" for="basic-default-message">Description</label>
                           <input

@@ -4,64 +4,51 @@ const productModel = require("../model/productModel");
 const path = require("path");
 const multer = require("multer");
 const categoryModel = require("../model/categoryModel");
-const upload = require('../util/multer')
+const upload = require("../util/multer");
 
 const orderModel = require("../model/orderModel");
 
-
-
 // get methods
 loadDashboard = (req, res) => {
- try {
-
-  
-   res.render("dashboard");
- } catch (error) {
-
- }
+  try {
+    res.render("dashboard");
+  } catch (error) {}
 };
-
-
 
 const loadProduct = async (req, res) => {
   try {
-   
     productModel.find({}).exec((err, product) => {
       if (product) {
         res.render("product", { product });
         console.log(product);
       }
     });
-    
   } catch (error) {
-
     console.log(error);
-    
   }
 };
 
 loadAddProduct = async (req, res) => {
-  
-try {
-	  categoryModel.find({}).exec((err, category) => {
-        res.render("addProduct",{category});
-      })
-	  
-} catch (error) {
-
+  try {
+    categoryModel.find({}).exec((err, category) => {
+      res.render("addProduct", { category });
+    });
+  } catch (error) {
     console.log(error.message);
-	
-}
+  }
 };
 
 const loadUsers = (req, res) => {
-  const userData = userModel.find({}).sort({_id:-1}).exec((err, user) => {
-    if (user) {
-      res.render("users", { user });
-    } else {
-      res.render("users");
-    }
-  });
+  const userData = userModel
+    .find({})
+    .sort({ _id: -1 })
+    .exec((err, user) => {
+      if (user) {
+        res.render("users", { user });
+      } else {
+        res.render("users");
+      }
+    });
 };
 
 loadLogin = (req, res) => {
@@ -79,7 +66,7 @@ const verifyLogin = async (req, res) => {
 
     if (userData) {
       const passwordMatch = await bcrypt.compare(
-        req.body.password, 
+        req.body.password,
         userData.password
       );
 
@@ -108,14 +95,14 @@ const verifyLogin = async (req, res) => {
 
 const addProduct = async (req, res, next) => {
   try {
-    const images = req.files
+    const images = req.files;
     const product = new productModel({
       name: req.body.product,
       category: req.body.category,
       price: req.body.price,
       image: images.map((x) => x.filename),
       description: req.body.description,
-      quantity:req.body.qty,
+      quantity: req.body.qty,
       isAvailable: true,
     });
 
@@ -127,13 +114,13 @@ const addProduct = async (req, res, next) => {
   }
 };
 
-const loadEditProduct = (req, res) => {
+const loadEditProduct = async (req, res) => {
   try {
-    productModel.findById({ _id: req.query.id }).exec((err, product) => {
-      if (product) {
-        res.render("editProduct", { product });
-      }
-    });
+    const category = await categoryModel.find({});
+
+    const product = await productModel.findById({ _id: req.query.id });
+
+    res.render("editProduct", { product, category });
   } catch (error) {
     console.log(error.message);
   }
@@ -141,8 +128,11 @@ const loadEditProduct = (req, res) => {
 
 const editProduct = async (req, res, next) => {
   try {
+    // console.log(req.file.filename);
 
-    console.log(req.file.filename);
+    const image = req.files;
+
+    console.log(image);
 
     await productModel
       .findByIdAndUpdate(
@@ -152,7 +142,7 @@ const editProduct = async (req, res, next) => {
             name: req.body.name,
             category: req.body.category,
             price: req.body.price,
-            image:req.file.filename,
+            // image: image.map((x) => x.filename),
             description: req.body.description,
           },
         }
@@ -217,95 +207,86 @@ const inStock = async (req, res) => {
   res.redirect("/admin/products");
 };
 
-
-const addCategory = async (req, res,next) => {
-
+const addCategory = async (req, res, next) => {
   console.log(req.body.name);
 
-  const category = await categoryModel.findOne({name: req.body.name});
+  const category = await categoryModel.findOne({ name: req.body.category });
 
-if (!category) {
-	    const category = new categoryModel({
-	        name : req.body.name
-	    })
-	 
-	    await category.save().then(()=>{console.log('category saved successfully')})
-	
+  if (!category) {
+    const category = new categoryModel({
+      name: req.body.category,
+    });
 
-              res.writeHead(200, { "Content-Type": "text/html" });
-  res.write(
-    '<tr><td id="cat"><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong></strong></td><td>hello</td> <td><button class="btn btn-danger"><a style="text-decoration: none; color: #ffff;" href="/admin/deleteCategory?id={{_id}}">Delete</a></button></td></tr>'
-  );
-  res.end();
-	    // next()
+    await category.save().then((savedCategory) => {
+      console.log("category saved successfully");
+      console.log(savedCategory);
+      res.send(savedCategory);
+    });
 
-} else {
+    // res.writeHead(200, { "Content-Type": "text/html" });
+    // res.write(
+    //   '<tr><td id="cat"><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong></strong></td><td>hello</td> <td><button class="btn btn-danger"><a style="text-decoration: none; color: #ffff;" href="/admin/deleteCategory?id={{_id}}">Delete</a></button></td></tr>'
+    // );
+    // res.end();
+    // next()
+  } else {
+    console.log("not found category");
 
-  console.log('not found category');
-
-    res.redirect('/admin/category')
-	
-}
-
-}
+    res.redirect("/admin/category");
+  }
+};
 
 loadCategory = async (req, res) => {
-    categoryModel.find({}).exec((err, category) =>{
-
-    if(category){
+  categoryModel.find({}).exec((err, category) => {
+    if (category) {
       // res.json(category)
 
-        res.render('category', {category})
-    }else{
-
-        console.log('no category found');
-
+      res.render("category", { category });
+    } else {
+      console.log("no category found");
     }
-    
- })
-}
+  });
+};
 
 deleteCategory = async (req, res) => {
-    
-    await categoryModel.findByIdAndDelete({_id: req.query.id});
+  await categoryModel.findByIdAndDelete({ _id: req.query.id });
 
-    res.redirect('/admin/category');
+  res.redirect("/admin/category");
+};
+//! =================================ORDER=========================================================!
+const loadOrders = async (req, res) => {
+  const order = await orderModel.find({}).sort({ createdAt: -1 });
 
+  if (req.query.id) {
+    id = req.query.id;
+    console.log(id);
+    res.render("order", { order, id: id });
+  } else {
+    res.render("order", { order });
+  }
 
-}
-
-const loadOrders = async (req,res) => {
-
-  const orderDetails = await orderModel
-  .find({})
-  .exec((err, data) => {
-    res.render("order", {
-      order: data,
-    });
-  });
-
-
-}
+};
 
 const cancelOrder = async (req, res) => {
-
   await orderModel.findOneAndUpdate(
     { _id: req.query.id },
     {
       $set: {
-        status: false,
+        status: "Cancel",
       },
     }
   );
-  console.log('cancelled order');
+  console.log("cancelled order");
+  res.redirect("/admin/order");
+};
+
+const ConfirmOrder = async (req, res) => {
+  await orderModel.findByIdAndUpdate(
+    { _id: req.query.id },
+    { $set: { status: "Confirm" } }
+  )
   res.redirect('/admin/order')
-
-
-}
-
-
-
-
+};
 
 module.exports = {
   cancelOrder,
@@ -323,5 +304,6 @@ module.exports = {
   editProduct,
   loadEditProduct,
   loadCategory,
-  addCategory
+  addCategory,
+  ConfirmOrder,
 };

@@ -178,24 +178,20 @@
          {{!-- <button><a href="admin/category">Category</a></button> --}}
         </div>
         <div class="card-body">
-          {{!-- <form
-            {{!-- action="/admin/addCategory" --}}
-            {{!-- method="post" --}}
-          > --}}
+          <form id="add-category-form">
             <div class="mb-3">
               <label class="form-label" for="basic-default-fullname">Category
                 Name</label>
               <input
                 type="text"
                 name="name"
-                
                 class="form-control"
-                id="category" 
+                id="category-input" 
                 placeholder="iphone...."
               />
             </div>
-            <button onclick="addCat()" class="btn btn-primary">Add Category</button>
-          {{!-- </form> --}}
+            <button ty class="btn btn-primary">Add Category</button>
+          </form>
         </div>
       </div>
     </div>
@@ -212,20 +208,28 @@
                         <th></th>
                       </tr>
                     </thead>
-                    <tbody id="cat"   class="table-border-bottom-0">
+                    <tbody    class="table-border-bottom-0">
                       {{#each category}}
                       <tr>
-                        <td id="cat"><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{@index}}</strong></td>
+                        <td id="cat"><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{inc @index}}</strong></td>
 
                         <td>{{name}}</td> 
 
                         <td><button class="btn btn-danger"><a style="text-decoration: none; color: #ffff;" href="/admin/deleteCategory?id={{_id}}">Delete</a></button></td>
 
                       </tr>
+                     
+                      
                       {{/each}}
-                      <div id="input-container">
+                       <tr>
+                        <td id="cat"><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong></strong></td>
 
-                      </div>
+                        <td id="category-list"></td> 
+
+                        <td id="cat"><button class="btn btn-danger"><a style="text-decoration: none; color: #ffff;" href="/admin/deleteCategory?id={{_id}}">Delete</a></button></td>
+
+                      </tr>
+
                     </tbody>
                   </table>
 
@@ -235,53 +239,6 @@
 </div>
 <!-- / Content -->
 
-{{!-- <script>
-
-  const input = document.querySelector("#input")
-  //const addCategoryButton = document.querySelector("button")
-  let catBody = document.querySelector("cat")
-
-  async function addCategoryButton(){
-   await fetch("http://localhost:5000/admin/category",{
-      method: "POST",
-      headers:{
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        name: input.value ,
-      }),
-      
-    }).then((res)=>res.json())
-    .then((data)=> displayCategory())
-    
-    .catch((err)=>console.log(err.message))
-
-
-  }
-
-  async function displayCategory(){
-    await fetch("http://localhost:5000/admin/category")
-    .then((res)=>res.json())
-    .then((data)=>console.log(data))
-    .then((data)=> {
-let section = ''
-      data.forEach((ele)=>{
-        section += `<tr>
-                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>${ele.index}</strong></td>
-
-                        <td>${ele.name}</td> 
-
-                        <td><button class="btn btn-danger"><a style="text-decoration: none; color: #ffff;" href="/admin/deleteCategory?id={{_id}}">Delete</a></button></td>
-
-                      </tr>`
-      })
-
-     catBody.innerHTML(section)
-      
-    }) 
-  }
-
-</script> --}}
 <script>
   const form = document.getElementById('add-category-form');
   const categoryInput = document.getElementById('category-input');
@@ -292,7 +249,7 @@ let section = ''
     const category = categoryInput.value;
 
     // Send an AJAX request to the server
-    fetch('/add-category', {
+    fetch('http://localhost:5000/admin/category', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -304,8 +261,9 @@ let section = ''
       console.log(data);
       // Display the new category on the page
       const categoryList = document.getElementById('category-list');
-      const newCategoryItem = document.createElement('li');
+      const newCategoryItem = document.createElement('td');
       newCategoryItem.textContent = data.name;
+      // categoryList.style.display = "block"; 
       categoryList.appendChild(newCategoryItem);
     })
     .catch(error => console.error(error));

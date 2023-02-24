@@ -60,6 +60,8 @@ router.get('/order', adminController.loadOrders)
 
 router.get('/cancelOrder', adminController.cancelOrder)
 
+router.get('/confirmOrder', adminController.ConfirmOrder)
+
 // post
 
 router.post("/", adminController.verifyLogin);
@@ -77,6 +79,6 @@ router.post(
   adminController.loadAddProduct
 );
 
-router.post("/update", multer.upload.array("images"), adminController.editProduct);
+router.post("/update", multer.upload.array("image"), adminController.editProduct);
 
 module.exports = router; 

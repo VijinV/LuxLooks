@@ -452,7 +452,7 @@ const editAddress = async (req, res) => {
     }
   ).then(() => console.log("address updated"));
 
-  res.redirect("/checkout");
+  res.redirect("/address");
 };
 
 const deleteAddress = async (req, res) => {
@@ -462,7 +462,7 @@ const deleteAddress = async (req, res) => {
     console.log("address deleted")
   );
 
-  res.redirect("/checkout");
+  res.redirect("/address");
 };
 
 const placeOrder = async (req, res) => {
@@ -486,11 +486,8 @@ const placeOrder = async (req, res) => {
       if (address) {
         order = await orderModel({
           userId: userSession.user_id,
-
           payment: req.body.payment,
-
           name: address.name,
-
           address: address.address,
           city: address.city,
           state: address.state,
@@ -526,7 +523,6 @@ const placeOrder = async (req, res) => {
   } catch (error) {}
 };
 
-// TODO:  Change the printing of the orders ................
 
 const loadOrderDetails = async (req, res) => {
   const userId = req.session.user_id;
@@ -555,14 +551,13 @@ const loadOrderDetails = async (req, res) => {
 //     });
 // };
 
-// TODO: cancel order has not completed yet ................
 
 const cancelOrder = async (req, res) => {
   await orderModel.findOneAndUpdate(
     { _id: req.query.id },
     {
       $set: {
-        status: false,
+        status: "Cancel",
       },
     }
   );
@@ -661,7 +656,22 @@ const checkOtp = (req, res) => {
   }
 };
 
+const loadAddress = async (req, res) => {
+  
+    const userId = req.session.user_id;
+  
+    const user = await userSchema.findById({ _id: userId });
+  
+    const address = await addressModel.find({ userId: userId });
+    res.render("loadAddress", {
+      add: address,
+      session: req.session.user_id,
+    });
+  
+}
+
 module.exports = {
+  loadAddress,
   checkOtp,
   editMobile,
   payment,

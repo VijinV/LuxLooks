@@ -42,7 +42,21 @@ app.engine(
         for(var i = 0; i < max && i < ary.length; ++i)
             result.push(options.fn(ary[i]));
         return result.join('');
+    },
+    inc:function(value,options){
+      return parseInt(value) + 1
+    },
+    eq:function(v1, v2) {
+      if(v1 == v2) {
+        return  v2
+      }
+      else{
+        
+
+      }
     }
+
+
     }
   })
 );
@@ -57,6 +71,29 @@ adminRouter.engine(
     defaultLayout: "adminLayout",
     layoutsDir: __dirname + "/views/layout",
     partialsDir: __dirname + "/views/partials",
+    helpers:{
+      inc:function(value,options){
+        return parseInt(value) + 1
+      },limit:function(ary, max, options) {
+        if(!ary || ary.length == 0)
+            return options.inverse(this);
+    
+        var result = [ ];
+        for(var i = 0; i < max && i < ary.length; ++i)
+            result.push(options.fn(ary[i]));
+        return result.join('');
+    },
+    eq:function(v1, v2) {
+      if(v1 == v2) {
+        return  v2
+      }
+      else{
+        
+
+      }
+    }
+
+    }
   })
 );
 
