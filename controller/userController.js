@@ -19,10 +19,14 @@ let newUser;
 loadHome = (req, res) => {
   try {
     const session = req.session.user_id;
+    const userImage = req.session.userImg
+
+    console.log(userImage);
+  
     login = false;
     productModel.find({}).exec((err, product) => {
       if (product) {
-        res.render("home", { session, product, login });
+        res.render("home", { session, product, login,userImage });
       } else {
         res.render("home", { session, login });
       }
@@ -35,6 +39,8 @@ loadHome = (req, res) => {
 const loadCart = async (req, res) => {
   try {
     login = false;
+    
+
     userSession = req.session;
     const userData = await userSchema.findById({ _id: userSession.user_id });
     const completeUser = await userData.populate("cart.item.productId");
@@ -45,6 +51,7 @@ const loadCart = async (req, res) => {
       cartProducts: completeUser.cart.item,
       total: completeUser.cart.totalPrice,
       session: req.session.user_id,
+      userImage:req.session.userImg
     });
   } catch (error) {
     console.log(error);
@@ -102,6 +109,7 @@ loadWishlist = async (req, res) => {
       id: userSession.user_id,
       products: completeUser.wishlist.item,
       session: req.session.user_id,
+      userImage:req.session.userImg
     });
   } catch (error) {
     console.log(error.message);
@@ -143,9 +151,9 @@ const loadShop = (req, res) => {
   login = false;
   productModel.find({}).exec((err, product) => {
     if (product) {
-      res.render("shop", { session, product, login });
+      res.render("shop", { session, product, login , userImage:req.session.userImg});
     } else {
-      res.render("shop", { session, login });
+      res.render("shop", { session, login, userImage:req.session.userImg });
     }
   });
   
@@ -154,18 +162,18 @@ const loadShop = (req, res) => {
 loadProduct = (req, res) => {
   const session = req.session.user_id;
   login = false;
-  res.render("productDetails", { session, login });
+  res.render("productDetails", { session, login, userImage:req.session.userImg });
 };
 
 loadContact = (req, res) => {
   const session = req.session.user_id;
   login = false;
-  res.render("contact", { session, login });
+  res.render("contact", { session, login , userImage:req.session.userImg});
 };
 
 loadLogin = (req, res) => {
   login = true;
-  res.render("login", { login });
+  res.render("login", { login , userImage:req.session.userImg});
 };
 
 // loadRegister = (req, res) => {
@@ -182,7 +190,7 @@ loadProductDetails = async (req, res) => {
 
     const product = await productModel.findById({ _id: req.query.id });
 
-    res.render("productDetails", { product, session, login });
+    res.render("productDetails", { product, session, login , userImage:req.session.userImg});
   } catch (error) {
     console.log(error.message);
   }
@@ -246,6 +254,8 @@ const verifyLogin = async (req, res, next) => {
         if (userData.isAvailable) {
           req.session.user_id = userData._id;
           req.session.user_name = userData.name;
+          req.session.userImg = userData.image;
+          // console.log(userData.image);
           res.redirect("/");
         } else {
           res.render("login", {
@@ -307,7 +317,8 @@ loadCheckout = async (req, res) => {
   res.render("checkout", {
     add: address,
     totalPrice: completeUser.cart.totalPrice,
-    session: req.session.user_id,
+    session: req.session.user_id
+    , userImage:req.session.userImg
   });
 };
 
@@ -332,11 +343,20 @@ const addAddress = async (req, res) => {
 };
 
 loadOrderSummary = (req, res) => {
-  res.render("ordersummary", { session: req.session.user_id });
+  res.render("ordersummary", { session: req.session.user_id, userImage:req.session.userImg });
 };
 
-loadOrderSuccess = (req, res) => {
-  res.render("orderSuccess", { session: req.session.user_id });
+loadOrderSuccess = async (req, res) => {
+
+  await userModel.findOneAndUpdate({_id:req.session.user_id},{$set:{
+
+    "cart.item ": [],
+    "cart.totalPrice": "0"
+
+  }})
+
+
+  res.render("orderSuccess", { session: req.session.user_id, userImage:req.session.userImg });
 };
 
 const loadForgetPassword = (req, res) => {
@@ -427,7 +447,8 @@ const loadEditAddress = async (req, res) => {
       res.render("editaddress", {
         address,
         addressId,
-        session: req.session.user_id,
+        session: req.session.user_id
+        , userImage:req.session.userImg
       });
     }
   );
@@ -503,6 +524,7 @@ const placeOrder = async (req, res) => {
 
       if (req.body.payment == "cod") {
         res.render("orderSuccess", { session: req.session.user_id });
+
         order
           .save()
           .then(() => {
@@ -532,7 +554,7 @@ const loadOrderDetails = async (req, res) => {
   const orderDetails = await orderModel
     .find({ userId: userId })
     .exec((err, data) => {
-      res.render("ordersummary", { session: req.session.user_id, order: data });
+      res.render("ordersummary", { session: req.session.user_id, order: data,userImage:req.session.userImg });
     });
 };
 
@@ -583,7 +605,7 @@ const loadUserProfile = async (req, res) => {
   const session = req.session;
 
   userSchema.findById({ _id: session.user_id }).exec((err, user) => {
-    res.render("userProfile", { user, session: req.session.user_id });
+    res.render("userProfile", { user, session: req.session.user_id , userImage:req.session.userImg});
     console.log(user.image);
   });
 };
@@ -592,7 +614,7 @@ const loadEditUserProfile = async (req, res) => {
   const session = req.session;
 
   userSchema.findById({ _id: session.user_id }).exec((err, user) => {
-    res.render("editUserProfile", { user, session: req.session.user_id });
+    res.render("editUserProfile", { user, session: req.session.user_id, userImage:req.session.userImg });
   });
 };
 
@@ -609,7 +631,9 @@ const editUserProfile = async (req, res) => {
         },
       }
     )
-    .then(() => {
+    .then((user) => {
+      req.session.userImg = user.image;
+      console.log(user.image);
       res.redirect("/editProfile");
     })
     .then(() => console.log("edited"));
@@ -665,7 +689,7 @@ const loadAddress = async (req, res) => {
     const address = await addressModel.find({ userId: userId });
     res.render("loadAddress", {
       add: address,
-      session: req.session.user_id,
+      session: req.session.user_id, userImage:req.session.userImg,
     });
   
 }

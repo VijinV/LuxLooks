@@ -13,17 +13,17 @@
 	</div>
 		
 	<!-- Shoping Cart -->
-	<form class="bg0 p-t-75 p-b-85">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
+	<form class="bg0 p-t-75 p-b-85 w-100">
+		<div class="container w-100">
+			<div class="row w-100">
+				<div class="col-lg-10 col-xl-7 w-100 m-lr-auto m-b-50">
 					<div class="m-l-25 m-r--38 m-lr-0-xl">
 						<div class="wrap-table-shopping-cart">
 							<table class="table-shopping-cart">
 								<tr class="table_head">
-									<th class="column-1">Product</th>
+									<th class="column-1">Sl.No</th>
 									<th class="column-2">Time</th>
-									{{!-- <th class="column-3">Price</th> --}}
+									<th class="column-3">Price</th>
 									<th class="column-4">Payment</th>
 									<th class="column-5"></th>
 								</tr>
@@ -36,7 +36,7 @@
 											<img src="admin/assets/img/products/{{productId}}" alt="IMG">
 										</div>
 									</td> --}}
-									<td class="column-2">{{_id}}</td>
+									<td class="column-2 ms-5">{{inc @index}}</td>
 											<td>
 										{{createdAt}}
 									</td>
@@ -48,8 +48,8 @@
 
 									{{#if (eq status "Cancel")}}
 									 <td class="column-5"><button disabled class="btn btn-secondary"><a style="text-decoration: none; color: #ffff;">Canceled</a></button></td>
-                                    {{else}}
-                                   <td class="column-5"><button class="btn btn-danger"><a style="text-decoration: none; color: #ffff;" href="/cancelOrder?id={{_id}}">Cancel</a></button></td>
+                                    {{else if (eq status "Confirm")}}
+									<td><span class="badge bg-label-success me-1">Confirmed</span></td>
                                      {{/if}}
 
                                     <td class="column-5"><button class="btn btn-primary"><a style="text-decoration: none; color: #ffff;" href="/viewOrder?id={{_id}}">View</a></button></td>

@@ -9,20 +9,47 @@ const upload = require("../util/multer");
 const orderModel = require("../model/orderModel");
 
 // get methods
-loadDashboard = (req, res) => {
+loadDashboard = async (req, res) => {
   try {
+
+   await orderModel.find({}).countDocuments((err, count) =>{
+
+
+    if (err) {
+
+      console.log(err);
+      
+    } else {
+      console.log(count,'countDocuments');
+    }
+
+
+    })
+
     res.render("dashboard");
   } catch (error) {}
 };
 
 const loadProduct = async (req, res) => {
   try {
-    productModel.find({}).exec((err, product) => {
+    productModel.find({}).sort({_id:-1}).exec((err, product) => {
       if (product) {
         res.render("product", { product });
         console.log(product);
       }
     });
+    await orderModel.find({}).countDocuments((err, count) =>{
+      
+      if (err) {
+  
+        console.log(err);
+        
+      } else {
+        console.log(count,'countDocuments');
+      }
+  
+  
+      })
   } catch (error) {
     console.log(error);
   }
@@ -288,7 +315,43 @@ const ConfirmOrder = async (req, res) => {
   res.redirect('/admin/order')
 };
 
+const deliOrder = async (req, res) => {
+
+  await  orderModel.findByIdAndUpdate(
+    { _id: req.query.id },
+    { $set: { status: "Delivered" } }
+  )
+  res.redirect('/admin/order')
+
+}
+
+const returnOrder = async (req, res) => {
+
+  await  orderModel.findByIdAndUpdate(
+    { _id: req.query.id },
+    { $set: { status: "Return" } }
+  )
+  res.redirect('/admin/order')
+}
+
+const viewOrder = async (req, res) => {
+
+
+  const order = await orderModel.findById({ _id: req.query.Id });
+
+  const completeData = await order.populate("products.item.productId");
+
+
+  res.render("orderList", {
+    order: completeData.products.item,
+    session: req.session.user_id,
+  });
+
+}
+
 module.exports = {
+  viewOrder,
+  returnOrder,
   cancelOrder,
   loadOrders,
   deleteCategory,
@@ -306,4 +369,5 @@ module.exports = {
   loadCategory,
   addCategory,
   ConfirmOrder,
+  deliOrder,
 };

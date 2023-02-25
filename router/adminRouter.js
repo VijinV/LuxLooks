@@ -46,21 +46,27 @@ router.get("/dashboard", adminAuth.isLogout, adminController.loadDashboard);
 
 router.get("/logout", adminAuth.logout);
 
-router.get("/editProduct", adminController.loadEditProduct);
+router.get("/editProduct",adminAuth.isLogout, adminController.loadEditProduct);
 
-router.get("/block", adminController.blockUser);
+router.get("/block", adminAuth.isLogout,adminController.blockUser);
 
-router.get("/stock", adminController.inStock);
+router.get("/stock",adminAuth.isLogout, adminController.inStock);
 
-router.get('/category', adminController.loadCategory)
+router.get('/category',adminAuth.isLogout,adminAuth.isLogout, adminController.loadCategory)
 
-router.get('/deleteCategory', adminController.deleteCategory)
+router.get('/deleteCategory',adminAuth.isLogout, adminController.deleteCategory)
 
-router.get('/order', adminController.loadOrders)
+router.get('/order',adminAuth.isLogout, adminController.loadOrders)
 
-router.get('/cancelOrder', adminController.cancelOrder)
+router.get('/cancelOrder',adminAuth.isLogout, adminController.cancelOrder)
 
-router.get('/confirmOrder', adminController.ConfirmOrder)
+router.get('/confirmOrder',adminAuth.isLogout, adminController.ConfirmOrder)
+
+router.get('/deliOrder',adminAuth.isLogout, adminController.deliOrder)
+
+router.get('/returnOrder',adminAuth.isLogout, adminController.returnOrder)
+
+router.get('/viewOrder',adminAuth.isLogout, adminController.viewOrder)
 
 // post
 
@@ -69,16 +75,16 @@ router.post("/", adminController.verifyLogin);
 // router.post ('/addCategory', adminController.addCategory,adminController.loadCategory)
 
 
-router.post('/category',adminController.addCategory)
+router.post('/category',adminAuth.isLogout,adminController.addCategory)
 
 
 router.post(
-  "/addProducts",
+  "/addProducts",adminAuth.isLogout,
   multer.upload.array("images"),
   adminController.addProduct,
   adminController.loadAddProduct
 );
 
-router.post("/update", multer.upload.array("image"), adminController.editProduct);
+router.post("/update",adminAuth.isLogout, multer.upload.array("image"), adminController.editProduct);
 
 module.exports = router; 

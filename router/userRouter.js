@@ -96,6 +96,8 @@ route.get('/userProfile',userAuth.isLogout,userController.loadUserProfile)
 
  route.get('/address',userAuth.isLogout,userController.loadAddress)
 
+ 
+
 
  route.get('/editMobile',userController.editMobile)
 
