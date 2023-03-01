@@ -68,6 +68,8 @@ router.get('/returnOrder',adminAuth.isLogout, adminController.returnOrder)
 
 router.get('/viewOrder',adminAuth.isLogout, adminController.viewOrder)
 
+router.get('/coupon',adminAuth.isLogout,adminController.loadCoupon)
+
 // post
 
 router.post("/", adminController.verifyLogin);
@@ -86,5 +88,7 @@ router.post(
 );
 
 router.post("/update",adminAuth.isLogout, multer.upload.array("image"), adminController.editProduct);
+
+router.post('/addCoupon',adminAuth.isLogout,adminController.addCoupon)
 
 module.exports = router; 

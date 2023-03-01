@@ -91,6 +91,9 @@ adminRouter.engine(
         
 
       }
+    },
+    formatNumber:function (num) {
+      return num.toLocaleDateString('en-US');
     }
 
     }

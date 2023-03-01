@@ -8,6 +8,9 @@ const upload = require("../util/multer");
 
 const orderModel = require("../model/orderModel");
 
+
+const couponModel = require("../model/couponModel");
+
 // get methods
 loadDashboard = async (req, res) => {
   try {
@@ -263,7 +266,7 @@ const addCategory = async (req, res, next) => {
   }
 };
 
-loadCategory = async (req, res) => {
+const loadCategory = async (req, res) => {
   categoryModel.find({}).exec((err, category) => {
     if (category) {
       // res.json(category)
@@ -349,7 +352,50 @@ const viewOrder = async (req, res) => {
 
 }
 
+const loadCoupon = async (req, res) => {
+
+const coupon = await couponModel.find({})
+
+  res.render('coupon',{coupon,})
+
+}
+
+const addCoupon = async (req, res) => {
+
+  try {
+    
+    const coupon =  new couponModel({
+
+      code : req.body.code,
+      description : req.body.description,
+      discount:req.body.discount,
+      expiresAt:req.body.expiresAt,
+      isActive : true,
+      createdAt:Date.now(),
+      updatedAt:Date.now()
+      
+    })
+
+    console.log(coupon);
+
+    await coupon.save().then(()=>{
+      console.log('saved');
+      res.redirect('/admin/coupon')
+    })
+
+  } catch (error) {
+
+
+    
+  }
+
+
+}
+
+
 module.exports = {
+  addCoupon,
+  loadCoupon,
   viewOrder,
   returnOrder,
   cancelOrder,

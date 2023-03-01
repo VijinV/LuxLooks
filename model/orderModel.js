@@ -36,6 +36,17 @@ const orderSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  couponCode:{
+    type: String,
+  },
+  discount:{
+    type: String,
+  },
+  Total:{
+
+    type:Number,
+
+  },
   createdAt: {
     type: Date,
     immutable: true,
@@ -64,7 +75,7 @@ const orderSchema = new mongoose.Schema({
 
   status: {
     type: String,
-    default: "Attempted"
+    default: "Confirm"
   }
   , 
   productReturned: [{

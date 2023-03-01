@@ -68,6 +68,10 @@ route.post('/placeOrder',userAuth.isLogout,userController.placeOrder)
 
 route.get('/orderSuccess',userAuth.isLogout, userController.loadOrderSuccess)
 
+route.get('/orderFailure',userAuth.isLogout,(req, res) => {
+  res.send('failed to payment to order')
+})
+
 route.get('/orderSummary',userAuth.isLogout, userController.loadOrderSummary)
 
 route.post('/addToWishlist',userAuth.isLogout, userController.addToWishlist)
@@ -126,6 +130,12 @@ route.post('/otp',userController.verifyOtp)
 route.post('/editUser',userAuth.isLogout,userMulter.upload,userController.editUserProfile)
 
 route.post('/razorpay',userAuth.isLogout, userController.payment)
+
+route.post('/updateCartItem',userController.updateCartItem)
+
+route.post('/applyCoupon',userController.applyCoupon)
+
+route.get('/loadOrderSuccess',userController.loadOrderSuccess)
 
 
 module.exports = route;
