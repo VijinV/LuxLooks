@@ -28,44 +28,61 @@
 
                                         <button class="btn btn-danger ml-2 btn-lg mx-3" id="rzp-button1">Pay</button>
                                        
+                                        <input type="hidden" id="totalPrice" value={{orderData.products.totalPrice}}>
+                                        <input type="hidden" id="ID" value={{orderData._id}}>
+
+
+
                                         <script>
 
+                                            const total = document.querySelector('#totalPrice').value
+                                            const id = document.querySelector('#ID').value
 
                                             document.querySelector('#rzp-button1').onclick =async function (e) {
                                                await e.preventDefault();
-
-                                                let response = await fetch("http://localhost:5000/razorpay", {
-                                                    method: "POST",
-                                                    headers:{
-                                                        "Content-Type":"application/json"
+                                            var options = {
+                                             "key": 'rzp_test_m2QMJlI1oi6E6F', // Enter the Key ID generated from the Dashboard
+                                                "amount":total*100 , // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                                                "currency": "INR",
+                                                //"order_id": id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                                                "handler": function (response) {
+                                                    console.log(response);
+                                                    fetch('/payment', {
+                                                    method: 'POST',
+                                                    headers: {
+                                                        'Content-Type': 'application/json'
                                                     },
-                                                    body:JSON.stringify({
-                                                        amount:7800,
+                                                    body: JSON.stringify({
+                                                    paymentId: response.razorpay_payment_id,
+                                                    // orderId: response.razorpay_order_id, 
+                                                    signature: response.razorpay_signature
                                                     })
-                                                })
-                                                let orderData = await response.json()
-                                                console.log(typeof(orderData.order.amount));
+                                                    })
+                                                    .then(data => {
+                                                      if (data.status == 'success') {
+                                                        // Redirect to success page
+                                                        window.location.href = '/orderSuccess';
+                                                      } else {
+                                                        // Redirect to failed page
+                                                        //window.location.href = '/paymentFailure'; --}}
+                                                        window.location.href = '/orderSuccess';
 
-                                                var options = {
-                                                    "key": 'rzp_test_m2QMJlI1oi6E6F', // Enter the Key ID generated from the Dashboard
-                                                    "amount": orderData.order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-                                                    "currency": "INR",
-
-                                                    "order_id": orderData.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-                                                    "handler": function (response) {
-                                                        console.log(response);
-                                                        alert(response.razorpay_payment_id);
-                                                        alert(response.razorpay_order_id);
-                                                        alert(response.razorpay_signature)
-                                                    },
- 
+                                                      }
+                                                    })
+                                                    .catch(error => {
+                                                    console.error(error);
+                                                    });
+                                                }
                                                 };
-
+                                                
                                                 var rzp1 = new Razorpay(options);
-
+                                                
                                                 rzp1.open();
+
                                             }
 
+
+                                                
                                         </script>
 
 

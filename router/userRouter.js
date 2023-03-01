@@ -68,6 +68,12 @@ route.post('/placeOrder',userAuth.isLogout,userController.placeOrder)
 
 route.get('/orderSuccess',userAuth.isLogout, userController.loadOrderSuccess)
 
+route.get('/paymentFailure',(req, res) => {
+
+  res.send('Payment Failure')
+
+})
+
 route.get('/orderFailure',userAuth.isLogout,(req, res) => {
   res.send('failed to payment to order')
 })

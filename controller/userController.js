@@ -550,13 +550,17 @@ const placeOrder = async (req, res) => {
           if (req.body.payment == "cod") {
 
             console.log('success');
+            console.log(order);
 
             res.redirect('/orderSuccess')
 
           } else {
+            console.log(order);
             res.render("razorpay", {
               total: completeUser.cart.totalPrice,
               session: req.session.user_id,
+              orderData:order
+              
             });
 
           }
@@ -664,20 +668,44 @@ const payment = async (req, res) => {
   const userData = await userModel.findById({_id:userSession.user_id});
   const completeUser = await userData.populate('cart.item.productId');
   var instance = new RazorPay({
-      key_id:process.env.KEY_ID,
-      key_secret:process.env.KEY_SECRET,
+      key_id:'rzp_test_m2QMJlI1oi6E6F',
+      key_secret:'UqQbA4vzZOYIuHu5Bus3zr7i',
   })
   
   console.log(completeUser.cart.totalPrice);
-  let order = await instance.orders.create({
+  let myOrder = await instance.orders.create({
       amount:completeUser.cart.totalPrice * 100,
       currency:"INR",
       receipt:"receipt#1"
   })
-  res.status(201).json({
-      success:true,
-      order,
-  });
+
+  console.log(myOrder);
+
+  if(res.status(201)){
+    res.json({ status: 'success' });
+  }else{
+    res.json({ status: 'success' });
+  }
+
+  // instance.payments.capture(order._id, completeUser.cart.totalPrice * 100, {
+  //   currency: "INR"
+  // }, (err, payment) => {
+  //   if (err) {
+  //     res.json({ status: 'failed' });
+  //   } else {
+  //     console.log(payment);
+  //     res.json({ status: 'success' });
+  //   }
+  // });
+  
+  
+  // res.status(201).json({
+  //     success:true,
+  //     order,
+  // });
+
+
+
   }
 
 ///!
