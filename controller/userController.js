@@ -663,9 +663,9 @@ const payment = async (req, res) => {
   userSession = req.session;
   const userData = await userModel.findById({_id:userSession.user_id});
   const completeUser = await userData.populate('cart.item.productId');
-  var instance = new Razorpay({
-      key_id:process.env.PAYMENT_KEY,
-      key_secret:process.env.PAYMENT_SECRET,
+  var instance = new RazorPay({
+      key_id:process.env.KEY_ID,
+      key_secret:process.env.KEY_SECRET,
   })
   
   console.log(completeUser.cart.totalPrice);
