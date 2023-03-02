@@ -12,26 +12,6 @@ const orderModel = require("../model/orderModel");
 const couponModel = require("../model/couponModel");
 
 // get methods
-// loadDashboard = async (req, res) => {
-//   try {
-
-//    await orderModel.find({}).countDocuments((err, count) =>{
-
-
-//     if (err) {
-
-//       console.log(err);
-      
-//     } else {
-//       console.log(count,'countDocuments');
-//     }
-
-
-//     })
-
-//     res.render("dashboard");
-//   } catch (error) {}
-// };
 
 const loadProduct = async (req, res) => {
   try {
@@ -105,7 +85,7 @@ const verifyLogin = async (req, res) => {
           req.session.admin_id = userData._id;
           req.session.admin_name = userData.name;
 
-          res.redirect("/admin");
+          res.redirect("/admin/dashboard");
         } else {
           res.render("login", {
             message: "You are not an administrator",
@@ -404,75 +384,100 @@ const addCoupon = async (req, res) => {
 }
 
 
+
 const loadDashboard = async (req, res) => {
-  try {
-    adminSession = req.session
-    if (isAdminLoggedin) {
-      const productData = await productModel.find()
-      const userData = await userModel.find({ is_admin: 0 })
-      const adminData = await userModel.findOne({is_admin:1})
-      const categoryData = await categoryModel.find()
+    try {
 
-      const categoryArray = [];
-      const orderCount = [];
-      for(let key of categoryData){
-        categoryArray.push(key.name)
-        orderCount.push(0)
+      adminSession = req.session
+      if (adminSession) {
+        const productData = await productModel.find()
+        const userData = await userModel.find()
+        // const adminData = await Admin.findOne()
+        const categoryData = await categoryModel.find()
+        const orders = await orderModel.find();
+  
+        const categoryArray = [];
+        const orderCount = [];
+        for(let key of categoryData){
+          categoryArray.push(key.name)
+          orderCount.push(0)
+      }
+
+      const completeorder = []
+      const orderDate =[];
+      const orderData =await orderModel.find()
+      for(let key of orderData){
+        const uppend = await key.populate('products.item.productId')
+        orderDate.push(key.createdAt);
+        completeorder.push(uppend)
     }
-    const completeorder = []
-    const orderData =await Order.find()
-    for(let key of orderData){
-      const uppend = await key.populate('products.item.productId')
-      completeorder.push(uppend)
-  }
-
-  const productName =[];
-  const salesCount = [];
-  const productNames = await Product.find();
-  for(let key of productNames){
-    productName.push(key.name);
-    salesCount.push(key.sales)
-  }
-  for(let i=0;i<completeorder.length;i++){
-    for(let j = 0;j<completeorder[i].products.item.length;j++){
-       const cataData = completeorder[i].products.item[j].productId.category
-       const isExisting = categoryArray.findIndex(category => {
-        return category === cataData
-       })
-       orderCount[isExisting]++
-}}
-
-  const showCount = await orderModel.find().count()
-  const productCount = await productModel.count()
-  const usersCount = await userModel.count({is_admin:0})
-  const totalCategory = await categoryModel.count({isAvailable:1})
-
-console.log(categoryArray);
-console.log(orderCount);
-
-    res.render('dashboard', {
-      users: userData,
-      admin: adminData,
-      product: productData,
-      category: categoryArray,
-      count: orderCount,
-      pname:productName,
-      pcount:salesCount,
-      showCount,
-      productCount,
-      usersCount,
-      totalCategory
-      
+    // console.log(orderDate);
+    const orderCountsByDate = {};
+    orders.forEach(order => {
+      const date = order.createdAt.toDateString();
+      if (orderCountsByDate[date]) {
+        orderCountsByDate[date]++;
+      } else {
+        orderCountsByDate[date] = 1;
+      }
     });
-      
+
+  const dates = Object.keys(orderCountsByDate);
+  const orderCounts = Object.values(orderCountsByDate);
+  
+    const productName =[];
+    const salesCount = [];
+    const productNames = await productModel.find();
+    for(let key of productNames){
+      productName.push(key.name);
+      salesCount.push(key.sales)
+    }
+    for(let i=0;i<completeorder.length;i++){
+      for(let j = 0;j<completeorder[i].products.item.length;j++){
+         const cataData = completeorder[i].products.item[j].productId.category
+         const isExisting = categoryArray.findIndex(category => {
+          return category === cataData
+         })
+         orderCount[isExisting]++
+  }}
+  
+    const showCount = await orderModel.find().count()
+    console.log(showCount);
+    const productCount = await productModel.count()
+    const usersCount = await userModel.count()
+    const totalCategory = await categoryModel.count({isAvailable:1})
+  
+  // console.log(categoryArray);
+  // console.log(orderCount);
+
+  
+  
+      res.render('dashboard', {
+        users: userData,
+        // admin,
+        product: productData,
+        category: categoryArray,
+        count: orderCounts,
+        pname:productName,
+        pdate:dates,
+        pcount:salesCount,
+        showCount,
+        productCount,
+        usersCount,
+        totalCategory
+      });
+        
     } else {
-      res.redirect('/admin/adminLogin')
+      res.redirect('/admin/')
     }
   } catch (error) {
-    console.log(error.message)
+    // console.log(error.message)
+    console.log(error.message);
   }
 }
-
+    
+    
+ 
 module.exports = {
   addCoupon,
   loadCoupon,

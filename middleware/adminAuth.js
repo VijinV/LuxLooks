@@ -1,7 +1,7 @@
 const isLogin = (req, res, next) => {
   try {
     if (req.session.admin_id) {
-      res.render("dashboard");
+      res.redirect("/admin/dashboard");
     } else {
       next();
     }
