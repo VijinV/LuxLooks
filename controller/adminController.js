@@ -323,7 +323,7 @@ const returnOrder = async (req, res) => {
     console.log(typeof(newWallet));
     await userModel.findByIdAndUpdate({_id:completeOrder.userId._id},{$set:{
       wallet:newWallet
-    }}).then((data)=>console.log(data))
+    }}).then((data)=>console.log(data))  
 
     res.redirect('/admin/order')
 }
