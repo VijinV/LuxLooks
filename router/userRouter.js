@@ -106,6 +106,10 @@ route.get('/userProfile',userAuth.isLogout,userController.loadUserProfile)
 
  route.get('/address',userAuth.isLogout,userController.loadAddress)
 
+ route.get('/returnOrder',userAuth.isLogout,userController.returnOrder)
+
+ route.get('/wallet',userAuth.isLogout,userController.loadWallet)
+
  
 
 

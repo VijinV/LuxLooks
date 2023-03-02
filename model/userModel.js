@@ -34,6 +34,9 @@ const userSchema = new mongoose.Schema({
   image:{
     type: String,
 
+  }, wallet:{
+    type:Number,
+    default:0,
   },
   cart: {
     item: [

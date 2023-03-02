@@ -540,6 +540,7 @@ const placeOrder = async (req, res) => {
               zip: address.zip,
               mobile: address.mobile,
               products: completeUser.cart,
+              price: completeUser.cart.totalPrice
             });
           }
           //! address not found
@@ -993,7 +994,28 @@ const loadOrderSuccess = async (req, res) => {
   } catch (error) {}
 };
 
+const returnOrder =async (req,res)=>{
+
+
+
+ const orderData = await orderModel.findByIdAndUpdate({_id:req.query.id},{$set:{
+    status:'ReturnRequestReceived'
+  }})
+
+  console.log(orderData);
+
+  res.redirect('/orderDetails')
+}
+
+const loadWallet = async (req, res) => {
+  const user = await  userModel.findById({_id:req.session.user_id})
+  console.log(user);
+  res.render('wallet',{user})
+}
+
 module.exports = {
+  loadWallet,
+  returnOrder,
   applyCoupon,
   updateCartItem,
   loadAddress,

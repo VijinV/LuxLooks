@@ -25,9 +25,9 @@
 									<th class="column-2">Date</th>
 									<th class="column-3">Payment</th>
 									<th class="column-4">Status</th>
-									<th class="column-5"></th>
-									<th class="column-6"></th>
-									<th class="column-6"></th>
+									<th class="column-5">Status</th>
+									<th class="column-6">Status</th>
+
 
 								</tr>
 
@@ -50,18 +50,18 @@
 									</td>
 
 									 {{#if (eq status "Attempted")}}
-                                        <td><span class="badge bg-label-primary me-1">Attempted</span></td>
+                                        <td class="column-4"><span class="badge bg-label-primary me-1">Attempted</span></td>
                                         {{else if (eq status "Confirm")}}
                                         
-                                      <td><span class="badge bg-label-success me-1">Confirmed</span></td> 
+                                      <td class="column-4"><span class="badge bg-label-success me-1">Confirmed</span></td> 
                                         {{else if (eq status "Delivered")}}
-                                        <td><span class="badge bg-label-danger me-1">Delivered</span></td>
+                                        <td class="column-4"><span class="badge bg-label-success me-1">Delivered</span></td>
 										 {{else if (eq status "Return")}}
-                                        <td><span class="badge bg-label-danger me-1">Return</span></td>
-										{{else if (eq status "Build")}}
-                                        <td><span class="badge bg-label-danger me-1">BUild</span></td>
-                                        {{else}}
-                                        <td><span class="badge bg-label-danger me-1"></span></td>
+                                        <td class="column-4"><span class="badge bg-label-primary me-1">Return</span></td>
+										{{else if (eq status "Cancel")}}
+                                        <td class="column-4"><span class="badge bg-label-danger me-1">Cancelled</span></td>
+                                        {{else if (eq status "ReturnRequestReceived")}}
+                                        <td class="column-4"><span class="badge bg-label-warning me-1">Return Request Received</span></td>
                                         {{/if}}
                                         <td class="column-5"><button class="btn btn-primary"><a style="text-decoration: none; color: #ffff;" href="/viewOrder?id={{_id}}">View</a></button></td>
 
@@ -69,15 +69,14 @@
 										<td class="column-6">
 											<button class="btn btn-warning"><a class="aTag" href="/returnOrder?id={{_id}}">Return</a></button>
 										</td>
-										{{else if (eq status "Confirm")}}
-										<td class="column-6"></td>
+										{{else if (eq status "Attempted")}}
+										{{else if (eq status "Cancel")}}
+										{{else if (eq status "ReturnRequestReceived")}}
+
+                                        {{!-- <td class="column-6"><button class="btn btn-danger"><a class="aTag" href="/cancelOrder?id={{_id}}">Cancel</a></button></td> --}}
 										{{else}}
-										<td class="column-7">
-											<button class="btn btn-Danger"><a class="aTag" href="/cancelOrder?id={{_id}}">Cancel</a></button>
-										</td>
+                                        <td class="column-6"><button class="btn btn-danger"><a class="aTag" href="/cancelOrder?id={{_id}}">Cancel</a></button></td>
 										{{/if}}
-
-
 								</tr>
 
 								{{/each}}

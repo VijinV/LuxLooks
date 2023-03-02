@@ -207,8 +207,10 @@
                         
                           <td><span class="badge bg-label-success me-1">Confirmed</span></td> 
                         {{else if (eq status "Delivered")}}
-                        <td><span class="badge bg-label-danger me-1">Delivered</span></td> {{else if (eq status "Return")}}
-                        <td><span class="badge bg-label-danger me-1">Return</span></td>{{else if (eq status "Build")}}
+                        <td><span class="badge bg-label-danger me-1">Delivered</span></td> 
+                        {{else if (eq status "ReturnRequestReceived")}}
+                        <td><span class="badge bg-label-danger me-1">Return Request on Pending</span></td>
+                        {{else if (eq status "Build")}}
                         <td><span class="badge bg-label-danger me-1">BUild</span></td>
                         {{else}}
                         <td><span class="badge bg-label-danger me-1"></span></td>
@@ -290,31 +292,16 @@
                         {{else if (eq status "Confirm")}}
                           <td><span class="badge bg-label-danger me-1">Confirmed</span></td> 
                         {{else if (eq status "Delivered")}}
-                        <td><span class="badge bg-label-danger me-1">Delivered</span></td> {{else if (eq status "Return")}}
-                        <td><span class="badge bg-label-danger me-1">Return</span></td>{{else if (eq status "Build")}}
+                        <td><span class="badge bg-label-danger me-1">Delivered</span></td>
+                        {{else if (eq status "ReturnRequestReceived")}}
+                        <td><span class="badge bg-label-danger me-1">Return Request on Pending</span></td>
+                        {{else if (eq status "Build")}}
                         <td><span class="badge bg-label-danger me-1">BUild</span></td>
                         {{else}}
                         <td><span class="badge bg-label-danger me-1"></span></td>
 
                         {{/if}}
 
-                        {{!-- {{#eq s}} --}}
-
-                        {{!-- <td>
-                          <div class="dropdown">
-                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                              <i class="bx bx-dots-vertical-rounded"></i>
-                            </button>
-                            <div class="dropdown-menu">
-                              <a class="dropdown-item" href="javascript:void(0);"
-                                ><i class="bx bx-edit-alt me-1"></i> Edit</a
-                              >
-                              <a class="dropdown-item" href="javascript:void(0);"
-                                ><i class="bx bx-trash me-1"></i> Delete</a
-                              >
-                            </div>
-                          </div>
-                        </td> --}}
 
                         {{#if status}}
 
@@ -340,10 +327,7 @@
                   </table>
                 </div>
               </div>
-
-               {{else if (eq id "Return")}}
-               Return
-               
+              {{else if (eq id "Return")}}
               <div class="card">
                 <h5 class="card-header">Return</h5>
                 <div class="table-responsive text-nowrap">
@@ -359,15 +343,15 @@
                     </thead>
                     <tbody class="table-border-bottom-0">
                       {{#each order}}
-                      {{#if (eq status "Return")}}
+                      {{#if (eq status "ReturnRequestReceived")}}
                       <tr>
                         <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{_id}}</strong></td>
                         <td>{{createdAt}}</td>
                         <td>{{payment}}</td>
                         <td>{{name}}</td>
 
-                        {{#if (eq status "Attempted")}}
-                        <td><span class="badge bg-label-primary me-1">Attempted</span></td>
+                        {{#if (eq status "ReturnRequestReceived")}}
+                        <td><span class="badge bg-label-primary me-1">Return Request on Pending</span></td>
                         {{else if (eq status "Confirm")}}
                           <td><span class="badge bg-label-danger me-1">Confirmed</span></td> 
                         {{else if (eq status "Delivered")}}
@@ -380,19 +364,46 @@
                         {{/if}}
 
                         {{#if status}}
+                        <td>
+                      <button class="btn btn-warning"><a class="aTag" href="/admin/returnOrder?Id={{_id}}">Return</a></button>
 
-                    {{!-- <td>
-                        <button class="btn btn-danger"><a style="text-decoration: none; color: #000;" href="/admin/cancelOrder?id={{_id}}">Cancel</a></button>
-                    </td>
-
-                    <td>
-                        <button class="btn btn-success"><a style="text-decoration: none; color: #000;" href="/admin/cancelOrder?id={{_id}}">Confirm</a></button>
-                    </td> --}}
-                    {{else}}
-                     <td>
-                         
                     </td>
                     {{/if}}
+                    <td>
+                        <button class="btn btn-primary"><a style="text-decoration: none; color: #000;" href="/admin/viewOrder?Id={{_id}}">View</a></button>
+                    </td>
+                      </tr>
+                      {{else if (eq status "Return" )}}
+                      <tr>
+                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{_id}}</strong></td>
+                        <td>{{createdAt}}</td>
+                        <td>{{payment}}</td>
+                        <td>{{name}}</td>
+
+                        {{#if (eq status "Return")}}
+                        <td><span class="badge bg-label-warning me-1">Returned</span></td>
+                        {{else if (eq status "Confirm")}}
+                          <td><span class="badge bg-label-danger me-1">Confirmed</span></td> 
+                        {{else if (eq status "Delivered")}}
+                        <td><span class="badge bg-label-danger me-1">Delivered</span></td> {{else if (eq status "Return")}}
+                        <td><span class="badge bg-label-danger me-1">Return</span></td>{{else if (eq status "Build")}}
+                        <td><span class="badge bg-label-danger me-1">BUild</span></td>
+                        {{else}}
+                        <td><span class="badge bg-label-danger me-1"></span></td>
+
+                        {{/if}}
+{{!-- 
+                        {{#if status}}
+                        <td>
+                      <button class="btn btn-warning"><a class="aTag" href="/admin/returnOrder?Id={{_id}}">Return</a></button>
+
+                    </td>
+                    {{else}}
+                     <td>
+                      <button class="btn btn-primary"><a class="aTag" href="/admin/returnOrder?Id={{_id}}">Return</a></button>
+
+                    </td>
+                    {{/if}} --}}
                     <td>
                         <button class="btn btn-primary"><a style="text-decoration: none; color: #000;" href="/admin/viewOrder?Id={{_id}}">View</a></button>
                     </td>

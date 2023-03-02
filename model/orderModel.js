@@ -81,8 +81,8 @@ const orderSchema = new mongoose.Schema({
   productReturned: [{
     type: Number
   }],
-  wallet:{
-    type:Number
+  price:{
+    type: Number
   }
   
 

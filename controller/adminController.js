@@ -12,26 +12,26 @@ const orderModel = require("../model/orderModel");
 const couponModel = require("../model/couponModel");
 
 // get methods
-loadDashboard = async (req, res) => {
-  try {
+// loadDashboard = async (req, res) => {
+//   try {
 
-   await orderModel.find({}).countDocuments((err, count) =>{
+//    await orderModel.find({}).countDocuments((err, count) =>{
 
 
-    if (err) {
+//     if (err) {
 
-      console.log(err);
+//       console.log(err);
       
-    } else {
-      console.log(count,'countDocuments');
-    }
+//     } else {
+//       console.log(count,'countDocuments');
+//     }
 
 
-    })
+//     })
 
-    res.render("dashboard");
-  } catch (error) {}
-};
+//     res.render("dashboard");
+//   } catch (error) {}
+// };
 
 const loadProduct = async (req, res) => {
   try {
@@ -330,11 +330,22 @@ const deliOrder = async (req, res) => {
 
 const returnOrder = async (req, res) => {
 
-  await  orderModel.findByIdAndUpdate(
-    { _id: req.query.id },
+  console.log(req.query.Id);
+  const order = await  orderModel.findByIdAndUpdate(
+    { _id: req.query.Id },
     { $set: { status: "Return" } }
-  )
-  res.redirect('/admin/order')
+    )
+    const completeOrder = await order.populate("userId")
+    console.log(completeOrder.userId._id);
+    const user = await userModel.findOne({_id:completeOrder.userId._id})
+    let wallet = user.wallet
+    const newWallet = parseInt(wallet+order.price)
+    console.log(typeof(newWallet));
+    await userModel.findByIdAndUpdate({_id:completeOrder.userId._id},{$set:{
+      wallet:newWallet
+    }}).then((data)=>console.log(data))
+
+    res.redirect('/admin/order')
 }
 
 const viewOrder = async (req, res) => {
@@ -392,6 +403,75 @@ const addCoupon = async (req, res) => {
 
 }
 
+
+const loadDashboard = async (req, res) => {
+  try {
+    adminSession = req.session
+    if (isAdminLoggedin) {
+      const productData = await productModel.find()
+      const userData = await userModel.find({ is_admin: 0 })
+      const adminData = await userModel.findOne({is_admin:1})
+      const categoryData = await categoryModel.find()
+
+      const categoryArray = [];
+      const orderCount = [];
+      for(let key of categoryData){
+        categoryArray.push(key.name)
+        orderCount.push(0)
+    }
+    const completeorder = []
+    const orderData =await Order.find()
+    for(let key of orderData){
+      const uppend = await key.populate('products.item.productId')
+      completeorder.push(uppend)
+  }
+
+  const productName =[];
+  const salesCount = [];
+  const productNames = await Product.find();
+  for(let key of productNames){
+    productName.push(key.name);
+    salesCount.push(key.sales)
+  }
+  for(let i=0;i<completeorder.length;i++){
+    for(let j = 0;j<completeorder[i].products.item.length;j++){
+       const cataData = completeorder[i].products.item[j].productId.category
+       const isExisting = categoryArray.findIndex(category => {
+        return category === cataData
+       })
+       orderCount[isExisting]++
+}}
+
+  const showCount = await orderModel.find().count()
+  const productCount = await productModel.count()
+  const usersCount = await userModel.count({is_admin:0})
+  const totalCategory = await categoryModel.count({isAvailable:1})
+
+console.log(categoryArray);
+console.log(orderCount);
+
+    res.render('dashboard', {
+      users: userData,
+      admin: adminData,
+      product: productData,
+      category: categoryArray,
+      count: orderCount,
+      pname:productName,
+      pcount:salesCount,
+      showCount,
+      productCount,
+      usersCount,
+      totalCategory
+      
+    });
+      
+    } else {
+      res.redirect('/admin/adminLogin')
+    }
+  } catch (error) {
+    console.log(error.message)
+  }
+}
 
 module.exports = {
   addCoupon,
