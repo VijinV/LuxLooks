@@ -118,27 +118,27 @@
                                 <label class="form-check-label mb-2 me-1" for="defaultRadio1">{{mobile }}</label>
 
                                 <button style="height: 25px;
-    position: absolute;
-    width: 100px;
-    margin-top: -38px;" class="btn btn-warning"><a style="    font-size: 12px;
-    text-decoration: none;
-    color: black;
-    position: absolute;
-    margin-top: -8px;
-    margin-left: -47px;
-    height: 25px;
-    width: 31px;
-    padding-left: 32px;" href="/editAddress?id={{_id}}">edit</a></button>
-     <button style="height: 25px; width: 100px;" class="btn btn-danger"><a style="    font-size: 12px;
-    text-decoration: none;
-    color: black;
-    position: absolute;
-    margin-top: -8px;
-    margin-left: -47px;
-    height: 25px;
-    width: 31px;
-    padding-left: 32px;" href="/deleteAddress?id={{_id}}">Delete</a></button>
-
+                                    position: absolute;
+                                    width: 100px;
+                                    margin-top: -38px;" class="btn btn-warning"><a style="    font-size: 12px;
+                                    text-decoration: none;
+                                    color: black;
+                                    position: absolute;
+                                    margin-top: -8px;
+                                    margin-left: -47px;
+                                    height: 25px;
+                                    width: 31px;
+                                    padding-left: 32px;" href="/editAddress?id={{_id}}">edit</a></button>
+                                <button style="height: 25px; width: 100px;" class="btn btn-danger"><a style="    font-size: 12px;
+                                    text-decoration: none;
+                                    color: black;
+                                    position: absolute;
+                                    margin-top: -8px;
+                                    margin-left: -47px;
+                                    height: 25px;
+                                    width: 31px;
+                                    padding-left: 32px;" href="/deleteAddress?id={{_id}}">Delete</a></button>
+                                
                           </div>
 
 
@@ -169,14 +169,11 @@
             </div>
 
             <div class="size-209">
-              <span class="mtext-110 cl2">
+              <span class="mtext-110 cl2" id="grand-total">
                 {{totalPrice}}
               </span>
             </div>
           </div>
-
-
-
           <div class="flex-w flex-t p-t-27 p-b-33">
             <div class="size-208">
               <span class="mtext-101 cl2">
@@ -190,6 +187,7 @@
               </span>
             </div>
           </div>
+          
           <div class="size-208">
 								<span class="stext-110 cl2">
 									Coupon Discount:
@@ -212,9 +210,18 @@
 									{{!-- {{}} --}}
 								</span>
 							</div>
-          
+          <div class="d-flex flex-wrap flex-m m-r-20 m-tb-5">
+						
+								<input class="stext-104 cl2 plh4 size-117 bor13 p-lr-20 m-r-10 m-tb-5 w-50" id="couponInput" type="text" name="coupon" placeholder="Coupon Code">	
+								<div class="">
+									<button class="flex-c-m stext-101 cl2 size-118 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-5 btn btn-dark " type="button" id="coupon-btn">Apply coupon</button>
+                  
+								</div>
+                <span id="message"></span> 
+								
+							</div>
 
-                        <div class="flex-w flex-t bor12 p-t-15 p-b-30">
+            <div class="flex-w flex-t bor12 p-t-15 p-b-30">
             <div class="size-208 w-full-ssm">
               <span class="stext-110 cl2">
                 Payments:
@@ -273,3 +280,27 @@
     </div>
   </div>
 </form>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+  const input = document.querySelector('#couponInput')
+$('#coupon-btn').click(function(e){
+  e.preventDefault();
+  const coupon = input.value
+  $.ajax({
+    url:'/applyCoupon',
+    type:'POST',
+    data:{coupon},
+    success:function(data){
+      console.log(data)
+      $('#message').text(data.message);
+      $('#grand-total').text(data.updatedTotal)
+    },
+    error:function(jqXHR,textStatus,errorThrown){
+      console.log(textStatus,errorThrown)
+    }
+  })
+})
+</script>

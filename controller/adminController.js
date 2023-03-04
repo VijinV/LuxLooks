@@ -138,6 +138,7 @@ const loadEditProduct = async (req, res) => {
 
 const editProduct = async (req, res, next) => {
   try {
+
     // console.log(req.file.filename);
 
     const image = req.files;
@@ -152,7 +153,7 @@ const editProduct = async (req, res, next) => {
             name: req.body.name,
             category: req.body.category,
             price: req.body.price,
-            // image: image.map((x) => x.filename),
+            // image: image.map((x) => x),
             description: req.body.description,
           },
         }
@@ -160,6 +161,7 @@ const editProduct = async (req, res, next) => {
       .then(() => {
         res.redirect("/admin/products");
       });
+        
   } catch (error) {
     console.log(error.message);
   }
@@ -363,7 +365,8 @@ const addCoupon = async (req, res) => {
       expiresAt:req.body.expiresAt,
       isActive : true,
       createdAt:Date.now(),
-      updatedAt:Date.now()
+      updatedAt:Date.now(),
+      maxLimit:req.body.maxLimit
       
     })
 
