@@ -39,14 +39,6 @@ const orderSchema = new mongoose.Schema({
   couponCode:{
     type: String,
   },
-  discount:{
-    type: String,
-  },
-  Total:{
-
-    type:Number,
-
-  },
   createdAt: {
     type: Date,
     immutable: true,
@@ -72,7 +64,6 @@ const orderSchema = new mongoose.Schema({
       default: 0
     }
   },
-
   status: {
     type: String,
     default: "Confirm"

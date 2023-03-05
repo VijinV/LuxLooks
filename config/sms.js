@@ -1,8 +1,8 @@
 const fast2sms = require("fast-two-sms");
 const otplib = require('otplib');
+const secret = otplib.authenticator.generateSecret();
 require("dotenv").config();
 
-const secret = otplib.authenticator.generateSecret();
 
 // Generate an OTP
 const token = otplib.authenticator.generate(secret);

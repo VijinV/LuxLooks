@@ -169,7 +169,7 @@
             </div>
 
             <div class="size-209">
-              <span class="mtext-110 cl2" id="grand-total">
+              <span class="mtext-110 cl2 grand-total" id="grand-total">
                 {{totalPrice}}
               </span>
             </div>
@@ -182,23 +182,26 @@
             </div>
 
             <div class="size-209 p-t-1">
-              <span class="mtext-110 cl2">
+              <span class="mtext-110 cl2 grand-total">
                 {{totalPrice}}
               </span>
             </div>
           </div>
-          
-          <div class="size-208">
-								<span class="stext-110 cl2">
-									Coupon Discount:
-								</span>
-							</div>
 
-							<div id="price" class="size-209 mt-3">
-								<span class="mtext-110 cl2">
-									{{!-- {{}} --}}
-								</span>
-							</div>
+          {{!-- <div class="flex-w flex-t p-t-27 p-b-33">
+            <div class="size-208">
+              <span class="mtext-101 cl2">
+                Coupon Discount:
+              </span>
+            </div>
+
+            <div class="size-209 p-t-1">
+              <span class="mtext-110 cl2" style="color: greenyellow;" id="couponDiscount">
+                {{discount}}
+              </span>
+            </div>
+          </div> --}}
+
 							<div class="size-208">
 								<span class="stext-110 cl2">
 									Total Amount:
@@ -217,6 +220,10 @@
 									<button class="flex-c-m stext-101 cl2 size-118 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-5 btn btn-dark " type="button" id="coupon-btn">Apply coupon</button>
                   
 								</div>
+                {{!-- {{#if discount}} --}}
+                <span class="discount">Congratulation you have Saved</span><span class="ms-2 me-2 discount" id="couponDiscount"></span><span>🤑</span>
+
+                {{!-- {{/if}} --}}
                 <span id="message"></span> 
 								
 							</div>
@@ -296,7 +303,8 @@ $('#coupon-btn').click(function(e){
     success:function(data){
       console.log(data)
       $('#message').text(data.message);
-      $('#grand-total').text(data.updatedTotal)
+      $('.grand-total').text(data.updatedTotal)
+      $('#couponDiscount').text(data.couponDiscount)
     },
     error:function(jqXHR,textStatus,errorThrown){
       console.log(textStatus,errorThrown)
