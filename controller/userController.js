@@ -567,7 +567,7 @@ const placeOrder = async (req, res) => {
               key_id:process.env.KEY_ID,
               key_secret:process.env.KEY_SECRET
             })
-            let razorpayOrder = await instance.order.create({
+            let razorpayOrder = await instance.orders.create({
               amount:totalPrice*100,
               currency:'INR',
               receipt:order._id.toString()
@@ -581,8 +581,7 @@ const placeOrder = async (req, res) => {
               key_id: process.env.key_id,
               user: userData,
               order: order,
-              orderId: order._id.toString()
-
+              orderId: order._id.toString()   
             });
           } 
       
