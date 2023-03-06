@@ -196,7 +196,7 @@
                       {{#each order}}
                       {{#if (eq status "Confirm")}}
                       <tr>
-                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{_id}}</strong></td>
+                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{inc @index}}</strong></td>
                         <td>{{formatNumber createdAt}}</td>
                         <td>{{payment}}</td>
                         <td>{{name}}</td>
@@ -282,8 +282,8 @@
                       {{#each order}}
                       {{#if (eq status "Delivered")}}
                       <tr>
-                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{_id}}</strong></td>
-                        <td>{{createdAt}}</td>
+                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{inc @index}}</strong></td>
+                        <td>{{formatNumber createdAt}}</td>
                         <td>{{payment}}</td>
                         <td>{{name}}</td>
 
@@ -345,8 +345,8 @@
                       {{#each order}}
                       {{#if (eq status "ReturnRequestReceived")}}
                       <tr>
-                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{_id}}</strong></td>
-                        <td>{{createdAt}}</td>
+                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{inc @index}}</strong></td>
+                        <td>{{formatNumber createdAt}}</td>
                         <td>{{payment}}</td>
                         <td>{{name}}</td>
 
@@ -375,8 +375,8 @@
                       </tr>
                       {{else if (eq status "Return" )}}
                       <tr>
-                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{_id}}</strong></td>
-                        <td>{{createdAt}}</td>
+                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{inc @index}}</strong></td>
+                        <td>{{formatNumber createdAt}}</td>
                         <td>{{payment}}</td>
                         <td>{{name}}</td>
 
@@ -437,8 +437,8 @@
                       {{#each order}}
                       {{#if (eq status "Cancel")}}
                       <tr>
-                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{_id}}</strong></td>
-                        <td>{{createdAt}}</td>
+                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{inc @index}}</strong></td>
+                        <td>{{ formatNumber createdAt}}</td>
                         <td>{{payment}}</td>
                         <td>{{name}}</td>
 
@@ -503,7 +503,7 @@
                       {{#each order}}
                       <tr>
                         <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{inc @index}}</strong></td>
-                        <td>{{createdAt}}</td>
+                        <td>{{formatNumber createdAt}}</td>
                         <td>{{payment}}</td>
                         <td>{{name}}</td>
 

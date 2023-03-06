@@ -5,6 +5,7 @@
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   </head>
   <body>
+    <section style="height: 100vh;">
     <h1>Order Details</h1>
     <p>Order ID: {{orderId}}</p>
     <p>Total Price: {{total}}</p>
@@ -16,7 +17,7 @@
         key: "{{key_id}}",
         amount: {{total}} * 100,
         currency: "INR",
-        name: "My Store",
+        name: "CodeCab",
         description: "Order #{{orderId}}",
         image: "https://example.com/your_logo.jpg",
         order_id: "{{order_id}}",
@@ -52,5 +53,6 @@
         e.preventDefault();
       };
     </script>
+    </section>
   </body>
 </html>

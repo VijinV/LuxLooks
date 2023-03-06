@@ -57,6 +57,8 @@ app.engine(
     },
     formatNumber:function (num) {
       return num.toLocaleDateString('en-US');
+    }, multi:function(val1,val2){
+      return val1*val2;
     }
 
 
@@ -97,6 +99,10 @@ adminRouter.engine(
     },
     formatNumber:function (num) {
       return num.toLocaleDateString('en-US');
+    },
+
+    multi:function(val1,val2){
+      return val1*val2;
     }
 
     }

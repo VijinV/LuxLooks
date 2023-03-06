@@ -618,14 +618,15 @@ const cancelOrder = async (req, res) => {
   res.redirect("/OrderDetails");
 };
 
-const viewOrders = async (req, res) => {
-  const order = await orderModel.findOne({ _id: req.query.id });
 
-  const completeData = await order.populate("products.item.productId");
+const viewOrders = async (req, res) => {
+  const order = await orderModel.findOne({ _id: req.query.id }).populate("products.item.productId");
+
+  
 
   res.render("orderlist", {
-    order: completeData.products.item,
-    session: req.session.user_id,
+    order,session: req.session.user_id,
+    product:order.products.item
   });
 };
 

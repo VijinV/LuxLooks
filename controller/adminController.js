@@ -141,7 +141,7 @@ const editProduct = async (req, res, next) => {
 
     // console.log(req.file.filename);
 
-    const image = req.files;
+    const image = req.body.image;
 
     console.log(image);
 
@@ -153,7 +153,7 @@ const editProduct = async (req, res, next) => {
             name: req.body.name,
             category: req.body.category,
             price: req.body.price,
-            // image: image.map((x) => x),
+            image: image.map((x) => x),
             description: req.body.description,
           },
         }
