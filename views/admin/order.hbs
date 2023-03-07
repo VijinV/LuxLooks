@@ -75,6 +75,12 @@
                 <div data-i18n="Analytics">Dashboard</div>
               </a>
             </li>
+             <li class="menu-item  ">
+              <a href="/admin/products" class="menu-link">
+              <i class="menu-icon bi bi-box2"></i>
+                <div data-i18n="Analytics">Sales</div>
+              </a>
+            </li>
             <li class="menu-item  ">
               <a href="/admin/products" class="menu-link">
               <i class="menu-icon bi bi-box2"></i>
@@ -201,20 +207,8 @@
                         <td>{{payment}}</td>
                         <td>{{name}}</td>
 
-                        {{#if (eq status "Attempted")}}
-                        <td><span class="badge bg-label-primary me-1">Attempted</span></td>
-                        {{else if (eq status "Confirm")}}
-                        
-                          <td><span class="badge bg-label-success me-1">Confirmed</span></td> 
-                        {{else if (eq status "Delivered")}}
-                        <td><span class="badge bg-label-danger me-1">Delivered</span></td> 
-                        {{else if (eq status "ReturnRequestReceived")}}
-                        <td><span class="badge bg-label-danger me-1">Return Request on Pending</span></td>
-                        {{else if (eq status "Build")}}
-                        <td><span class="badge bg-label-danger me-1">BUild</span></td>
-                        {{else}}
-                        <td><span class="badge bg-label-danger me-1"></span></td>
-
+                        {{#if (eq status "Confirm")}}
+                        <td><span class="badge bg-label-success me-1">Confirmed</span></td> 
                         {{/if}}
 
                         {{!-- {{#eq s}} --}}

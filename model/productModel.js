@@ -38,4 +38,17 @@ const productSchema = new mongoose.Schema({
   }
 })
 
+productSchema.methods.decreaseQuantity = async function (quantity) {
+  try {
+    const updatedProduct = await this.model('Product').findByIdAndUpdate(
+      this._id,
+      { $inc: { quantity: -quantity } },
+      { new: true }
+    )
+    return updatedProduct
+  } catch (error) {
+    throw new Error(error.message)
+  }
+}
+
 module.exports = mongoose.model('Product', productSchema)

@@ -16,11 +16,7 @@ const userMulter = require("../util/userMulter")
 
 const multer = require("../util/multer");
 
-// ! sms
-
-const sms = require("fast2sms");
-const otp = Math.floor(1000 + Math.random() * 9000);
-// !================================================
+route.locals.name = 'Testing Locals'
 
 route.use(nocache());
 
@@ -68,15 +64,11 @@ route.post('/placeOrder',userAuth.isLogout,userController.placeOrder)
 
 route.get('/orderSuccess',userAuth.isLogout, userController.loadOrderSuccess)
 
-route.get('/paymentFailure',(req, res) => {
+route.get('/paymentFailure',userController.orderFailed)
 
-  res.send('Payment Failure')
-
-})
-
-route.get('/orderFailure',userAuth.isLogout,(req, res) => {
-  res.send('failed to payment to order')
-})
+// route.get('/orderFailure',userAuth.isLogout,(req, res) => {
+//   res.send('failed to payment to order')
+// })
 
 route.get('/orderSummary',userAuth.isLogout, userController.loadOrderSummary)
 
@@ -110,7 +102,7 @@ route.get('/userProfile',userAuth.isLogout,userController.loadUserProfile)
 
  route.get('/wallet',userAuth.isLogout,userController.loadWallet)
 
- 
+route.get ('/generate-invoice',userController.generateInvoice) 
 
 
  route.get('/editMobile',userController.editMobile)

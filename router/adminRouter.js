@@ -70,6 +70,8 @@ router.get('/viewOrder',adminAuth.isLogout, adminController.viewOrder)
 
 router.get('/coupon',adminAuth.isLogout,adminController.loadCoupon)
 
+router.get('/sales',adminController.salesReport)
+
 // post
 
 router.post("/", adminController.verifyLogin);

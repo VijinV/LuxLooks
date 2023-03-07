@@ -138,13 +138,8 @@ const loadEditProduct = async (req, res) => {
 
 const editProduct = async (req, res, next) => {
   try {
-
     // console.log(req.file.filename);
-
     const image = req.body.image;
-
-    console.log(image);
-
     await productModel
       .findByIdAndUpdate(
         { _id: req.body.ID },
@@ -478,10 +473,33 @@ const loadDashboard = async (req, res) => {
     console.log(error.message);
   }
 }
-    
-    
+
+const salesReport = async (req,res)=>{
  
+  
+  const products = await productModel.find({})
+
+  let counts
+
+  counts = await orderModel.aggregate([
+    { $unwind: '$products.item' },
+    { $group: { _id: '$products.item.productId', count: { $sum: 1 } } },
+  ]).then(async (result) => {
+    const counts = [];
+    for (const { _id, count } of result) {
+      const product = await productModel.findById(_id)
+      counts.push({ productId: _id, count, product });
+    }
+    return counts;
+  });
+
+  res.render("sales", { sale: counts });
+  
+}
+    
+
 module.exports = {
+  salesReport,
   addCoupon,
   loadCoupon,
   viewOrder,
