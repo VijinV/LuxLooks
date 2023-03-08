@@ -8,24 +8,44 @@ const couponModel = require("../model/couponModel");
 const RazorPay = require("razorpay");
 const message = require("../config/sms");
 const bcrypt = require("bcrypt");
-const PDFDocument = require("pdfkit");
-const fs = require("fs");
+
 //Global variables =================================
 let newOtp;
 let login = false;  
 let newUser;
 let order;
+
+
+const userProfile = async (req, res) => {
+
+  if(req.session.user_id){
+    const user = await userModel.findById({_id:req.session.user_id})
+    return user.image
+  }else{
+    return null;
+  }
+
+}
+const checkSession = async (req, res) => {
+
+  if(req.session.user_id){
+    return req.session.user_id
+  }else{
+    return null;
+  }
+
+}
+
+
+
 //==================================================
-const loadHome = (req, res) => {
+const loadHome = async (req, res) => {
   try {
-    const session = req.session;
-    const userImage = req.session.userImg;
+    const session = await checkSession(req, res);
+    const userImage= await userProfile(req,res)
+
     productModel.find({}).exec((err, product) => {
-      if (product) {
-        res.render("home", { session, product, login, userImage });
-      } else {
-        res.render("home", { session, login });
-      }
+        res.render("home", { session:session, product, login:false,userImage });
     });
   } catch (error) {
     console.log(error.message);
@@ -34,6 +54,8 @@ const loadHome = (req, res) => {
 
 const loadCart = async (req, res) => {
   try {
+    const session = await checkSession(req, res);
+    const userImage= await userProfile(req,res)
     userSession = req.session;
     const userData = await userModel
       .findById({ _id: userSession.user_id })
@@ -45,8 +67,8 @@ const loadCart = async (req, res) => {
       id: userSession.user_id,
       cartProducts: completeUser.cart.item,
       total: completeUser.cart.totalPrice,
-      session: req.session.user_id,
-      userImage: req.session.userImg,
+      session,
+      userImage
     });
   } catch (error) {
     console.log(error);
@@ -267,7 +289,7 @@ const verifyLogin = async (req, res, next) => {
           req.session.user_name = userData.name;
           req.session.userImg = userData.image;
           // console.log(userData.image);
-          res.redirect("/");
+          res.redirect('/');
         } else {
           res.render("login", {
             login: true,

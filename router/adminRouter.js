@@ -79,7 +79,7 @@ router.post("/", adminController.verifyLogin);
 // router.post ('/addCategory', adminController.addCategory,adminController.loadCategory)
 
 
-router.post('/category',adminAuth.isLogout,adminController.addCategory)
+router.post('/addCategory',adminAuth.isLogout,adminController.addCategory)
 
 
 router.post(

@@ -1,7 +1,7 @@
 const isLogin = (req, res, next) => {
   try {
     if (req.session.user_id) {
-      res.render("home");
+      res.redirect('/')
     } else {
       next();
     }

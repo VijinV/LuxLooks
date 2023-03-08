@@ -15,8 +15,26 @@ const nocache = require("nocache");
 const userMulter = require("../util/userMulter")
 
 const multer = require("../util/multer");
+const categoryModel = require("../model/categoryModel");
+const userModel = require("../model/userModel");
 
-route.locals.name = 'Testing Locals'
+
+// ===========Global Settings =================
+
+
+
+
+
+// ===========Partial Variables / Global Variables =================
+( async function (){
+  const category = await categoryModel.find({})
+  route.locals.partialsCategory = category
+})()
+
+
+
+
+// =================================================================
 
 route.use(nocache());
 

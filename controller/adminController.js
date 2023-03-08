@@ -214,34 +214,31 @@ const inStock = async (req, res) => {
   res.redirect("/admin/products");
 };
 
-const addCategory = async (req, res, next) => {
-  console.log(req.body.name);
-
-  const category = await categoryModel.findOne({ name: req.body.category });
-
-  if (!category) {
+const addCategory = async (req, res) => {
+  try {
+    // Create new category
     const category = new categoryModel({
-      name: req.body.category,
+      name: req.body.name
     });
 
-    await category.save().then((savedCategory) => {
-      console.log("category saved successfully");
-      console.log(savedCategory);
-      res.send(savedCategory);
+    // Save category to database
+    await category.save();
+
+    // Send JSON response with new category information
+    res.json({
+      _id: category._id,
+      name: category.name,
+      index: category.index
     });
 
-    // res.writeHead(200, { "Content-Type": "text/html" });
-    // res.write(
-    //   '<tr><td id="cat"><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong></strong></td><td>hello</td> <td><button class="btn btn-danger"><a style="text-decoration: none; color: #ffff;" href="/admin/deleteCategory?id={{_id}}">Delete</a></button></td></tr>'
-    // );
-    // res.end();
-    // next()
-  } else {
-    console.log("not found category");
-
-    res.redirect("/admin/category");
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: 'Internal server error' });
   }
-};
+}
+
+  
+
 
 const loadCategory = async (req, res) => {
   categoryModel.find({}).exec((err, category) => {

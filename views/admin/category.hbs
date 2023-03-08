@@ -192,6 +192,14 @@
         </div>
         <div class="card-body">
           <form id="add-category-form">
+              <div class="mb-3">
+                <label for="categoryName" class="form-label">Category Name</label>
+                <input type="text" class="form-control" id="category-name-input" name="name" required>
+              </div>
+              <button type="submit" class="btn btn-primary">Add Category</button>
+            </form>
+
+          {{!-- <form id="add-category-form">
             <div class="mb-3">
               <label class="form-label" for="basic-default-fullname">Category
                 Name</label>
@@ -199,12 +207,12 @@
                 type="text"
                 name="name"
                 class="form-control"
-                id="category-input" 
+                id="category-name-input"
                 placeholder="iphone...."
               />
             </div>
             <button ty class="btn btn-primary">Add Category</button>
-          </form>
+          </form> --}}
         </div>
       </div>
     </div>
@@ -221,64 +229,84 @@
                         <th></th>
                       </tr>
                     </thead>
-                    <tbody    class="table-border-bottom-0">
-                      {{#each category}}
-                      <tr>
-                        <td id="cat"><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{inc @index}}</strong></td>
+                  <tbody class="table-border-bottom-0">
+                    {{#each category}}
+                    <tr>
+                      <td id="cat"><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{inc @index 1}}</strong></td>
+                      <td class="category-list">{{name}}</td>
+                      <td>
+                        <button class="btn btn-danger">
+                          <a style="text-decoration: none; color: #ffff;" href="/admin/deleteCategory?id={{_id}}">Delete</a>
+                        </button>
+                      </td>
+                    </tr>
+                    <tr class="hidden-row">
+                      <td id="cat"><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{inc @index 1}}</strong></td>
+                      <td class="category-list">{{name}}</td>
+                      <td>
+                        <button class="btn btn-danger">
+                          <a style="text-decoration: none; color: #ffff;" href="/admin/deleteCategory?id={{_id}}">Delete</a>
+                        </button>
+                      </td>
+                    </tr>
+                  {{/each}}
+                  </tbody>
 
-                        <td>{{name}}</td> 
-
-                        <td><button class="btn btn-danger"><a style="text-decoration: none; color: #ffff;" href="/admin/deleteCategory?id={{_id}}">Delete</a></button></td>
-
-                      </tr>
-                     
-                      
-                      {{/each}}
-                       <tr>
-                        <td id="cat"><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong></strong></td>
-
-                        <td id="category-list"></td> 
-
-                        <td id="cat"><button class="btn btn-danger"><a style="text-decoration: none; color: #ffff;" href="/admin/deleteCategory?id={{_id}}">Delete</a></button></td>
-
-                      </tr>
-
-                    </tbody>
                   </table>
 
                 </div>
               </div>
               <!--/ Basic Bootstrap Table -->
 </div>
-<!-- / Content -->
+<style>
+  .hidden-row {
+  display: none;
+}
+
+</style>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 
 <script>
-  const form = document.getElementById('add-category-form');
-  const categoryInput = document.getElementById('category-input');
+  $('#add-category-form').on('submit', function(e) {
+  e.preventDefault(); // prevent form submission
 
-  form.addEventListener('submit', (event) => {
-    event.preventDefault();
+  // Get category name input value
+  var categoryName = $('#category-name-input').val();
 
-    const category = categoryInput.value;
+  // Send AJAX request to add category
+  $.ajax({
+    type: 'POST',
+    url: '/admin/addCategory',
+    data: { name: categoryName },
+    success: function(response) {
+      // Check if response is defined
+      if (response) {
+        // Create new table row for the category
+        var newRow = '<tr>' +
+          '<td id="cat"><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>' + response.index + '</strong></td>' +
+          '<td class="category-list">' + response.name + '</td>' +
+          '<td>' +
+            '<button class="btn btn-danger">' +
+              '<a style="text-decoration: none; color: #ffff;" href="/admin/deleteCategory?id=' + response._id + '">Delete</a>' +
+            '</button>' +
+          '</td>' +
+        '</tr>';
 
-    // Send an AJAX request to the server
-    fetch('http://localhost:5000/admin/category', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ category })
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log(data);
-      // Display the new category on the page
-      const categoryList = document.getElementById('category-list');
-      const newCategoryItem = document.createElement('td');
-      newCategoryItem.textContent = data.name;
-      // categoryList.style.display = "block"; 
-      categoryList.appendChild(newCategoryItem);
-    })
-    .catch(error => console.error(error));
+        // Add the new row to the table
+        $('#categoryTable tbody').append(newRow);
+
+        // Clear the input field
+        $('#category-name-input').val('');
+      } else {
+        console.log('Error: response is undefined');
+      }
+    },
+    error: function(error) {
+      console.log(error);
+    }
   });
+});
+
 </script>
