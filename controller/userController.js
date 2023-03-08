@@ -12,7 +12,7 @@ const PDFDocument = require("pdfkit");
 const fs = require("fs");
 //Global variables =================================
 let newOtp;
-let login = false;
+let login = false;  
 let newUser;
 let order;
 //==================================================

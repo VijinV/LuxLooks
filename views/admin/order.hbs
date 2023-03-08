@@ -76,7 +76,7 @@
               </a>
             </li>
              <li class="menu-item  ">
-              <a href="/admin/products" class="menu-link">
+              <a href="/admin/sales" class="menu-link">
               <i class="menu-icon bi bi-box2"></i>
                 <div data-i18n="Analytics">Sales</div>
               </a>
@@ -286,7 +286,7 @@
                         {{else if (eq status "Confirm")}}
                           <td><span class="badge bg-label-danger me-1">Confirmed</span></td> 
                         {{else if (eq status "Delivered")}}
-                        <td><span class="badge bg-label-danger me-1">Delivered</span></td>
+                        <td><span class="badge bg-label-success me-1">Delivered</span></td>
                         {{else if (eq status "ReturnRequestReceived")}}
                         <td><span class="badge bg-label-danger me-1">Return Request on Pending</span></td>
                         {{else if (eq status "Build")}}
@@ -296,21 +296,6 @@
 
                         {{/if}}
 
-
-                        {{#if status}}
-
-                    <td>
-                        <button class="btn btn-warning"><a style="text-decoration: none; color: #000;" href="/admin/returnOrder?id={{_id}}">Return</a></button>
-                    </td>
-
-                    {{!-- <td>
-                        <button class="btn btn-success"><a style="text-decoration: none; color: #000;" href="/admin/cancelOrder?id={{_id}}">Confirm</a></button>
-                    </td> --}}
-                    {{else}}
-                     <td>
-                         
-                    </td>
-                    {{/if}}
                     <td>
                         <button class="btn btn-primary"><a style="text-decoration: none; color: #000;" href="/admin/viewOrder?Id={{_id}}">View</a></button>
                     </td>
@@ -516,7 +501,9 @@
 
                         {{/if}}
 
-                        {{#if (eq status "Cancel")}}
+                        {{#if (eq status "Return")}}
+
+                        {{else if (eq status "Cancel")}}
                     <td>
                         <button disabled class="btn btn-secondary"><a style="text-decoration: none; color: #000;" href="/admin/cancelOrder?id={{_id}}">Canceled</a></button>
                     </td>                    
