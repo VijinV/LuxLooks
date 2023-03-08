@@ -27,6 +27,7 @@
         "otplib",
         "passworderror",
         "pcount",
+        "pcounts",
         "phoneerror",
         "phonelen",
         "pincode",
