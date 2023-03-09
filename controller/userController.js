@@ -8,6 +8,7 @@ const couponModel = require("../model/couponModel");
 const RazorPay = require("razorpay");
 const message = require("../config/sms");
 const bcrypt = require("bcrypt");
+const categoryModel = require("../model/categoryModel");
 
 //Global variables =================================
 let newOtp;
@@ -163,21 +164,38 @@ const deleteWishlist = async (req, res) => {
 
 // !================================================================
 
-const loadShop = (req, res) => {
+const loadShop = async (req, res) => {
   const session = req.session.user_id;
   login = false;
-  productModel.find({}).exec((err, product) => {
-    if (product) {
-      res.render("shop", {
-        session,
-        product,
-        login,
-        userImage: req.session.userImg,
-      });
-    } else {
-      res.render("shop", { session, login, userImage: req.session.userImg });
-    }
-  });
+
+  const category = await categoryModel.find({})
+
+  const products = await productModel.find({}).exec()
+
+  let Category = req.query.catagory;
+
+        console.log('123456'+Category);
+        const categoryFind = await productModel.find({ category: Category })
+        if(Category == ',all'){
+            console.log('2554');
+            findCatagory = products
+        }else{
+            findCatagory = categoryFind
+        }
+        if (!Category) {
+            res.render('shop', {
+                product: products,
+                category:category
+
+            });
+        } else {
+
+
+            res.json(findCatagory)
+
+        }
+
+  
 };
 
 loadProduct = (req, res) => {
@@ -1109,8 +1127,40 @@ const orderFailed = async (req, res) => {
 }
 
 
+const searchProducts = async (req, res) => {
+  console.log('searchProducts');
+  const query = req.body.search;
+  console.log(query);
+  const products = await productModel.find({
+    name: { $regex: query, $options: "i" },
+  });
+  console.log(products);
+  res.json(products);
+};
+
+const  priceSorting = async (req, res) => {
+  try {
+    
+      let products;
+      const sortingStyle = req.query.sort;
+      console.log("sortingStyle="+sortingStyle);
+      if(sortingStyle == ',HighToLow'){
+          products = await productModel.find({}).sort({ price: -1 });
+      }else if(sortingStyle == ',LowToHigh'){
+          products = await productModel.find({}).sort({ price: 1 });
+      }else{
+          products = await productModel.find({});
+      }
+     
+    res.json(products);
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
 module.exports = {
+  priceSorting,
+  searchProducts,
   orderFailed,
   generateInvoice,
   loadWallet,

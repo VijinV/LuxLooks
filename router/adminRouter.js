@@ -89,7 +89,7 @@ router.post(
   adminController.loadAddProduct
 );
 
-router.post("/update",adminAuth.isLogout, multer.upload.array("image"), adminController.editProduct);
+router.post("/editProduct",adminAuth.isLogout, multer.upload.array("images"),adminController.editProduct);
 
 router.post('/addCoupon',adminAuth.isLogout,adminController.addCoupon)
 

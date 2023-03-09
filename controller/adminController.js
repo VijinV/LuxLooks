@@ -138,9 +138,13 @@ const loadEditProduct = async (req, res) => {
 
 const editProduct = async (req, res, next) => {
   try {
-    // console.log(req.file.filename);
-    const image = req.body.image;
-    await productModel
+    console.log('hai');
+    
+    const imageArray = images.map((x)=>x.filename)
+
+    console.log(imageArray);
+    if(imageArray.length == 0){
+      await productModel
       .findByIdAndUpdate(
         { _id: req.body.ID },
         {
@@ -148,14 +152,31 @@ const editProduct = async (req, res, next) => {
             name: req.body.name,
             category: req.body.category,
             price: req.body.price,
-            image: image.map((x) => x),
             description: req.body.description,
           },
         }
+      ).then(()=>
+      res.redirect("/admin/products")
       )
-      .then(() => {
-        res.redirect("/admin/products");
-      });
+
+    }else{
+      await productModel
+      .findByIdAndUpdate(
+        { _id: req.body.ID },
+        {
+          $set: {
+            name: req.body.name,
+            category: req.body.category,
+            price: req.body.price,
+            image: imageArray,
+            description: req.body.description,
+          },
+        }
+      ).then(()=>res.redirect("/admin/products"))
+
+    }
+  res.redirect("/admin/products");
+   
         
   } catch (error) {
     console.log(error.message);

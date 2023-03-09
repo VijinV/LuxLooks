@@ -17,6 +17,7 @@ const userMulter = require("../util/userMulter")
 const multer = require("../util/multer");
 const categoryModel = require("../model/categoryModel");
 const userModel = require("../model/userModel");
+const productModel = require("../model/productModel");
 
 
 // ===========Global Settings =================
@@ -156,6 +157,13 @@ route.post('/updateCartItem',userController.updateCartItem)
 route.post('/applyCoupon',userController.applyCoupon)
 
 route.get('/loadOrderSuccess',userController.loadOrderSuccess)
+
+route.post('/shop/search',userController.searchProducts)
+
+route.get('/priceSorting',userController.priceSorting)
+
+
+
 
 
 module.exports = route;

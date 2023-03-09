@@ -167,7 +167,7 @@
                       <small class="text-muted float-end">{{product._id}}</small>
                     </div>
                     <div class="card-body">
-                      <form action="/admin/update" method="post" enctype="multipart/form-data" >
+                      <form action="/admin/editProduct" method="post" enctype="multipart/form-data" >
                         <div class="mb-3">
                           <label class="form-label" for="basic-default-fullname">Product Name</label>
                           <input type="text" name="name" value="{{product.name}}" class="form-control" id="basic-default-fullname" placeholder="iphone...." />
@@ -223,7 +223,7 @@
                         <div class="mb-3">
                           <label class="form-label" for="basic-default-phone">Image</label>
                           <input
-                            name="image"
+                            name="images"
                             type="file"
                             id="basic-default-phone"
                             class="form-control phone-mask"
@@ -233,7 +233,7 @@
                         <div class="mb-3">
                           <label class="form-label" for="basic-default-phone">Image</label>
                           <input
-                            name="image"
+                            name="images"
                             type="file"
                             id="basic-default-phone"
                             class="form-control phone-mask"
@@ -243,7 +243,7 @@
                         <div class="mb-3">
                           <label class="form-label" for="basic-default-phone">Image</label>
                           <input
-                            name="image"
+                            name="images"
                             type="file"
                             id="basic-default-phone"
                             class="form-control phone-mask"
