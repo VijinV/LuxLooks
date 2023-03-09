@@ -162,7 +162,6 @@ const deleteWishlist = async (req, res) => {
   }
 };
 
-// !================================================================
 
 const loadShop = async (req, res) => {
   const session = req.session.user_id;
@@ -185,7 +184,9 @@ const loadShop = async (req, res) => {
         if (!Category) {
             res.render('shop', {
                 product: products,
-                category:category
+                category:category,
+                login:false,
+                session:req.session.user_id
 
             });
         } else {
