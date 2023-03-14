@@ -9,7 +9,7 @@ const orderModel = require("../model/orderModel");
 
 const couponModel = require("../model/couponModel");
 
-// get methods
+
 
 const loadProduct = async (req, res) => {
   try {

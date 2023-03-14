@@ -60,12 +60,12 @@ app.engine(
     }, multi:function(val1,val2){
       return val1*val2;
     }
-
-
     }
   })
 );
+
 // setting up view engine for admin routes
+
 adminRouter.set("views", path.join(__dirname, "views/admin"));
 adminRouter.set("view engine", "hbs");
 adminRouter.engine(

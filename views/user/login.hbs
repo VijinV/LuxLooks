@@ -1,5 +1,7 @@
+<section style="height: 69%">
 
-    <div class="container" id="container">
+
+    <div class="container mt-5" id="container" style="height: 100%;">
         <div class="form-container sign-up-container">
             <form action="/register" method="post">
                 <h1>Create Account</h1>
@@ -13,22 +15,22 @@
                 <input type="password" name="password" placeholder="Password" />
                 <small id="passworderror"></small>
                 <input type="password"name ="c-password" placeholder="Confirm-Password" />
-                <button onclick="return validateSubmit()" type="submit">Sign Up</button>
+                <button type="submit">Sign Up</button>
             </form>
         </div>
         <div class="form-container sign-in-container">
-            <form action="/login" method="post">
+            <form id="form" action="/login" method="post">
                 <h1>Sign in</h1>
               
                 <span>or use your account</span>
 
                 <span>{{message}}</span>
-                <input type="email" onkeyup="validateEmail()" id="email" name="email" placeholder="Email" />
-                <small class="text-danger" id="emailerror"> ema</small>
-                <input type="password" onkeyup="validatePassword()" id="password" name="password" placeholder="Password" />
+                <input type="email" id="email" name="email" placeholder="Email" />
+                <small class="text-danger" id="emailerror"></small>
+                <input type="password"  id="password" name="password" placeholder="Password" />
                 <small class="text-danger" id="passworderror"></small>
                 <a href="/forgetPassword">Forgot your password?</a>
-                <button onclick="validateLoginSubmit()" id="submit" type="submit">Login</button>
+                <button id="submit" onclick="submitForm()" type="submit">Login</button>
                 <small class="text-danger" id="loginerror"></small>
             </form>
         </div>
@@ -47,116 +49,182 @@
             </div>
         </div>
     </div>
-    {{!-- <script src="main.js"></script> --}}
+   
+ <script>
+    // Get form elements
+    const form = document.querySelector('form');
+    const nameInput = form.querySelector('input[name="name"]');
+    const mobileInput = form.querySelector('input[name="mobile"]');
+    const emailInput = form.querySelector('input[name="email"]');
+    const passwordInput = form.querySelector('input[name="password"]');
+    const cPasswordInput = form.querySelector('input[name="c-password"]');
+    const submitBtn = form.querySelector('button[type="submit"]');
 
-    <script>
-var nameerror = document.getElementById("nameerror");
-var emailerror = document.getElementById("emailerror");
-var passworderror = document.getElementById("passworderror");
-var confirmpasserror = document.getElementById("confirmpasserror");
-var submiterror = document.getElementById("submiterror");
-var loginError = document.getElementById("loginerror");
+    // Add event listener to form submission
+    form.addEventListener('submit', (event) => {
+        // Prevent default form submission
+        event.preventDefault();
 
-function validateName() {
-  var name = document.getElementById("usrname").value;
+        // Validate name input
+        if (nameInput.value === '') {
+            nameInput.nextElementSibling.textContent = 'Name is required';
+            nameInput.focus();
+            return false;
+        } else {
+            nameInput.nextElementSibling.textContent = '';
+        }
 
-  if (name.length == 0) {
-    nameerror.innerHTML = "Name is required";
-    return false;
-  }
+        // Validate mobile input
+        if (mobileInput.value === '') {
+            mobileInput.nextElementSibling.textContent = 'Phone number is required';
+            mobileInput.focus();
+            return false;
+        } else {
+            mobileInput.nextElementSibling.textContent = '';
+        }
 
-  if (!name.match(/^[A-Za-z]*\s{1}[A-Za-z]*$/)) {
-    nameerror.innerHTML = "Write Full name";
+        // Validate email input
+        if (emailInput.value === '') {
+            emailInput.nextElementSibling.textContent = 'Email is required';
+            emailInput.focus();
+            return false;
+        } else if (!isValidEmail(emailInput.value)) {
+            emailInput.nextElementSibling.textContent = 'Please enter a valid email';
+            emailInput.focus();
+            return false;
+        } else {
+            emailInput.nextElementSibling.textContent = '';
+        }
 
-    return false;
-  }
-  nameerror.innerHTML = "";
-  return true;
+        // Validate password input
+        if (passwordInput.value === '') {
+            passwordInput.nextElementSibling.textContent = 'Password is required';
+            passwordInput.focus();
+            return false;
+        } else if (passwordInput.value.length < 8) {
+            passwordInput.nextElementSibling.textContent = 'Password must be at least 8 characters long';
+            passwordInput.focus();
+            return false;
+        } else {
+            passwordInput.nextElementSibling.textContent = '';
+        }
+
+        // Validate confirm password input
+        if (cPasswordInput.value === '') {
+            cPasswordInput.nextElementSibling.textContent = 'Confirm password is required';
+            cPasswordInput.focus();
+            return false;
+        } else if (cPasswordInput.value !== passwordInput.value) {
+            cPasswordInput.nextElementSibling.textContent = 'Passwords do not match';
+            cPasswordInput.focus();
+            return false;
+        } else {
+            cPasswordInput.nextElementSibling.textContent = '';
+        }
+
+        // If all inputs are valid, submit the form
+        form.submit();
+    });
+
+    // Helper function to validate email
+    function isValidEmail(email) {
+        const re = /\S+@\S+\.\S+/;
+        return re.test(email);
+    }
+</script>
+
+<script>
+    // Get form elements
+    const form = document.querySelector('#form');
+    const emailInput = form.querySelector('input[name="email"]');
+    const passwordInput = form.querySelector('input[name="password"]');
+    const submitBtn = form.querySelector('button[type="submit"]');
+
+    // Add event listener to form submission
+    
+const submitForm(){
+
+
+// Validate email input
+        if (emailInput.value === '') {
+            emailInput.nextElementSibling.textContent = 'Email is required';
+            emailInput.focus();
+            return false;
+        } else if (!isValidEmail(emailInput.value)) {
+            emailInput.nextElementSibling.textContent = 'Please enter a valid email';
+            emailInput.focus();
+            return false;
+        } else {
+            emailInput.nextElementSibling.textContent = '';
+        }
+
+        // Validate password input
+        if (passwordInput.value === '') {
+            passwordInput.nextElementSibling.textContent = 'Password is required';
+            passwordInput.focus();
+            return false;
+        } else {
+            passwordInput.nextElementSibling.textContent = '';
+        }
+
+        // If all inputs are valid, submit the form
+        form.submit();
+
+
 }
+        
+ 
 
-function validateEmail() {
-  var email = document.getElementById("email").value;
+    // Helper function to validate email
+    function isValidEmail(email) {
+        const re = /\S+@\S+\.\S+/;
+        return re.test(email);
+    }
 
-  if (email.length == 0) {
-    emailerror.innerHTML = "Please Enter a email";
-    return false;
-  }
+    // Function to validate email input in real-time
+    function validateEmail() {
+        if (emailInput.value === '') {
+            emailInput.nextElementSibling.textContent = 'Email is required';
+        } else if (!isValidEmail(emailInput.value)) {
+            emailInput.nextElementSibling.textContent = 'Please enter a valid email';
+        } else {
+            emailInput.nextElementSibling.textContent = '';
+        }
+    }
 
-  if (!email.match(/^[A-Za-z\._\-[0-9]*[@][A-Za-z]*[\.][a-z]{2,4}$/)) {
-    emailerror.innerHTML = "Please Enter a Valid Email";
+    // Function to validate password input in real-time
+    function validatePassword() {
+        if (passwordInput.value === '') {
+            passwordInput.nextElementSibling.textContent = 'Password is required';
+        } else {
+            passwordInput.nextElementSibling.textContent = '';
+        }
+    }
 
-    return false;
-  }
-  emailerror.innerHTML = "";
-  return true;
-}
+    // Function to validate form before submission
+    function validateLoginSubmit() {
+        if (emailInput.value === '' || !isValidEmail(emailInput.value)) {
+            emailInput.nextElementSibling.textContent = 'Please enter a valid email';
+            emailInput.focus();
+            return false;
+        } else {
+            emailInput.nextElementSibling.textContent = '';
+        }
 
-function validatePassword() {
-  var password = document.getElementById("password").value;
-  if (password.length < 8) {
-    passworderror.innerHTML =
-      "the Password must Contains Numbers,Special Characters and Alphabets";
+        if (passwordInput.value === '') {
+            passwordInput.nextElementSibling.textContent = 'Password is required';
+            passwordInput.focus();
+            return false;
+        } else {
+            passwordInput.nextElementSibling.textContent = '';
+        }
 
-    return false;
-  }
-  passworderror.innerHTML = "";
-  return true;
-}
+        return true;
+    }
+</script>
 
-function validateConfirmPassword() {
-  var confirmpass = document.getElementById("confirmpass");
-  var password = document.getElementById("password").value
-  if (confirmpass == password) {
-    confirmpasserror.innerHTML = "Password does not match";
-    return false;
-  }
-  confirmpasserror.innerHTML = "";
-  return true;
-}
 
-function validatePhoneNumber() {
-  var phoneNumber = document.getElementById("phone").value;
 
-  //   var expr = /^[6-9][0-9]{9}$/;
-  //   if (!expr.test(phoneNumber)) {
-  //     phoneerror.innerHTML = "Invalid Mobile Number.";
-
-  //
-  //   }
-
-  var phonelen = phoneNumber.length;
-
-  if (phonelen > 10 || phonelen < 10) {
-    phoneerror.innerHTML = "Invalid Mobile Number.";
-    return false;
-  }
-  phoneerror.innerHTML = "";
-  return true;
-}
-
-function validateSubmit() {
-  if (
-    !validateEmail() ||
-    !validatePassword() ||
-    !validateName() ||
-    !validatePhoneNumber() ||
-    !validateConfirmPassword
-  ) {
-    submiterror.innerHTML = "Please fill the form";
-
-    return false;
-  }
-}
-
-function validateLoginSubmit() {
-  if (!validatePassword() || !validateEmail()) {
-
-    loginError.innerHTML = "Please fill the form";
-    return false
-  }
-  return true;
-}
-    </script>
 
 
 <style>
@@ -401,4 +469,4 @@ signInButton.addEventListener('click', () => container.classList.remove('right-p
 //this is a challenge that was posted a while ago and I found a way arround it with somehelp from youtube; This is my code but not my idea.
 </script>
 
-</html>
+</section>
