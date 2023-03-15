@@ -158,27 +158,27 @@
 	</div>
 		
 			<script>
+const input = document.querySelector("#wish");
 
-   const input = document.querySelector("#wish")
-   async function addToWish(){
-   await fetch("http://localhost:5000/addToWishlist",{
-      method: "POST",
-      headers:{
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        id: input.value ,
-      }),
-      
-    })    
-    .catch((err)=>console.log(err.message))
+function addToWish() {
+  $.ajax({
+    url: "http://localhost:5000/addToWishlist",
+    type: "POST",
+    dataType: "json",
+    data: JSON.stringify({
+      id: input.value,
+    }),
+    contentType: "application/json",
+    success: function(response) {
+      console.log(response);
+    },
+    error: function(error) {
+      console.log(error);
+    }
+  });
+}
 
-  }
-		</script>
 
-
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
         <script>
             var $filter = $('.filter-tope-group');
@@ -352,6 +352,9 @@
                     $('#products-container').html(productsHtml);
                 });
             });
-
-//              
+             
         </script>
+
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
