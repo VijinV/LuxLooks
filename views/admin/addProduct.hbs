@@ -74,7 +74,7 @@
           </g>
         </svg>
       </span>
-      <span class="app-brand-text demo menu-text fw-bolder ms-2">Sneat</span>
+      <span class="app-brand-text demo menu-text fw-bolder ms-2">LuxLooks Admin</span>
     </a>
 
     <a
@@ -97,8 +97,8 @@
     </li>
     <li class="menu-item  ">
               <a href="/admin/sales" class="menu-link">
-              <i class="menu-icon bi bi-box2"></i>
-                <div data-i18n="Analytics">Sales</div>
+              <i class="menu-icon bi bi-receipt-cutoff"></i>
+        <div data-i18n="Analytics">Sales</div>
               </a>
             </li>
    
@@ -123,7 +123,7 @@
      <li class="menu-item ">
       <a href="/admin/coupon" class="menu-link">
         {{! <i class="menu-icon tf-icons bx bx-people"></i> }}
-        <i class="menu-icon tf-icons bx bi bi-people"></i>
+        <i class="menu-icon bi bi-credit-card-2-front"></i>
         <div data-i18n="Analytics">Coupon</div>
       </a>
     </li>
@@ -189,13 +189,14 @@
           class="card-header d-flex justify-content-between align-items-center"
         >
           <h5 class="mb-0"></h5>
-         {{!-- <button><a href="admin/category">Category</a></button> --}}
         </div>
         <div class="card-body">
           <form
+          name="myForm"
             action="/admin/addProducts"
             method="post"
             enctype="multipart/form-data"
+            onsubmit="return validateForm()"
           >
             <div class="mb-3">
               <label class="form-label" for="basic-default-fullname">Product
@@ -208,19 +209,6 @@
                 placeholder="iphone...."
               />
             </div>
-            {{!-- <div class="mb-3">
-              <label
-                class="form-label"
-                for="basic-default-company"
-              >Category</label>
-              <input
-                type="text"
-                name="category"
-                class="form-control"
-                id="basic-default-company"
-                placeholder="Mobile..."
-              />
-            </div> --}}
             <div class="mb-3">
                         <label for="defaultSelect" class="form-label">Category</label>
                         <select name="category" id="defaultSelect" class="form-select">
@@ -302,4 +290,32 @@
     </div>
   </div>
 </div>
+
+
+  <script>
+  function validateForm() {
+    let product = document.forms["myForm"]["product"].value;
+    let price = document.forms["myForm"]["price"].value;
+    let qty = document.forms["myForm"]["qty"].value;
+    let des = document.forms["myForm"]["description"].value;
+
+    if (product == "") {
+      alert("Please enter a product name.");
+      return false;
+    }
+    if (price == "") {
+      alert("Please enter a price.");
+      return false;
+    }
+    if (qty == "" || isNaN(qty)) {
+      alert("Please enter a valid quantity.");
+      return false;
+    }
+    if(des == "" || des.length < 10){
+      alert ("Please enter a Description");
+      return false;
+    }
+  }
+</script>
+
 <!-- / Content -->

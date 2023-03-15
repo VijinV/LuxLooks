@@ -164,8 +164,10 @@ const deleteWishlist = async (req, res) => {
 
 
 const loadShop = async (req, res) => {
-  const session = req.session.user_id;
   login = false;
+
+  const session = await checkSession(req, res);
+  const userImage= await userProfile(req,res)
 
   const category = await categoryModel.find({})
 
@@ -186,7 +188,8 @@ const loadShop = async (req, res) => {
                 product: products,
                 category:category,
                 login:false,
-                session:req.session.user_id
+                session,
+                userImage
 
             });
         } else {
@@ -1063,15 +1066,31 @@ const loadOrderSuccess = async (req, res) => {
               .findById(order._id)
               .populate("products.item.productId")
               .then(async (order) => {
+
+                // decreasing quantity when buying products
                 for (const product of order.products.item) {
                   await productModel.findByIdAndUpdate(
                     product.productId._id,
-                    { $inc: { quantity: -1 } },
+                    { $inc: { quantity: -product.qty } },
                     { new: true }
                   );
                 }
-      
-                console.log("Quantity updated");
+                // updating status if the product quantity is zero
+
+                for (const product of order.products.item) {
+                 const products= await productModel.findById(product.productId._id);
+                 
+                 if(products.quantity == 0){
+
+                  await productModel.findByIdAndUpdate(product.productId._id,{$set:{
+                    isAvailable:0
+                  }});
+
+                 }
+
+
+                }
+                
               });
           });
       });
@@ -1108,14 +1127,7 @@ const generateInvoice = (req, res) => {};
 const orderFailed = async (req, res) => {
 
  try {
-  // await order.status = "Attempted"
- 
- 
-  //  console.log(order.status ,'orderStatus');
- 
-  await order.save().then(()=>{
      res.render('paymentFailed')
-   })
  } catch (error) {
 
   console.log(error.message);

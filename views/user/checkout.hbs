@@ -1,13 +1,13 @@
 <!-- breadcrumb -->
 <div class="container">
   <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
-    <a href="#" class="stext-109 cl8 hov-cl1 trans-04">
+    <a href="/" class="stext-109 cl8 hov-cl1 trans-04">
       Home
       <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
     </a>
 
     <span class="stext-109 cl4">
-      Shoping Cart
+       checkout
     </span>
   </div>
 </div>
@@ -18,8 +18,8 @@
     <div class="row">
       <div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
        <div class="container">
-  <div class="row justify-content-center">
-    <div class="col-12 col-md-6 mb-4">
+  <div class="row justify-content-between">
+    <div class="col-12 col-md-6 w-100 ">
       <form action="/addAddress" method="post">
         <div class="mb-3">
           <label for="name" class="form-label">Name</label>
@@ -50,13 +50,13 @@
         </div>
       </form>
     </div>
-    <div class="col-12 col-md-6">
+    <div class="col-12 col-md-6 w-100">
       <form action="/placeOrder" method="post">
         {{#each add}}
         <div class="card mb-3">
           <div class="card-body">
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="addressId" id="address{{_id}}" value="{{_id}}">
+              <input class="form-check-input" type="radio" name="addressId" id="address{{_id}}" value="{{_id}}" checked>
               <label class="form-check-label" for="address{{_id}}">
                 {{name}}<br>
                 {{address}}<br>
@@ -72,8 +72,7 @@
         {{/each}}
 
       </div>
-
-      <div class="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50">
+<div class="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50 w-100">
         <div
           class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm"
         >
@@ -108,19 +107,6 @@
             </div>
           </div>
 
-          {{!-- <div class="flex-w flex-t p-t-27 p-b-33">
-            <div class="size-208">
-              <span class="mtext-101 cl2">
-                Coupon Discount:
-              </span>
-            </div>
-
-            <div class="size-209 p-t-1">
-              <span class="mtext-110 cl2" style="color: greenyellow;" id="couponDiscount">
-                {{discount}}
-              </span>
-            </div>
-          </div> --}}
 
 							<div class="size-208">
 								<span class="stext-110 cl2">
@@ -161,7 +147,7 @@
                               value="cod"
                               id="defaultRadio1"
                             />
-                            <label class="form-check-label" for="defaultRadio1">COD('cash on delivery')</label>
+                            <label class="form-check-label" for="defaultRadio1">COD</label>
 
                           </div>
                            <div class="form-check mt-1">
@@ -171,6 +157,7 @@
                               type="radio"
                               value="card"
                               id="defaultRadio1"
+                              checked
                             />
                             <label class="form-check-label" for="defaultRadio1">Debit/Credit</label>
 
@@ -184,6 +171,16 @@
                               id="defaultRadio1"
                             />
                             <label class="form-check-label" for="defaultRadio1">UPI</label>
+                          </div>
+                          <div class="form-check mt-1">
+                            <input
+                              name="payment"
+                              class="form-check-input"
+                              type="radio"
+                              value="wallet"
+                              id="defaultRadio1"
+                            />
+                            <label class="form-check-label" for="defaultRadio1">Wallet</label>
                           </div>
             </div>
 
@@ -204,7 +201,12 @@
           </button>
         </div>
       </div>
+     
     </div>
+     
+  </div>
+  </div>
+  </div>
   </div>
 </form>
 
