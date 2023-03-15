@@ -1,23 +1,39 @@
-const isLogin = (req, res, next) => {
+const userModel = require("../model/userModel");
+
+const isLogin = async (req, res, next) => {
   try {
-    if (req.session.admin_id) {
-      res.redirect("/admin/dashboard");
-    } else {
-      next();
+    if(req.session.user_id){
+
+      const user =await userModel.findById({_id:req.session.user_id}) 
+      if (req.session.admin_id && user.isAvailable) {
+        res.redirect("/admin/dashboard");
+      } else {
+        next();
+      }
     }
+   
   } catch (error) {
     console.log(error.message);
   }
 };
 
-const isLogout = (req, res, next) => {
+const isLogout = async (req, res, next) => {
   try {
-    if (req.session.admin_id) {
-      next();
-    } else {
-      const logout = true;
-      res.render("login", { logout });
+
+    if(req.session.user_id){
+      const user = await userModel.findById({_id:req.session.user_id})
+
+      if (req.session.admin_id && user.isAvailable) {
+        next();
+      } else {
+        const logout = true;
+        res.render("login", { logout });
+      }
+
+
     }
+
+   
   } catch (error) {
     console.log(error.message);
   }

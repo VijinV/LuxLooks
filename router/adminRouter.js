@@ -70,7 +70,7 @@ router.get('/viewOrder',adminAuth.isLogout, adminController.viewOrder)
 
 router.get('/coupon',adminAuth.isLogout,adminController.loadCoupon)
 
-router.get('/sales',adminController.salesReport)
+router.get('/sales',adminAuth.isLogout,adminController.salesReport)
 
 // post
 

@@ -83,11 +83,9 @@ route.post('/placeOrder',userAuth.isLogout,userController.placeOrder)
 
 route.get('/orderSuccess',userAuth.isLogout, userController.loadOrderSuccess)
 
-route.get('/paymentFailure',userController.orderFailed)
+route.get('/paymentFailure',userAuth.isLogout,userController.orderFailed)
 
-// route.get('/orderFailure',userAuth.isLogout,(req, res) => {
-//   res.send('failed to payment to order')
-// })
+
 
 route.get('/orderSummary',userAuth.isLogout, userController.loadOrderSummary)
 
@@ -124,7 +122,7 @@ route.get('/userProfile',userAuth.isLogout,userController.loadUserProfile)
 route.get ('/generate-invoice',userController.generateInvoice) 
 
 
- route.get('/editMobile',userController.editMobile)
+ route.get('/editMobile',userAuth.isLogout,userController.editMobile)
 
 // route.get('editAddress', userController.editAddress)
 // route.get('/otp',userController.getOtp)
@@ -152,11 +150,11 @@ route.post('/editUser',userAuth.isLogout,userMulter.upload,userController.editUs
 
 route.post('/razorpay',userAuth.isLogout, userController.payment)
 
-route.post('/updateCartItem',userController.updateCartItem)
+route.post('/updateCartItem',userAuth.isLogout,userController.updateCartItem)
 
-route.post('/applyCoupon',userController.applyCoupon)
+route.post('/applyCoupon',userAuth.isLogout,userController.applyCoupon)
 
-route.get('/loadOrderSuccess',userController.loadOrderSuccess)
+route.get('/loadOrderSuccess',userAuth.isLogout,userController.loadOrderSuccess)
 
 route.post('/shop/search',userController.searchProducts)
 
