@@ -131,9 +131,8 @@ userSchema.methods.addToWishlist = function (product) {
   } else {
     wishlist.item.push({
       productId: product._id,
-      // price: product,
-
     });
+    console.log('added to wishlist')
   }
   return this.save();
 };

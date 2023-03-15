@@ -174,8 +174,7 @@ const loadShop = async (req, res) => {
   const products = await productModel.find({}).exec()
 
   let Category = req.query.catagory;
-
-        console.log('123456'+Category);
+  
         const categoryFind = await productModel.find({ category: Category })
         if(Category == ',all'){
             console.log('2554');
