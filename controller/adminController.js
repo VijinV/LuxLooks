@@ -58,11 +58,15 @@ const loadUsers = (req, res) => {
 };
 
 loadLogin = (req, res) => {
-  const logout = true;
-  res.render("login", { logout });
+ try {
+   const logout = true;
+   res.render("login", { logout });
+ } catch (error) {
+  console.log(error.message);
+ }
 };
 
-// post meathode
+
 
 const verifyLogin = async (req, res) => {
   try {

@@ -3,13 +3,12 @@ const userModel = require("../model/userModel");
 const isLogin = async (req, res, next) => {
   try {
     if(req.session.user_id){
-
       const user =await userModel.findById({_id:req.session.user_id}) 
       if (req.session.admin_id && user.isAvailable) {
         res.redirect("/admin/dashboard");
-      } else {
-        next();
-      }
+      } 
+    }else {
+      next();
     }
    
   } catch (error) {
@@ -25,12 +24,12 @@ const isLogout = async (req, res, next) => {
 
       if (req.session.admin_id && user.isAvailable) {
         next();
-      } else {
-        const logout = true;
-        res.render("login", { logout });
-      }
+      } 
 
 
+    }else {
+      const logout = true;
+      res.render("login", { logout });
     }
 
    
