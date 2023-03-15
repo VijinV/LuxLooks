@@ -2,8 +2,8 @@ const userModel = require("../model/userModel");
 
 const isLogin = async (req, res, next) => {
   try {
-    if(req.session.user_id){
-      const user =await userModel.findById({_id:req.session.user_id}) 
+    if(req.session.admin_id){
+      const user =await userModel.findById({_id:req.session.admin_id}) 
       if (req.session.admin_id && user.isAvailable) {
         res.redirect("/admin/dashboard");
       } 
@@ -19,8 +19,8 @@ const isLogin = async (req, res, next) => {
 const isLogout = async (req, res, next) => {
   try {
 
-    if(req.session.user_id){
-      const user = await userModel.findById({_id:req.session.user_id})
+    if(req.session.admin_id){
+      const user = await userModel.findById({_id:req.session.admin_id})
 
       if (req.session.admin_id && user.isAvailable) {
         next();
