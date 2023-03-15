@@ -133,8 +133,8 @@
 							</div>
 
 							<div class="block2-txt-child2 flex-r p-t-3">
-								<input type="hidden"  id="wish" value={{_id}}>
-								<a onclick="addToWish()" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
+								{{!-- <input type="hidden"  id="wish" value={{_id}}> --}}
+								<a class="btn-addwish-b2 dis-block pos-relative js-addwish-b2" href="/addToWishlist?id={{_id}}">
 									<img class="icon-heart1 dis-block trans-04" src="user/images/icons/icon-heart-01.png" alt="ICON">
 									<img class="icon-heart2 dis-block trans-04 ab-t-l" src="user/images/icons/icon-heart-02.png" alt="ICON">
 								</a>
@@ -162,25 +162,6 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 		
 			<script>
-const input = document.querySelector("#wish");
-
-function addToWish() {
-  $.ajax({ 
-    url: "http://localhost:5000/addToWishlist",
-    type: "POST",
-    dataType: "json",
-    data: JSON.stringify({
-      id: input.value,
-    }),
-    contentType: "application/json",
-    success: function(response) {
-      console.log(response);
-    },
-    error: function(error) {
-      console.log(error);
-    }
-  });
-}
 
             var $filter = $('.filter-tope-group');
             $filter.on('click', 'button', function () {

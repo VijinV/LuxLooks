@@ -78,12 +78,13 @@ const loadCart = async (req, res) => {
 
 const addToCart = async (req, res, next) => {
   try {
-    const productId = req.body.id;
+    const productId = req.query.id;
     console.log(productId);
     userSession = req.session;
     const userData = await userModel.findById({ _id: userSession.user_id });
     const productData = await productModel.findById({ _id: productId });
     await userData.addToCart(productData);
+    res.redirect('/shop')
   } catch (error) {
     console.log(error.message);
   }
@@ -105,8 +106,8 @@ const deleteCart = async (req, res, next) => {
 
 const addToWishlist = async (req, res) => {
   try {
-    const productId = req.body.id;
-    console.log(productId);
+    const productId = req.query.id;
+   
     userSession = req.session;
     const userData = await userModel.findById({ _id: userSession.user_id });
     const productData = await productModel.findById({ _id: productId });
@@ -174,7 +175,7 @@ const loadShop = async (req, res) => {
   const products = await productModel.find({}).exec()
 
   let Category = req.query.catagory;
-  
+
         const categoryFind = await productModel.find({ category: Category })
         if(Category == ',all'){
             console.log('2554');

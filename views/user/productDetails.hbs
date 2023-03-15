@@ -67,10 +67,11 @@
 								
 									<input id="input" type="hidden" value={{product._id}}>
 
-									<button onclick="addToCart()" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
+									<a class="aTag" href="/addToCart?id={{product._id}}">
+									<button  class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
 										Add to cart
-										
 									</button>
+									</a>
 								</div>
 							</div>	
 						</div>
@@ -266,29 +267,3 @@
 			</span>
 		</div>
 	</section>
-
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-
-	<script>
-
-const input = document.querySelector("#input");
-function addToCart() {
-  $.ajax({
-    type: "POST",
-    url: "http://localhost:5000/addToCart",
-    contentType: "application/json",
-    data: JSON.stringify({
-      id: input.value,
-    }),
-    success: function () {
-      console.log("Added to cart successfully!");
-    },
-    error: function (err) {
-      console.log(err.message);
-    },
-  });
-}
-
-	</script>

@@ -75,7 +75,7 @@ route.get("/productDetails", userController.loadProductDetails);
 
 route.get("/checkout",userAuth.isLogout,userController.loadCheckout)
 
-route.post("/addToCart", userAuth.isLogout,userController.addToCart) ////////////////?
+route.get("/addToCart", userAuth.isLogout,userController.addToCart) ////////////////?
 
 route.get('/deleteCart', userAuth.isLogout,userController.deleteCart)
 
@@ -89,7 +89,7 @@ route.get('/paymentFailure',userAuth.isLogout,userController.orderFailed)
 
 route.get('/orderSummary',userAuth.isLogout, userController.loadOrderSummary)
 
-route.post('/addToWishlist',userAuth.isLogout, userController.addToWishlist)
+route.get('/addToWishlist',userAuth.isLogout, userController.addToWishlist)
 
 route.get('/wishlist',userAuth.isLogout, userController.loadWishlist)
 
