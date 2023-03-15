@@ -84,7 +84,7 @@ const addToCart = async (req, res, next) => {
     const userData = await userModel.findById({ _id: userSession.user_id });
     const productData = await productModel.findById({ _id: productId });
     await userData.addToCart(productData);
-    res.redirect('/shop')
+    res.redirect('/cart')
   } catch (error) {
     console.log(error.message);
   }
