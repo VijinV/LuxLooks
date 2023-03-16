@@ -49,7 +49,7 @@
             <div class="decrement-btn btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m" data-product-id="{{productId._id}}">
               <i class="fs-16 zmdi zmdi-minus"></i>
             </div>
-            <input class="mtext-104 cl3 txt-center num-product qty" type="text" name="num-product1" value={{qty}}>
+            <input disabled class="mtext-104 cl3 txt-center num-product qty" type="text" name="num-product1" value={{qty}}>
             <div class="increment-btn btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m" data-product-id="{{productId._id}}">
               <i class="fs-16 zmdi zmdi-plus"></i>
             </div>
@@ -175,7 +175,7 @@ $('.decrement-btn').click(function(e) {
           type: 'POST',
           data: { productId: productId, qty: qty },
           success: function(data) {
-            // update subtotal and grand total
+            // update subtotal and  grand total
             console.log(data);
             const productPrice = data.productPrice;
             const newPrice = productPrice * qty;

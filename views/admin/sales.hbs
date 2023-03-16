@@ -163,6 +163,25 @@
 
             <div class="container-xxl flex-grow-1 container-p-y">
               <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light"></span>Products</h4>
+              <form action="/admin/datewiseReport" method="post"> 
+<div class="row" style="padding-bottom: 40px; padding-top: 40px;" id="sales-div">
+    
+    <div class="col-md-3">
+    <input type="date" class="form-control" value="" name="Startingdate" style="width: 300px;">
+    <span class="text-primary">Enter the Starting date</span>
+    </div>
+    <div class="col-md-3">
+        <input type="date" class="form-control" value="" name="Endingdate" style="width: 300px;">
+        <span class="text-primary">Enter the Ending date</span>
+        </div>
+        <div class="col-md-3">
+            <button type="submit" id="date-donfirm"
+              class=" btn btn-success ">
+              <span>Confirm Date</span>
+          </a>
+          </div>
+          </div>
+         </form> 
 
 <div class="d-flex">
    <button id="downloadPdfBtn" class="btn btn-primary d-flex mb-3 ms-3"> <i class="bi bi-filetype-pdf me-2"></i>Download Stock Report pdf</button>

@@ -177,73 +177,13 @@
   </ul>
 </aside>
 <!-- Content -->
+
     <!-- Content wrapper -->
     <div class="content-wrapper">
       <!-- Content -->
       <div class="container-xxl flex-grow-1 container-p-y">
-        <div class="row">
-          <div class="col-lg-8 mb-4 order-0">
-            <div class="card">
-              <div class="d-flex align-items-end row">
-                <div class="col-sm-7">
-                  <div class="card-body">
-                    <h5 class="card-title text-primary">Welcome {{admin.name}} 🎉</h5>
-                    <p class="mb-4">
-
-                    </p>
-
-
-                  </div>
-                </div>
-                <div class="col-sm-5 text-center text-sm-left">
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-4 col-md-4 order-1">
-            <div class="row">
-              <div class="col-lg-6 col-md-12 col-6 mb-4">
-
-
-
-              </div>
-              <div class="col-lg-6 col-md-12 col-6 mb-4">
-
-              </div>
-            </div>
-          </div>
-          <!-- Total Revenue -->
-          <div class="col-12 col-lg-8 order-2 order-md-3 order-lg-2 mb-4">
-            <div class="card">
-
-              <div class="row">
-                <div class="col-md-5">
-                  <div class="card">
-                    <canvas id="myPie"></canvas>
-                  </div>
-                </div>
-                <div class="col-md-7">
-                  <div class="card">
-                    <canvas id="myChart"></canvas>
-
-                  </div>
-                </div>
-                <input type="hidden" id="pname" value="{{pdate}}">
-                <input type="hidden" id="pcount" value="{{pcount}}">
-                <input type="hidden" id="ocount" value="{{count}}">
-                <input type="hidden" id="pdate" value="{{pdate}}">
-                <input type="hidden" id="category" value="{{category}}">
-                <input type="hidden" id="count" value="{{count}}">
-              </div>
-              
-            </div>
-          </div>
-          <!--/ Total Revenue -->
-
-        </div>
-
-
-        <div class="row">
+        <div class="row w-100" >
+            <div class="row mb-5" style="height: 50px;">
           <div class="col-lg-3 col-sm-6">
             <div class="card">
               <div class="content">
@@ -253,19 +193,14 @@
                       <i class="ti-user"></i>
                     </div>
                   </div>
-                  <div class="col-xs-7">
+                  <div class="col-xs-7 h-100">
                     <div class="numbers">
                       <p>Users</p>
                       {{usersCount}}
                     </div>
                   </div>
                 </div>
-                <!-- <div class="footer">
-                                <hr />
-                                <div class="stats">
-                                    <i class="ti-reload"></i> total users
-                                </div>
-                            </div> -->
+               
               </div>
             </div>
           </div>
@@ -345,6 +280,44 @@
             </div>
           </div>
         </div>
+          <!-- Total Revenue -->
+          <div class="col-md-12 order-2 order-md-3 order-lg-2 mb-4 mt-5">
+            <div class="card">
+
+              <div class="row">
+                <div class="col-md-5">
+                  <div class="card">
+                    <canvas id="myPie"></canvas>
+                  </div>
+                </div>
+                <div class="col-md-7">
+                  <div class="card">
+                    <canvas id="myChart"></canvas>
+
+                  </div>
+                </div>
+                <input type="hidden" id="pname" value="{{pdate}}">
+                <input type="hidden" id="pcount" value="{{pcount}}">
+                <input type="hidden" id="ocount" value="{{count}}">
+                <input type="hidden" id="pdate" value="{{pdate}}">
+                <input type="hidden" id="category" value="{{category}}">
+                <input type="hidden" id="count" value="{{count}}">
+              </div>
+              
+            </div>
+          </div>
+          <!--/ Total Revenue -->
+
+        </div>
+
+        <style>
+          .numbers{
+            padding: 20px;
+          }
+        </style>
+
+
+      
 
 
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

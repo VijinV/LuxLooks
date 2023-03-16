@@ -640,8 +640,8 @@ const loadOrderDetails = async (req, res) => {
   console.log(userId);
   await userModel.findById({ _id: userId });
 
-  const orderDetails = await orderModel
-    .find({ userId: userId })
+     orderModel
+    .find({ userId: userId }).sort({createdAt:-1})
     .exec((err, data) => {
       res.render("ordersummary", {
         session: req.session.user_id,

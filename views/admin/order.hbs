@@ -515,13 +515,22 @@
                         <button class="btn btn-success"><a style="text-decoration: none; color: #000;" href="/admin/confirmOrder?id={{_id}}">Confirm</a></button>
                     </td>
                     {{else}}
-                     <td>
-                        <button class="btn btn-danger"><a style="text-decoration: none; color: #000;" href="/admin/cancelOrder?id={{_id}}">Cancel</a></button>
-                    </td>
+                    
                     {{/if}}
+
+                    
+
                     <td>
                         <button class="btn btn-primary"><a style="text-decoration: none; color: #000;" href="/admin/viewOrder?Id={{_id}}">View</a></button>
                     </td>
+                    {{#if (eq status "Return")}}
+
+                    {{else}}
+ <td>
+                        <button class="btn btn-danger"><a style="text-decoration: none; color: #000;" href="/admin/cancelOrder?id={{_id}}">Cancel</a></button>
+                    </td>
+                    {{/if}}
+
                       </tr>
                       {{/each}}
                     </tbody>

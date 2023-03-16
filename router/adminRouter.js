@@ -93,4 +93,6 @@ router.post("/editProduct",adminAuth.isLogout, multer.upload.array("images"),adm
 
 router.post('/addCoupon',adminAuth.isLogout,adminController.addCoupon)
 
+router.post('/datewiseReport',adminController.dateWiseReport)
+
 module.exports = router; 

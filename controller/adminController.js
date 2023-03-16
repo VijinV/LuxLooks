@@ -340,9 +340,7 @@ const returnOrder = async (req, res) => {
 
 const viewOrder = async (req, res) => {
   const order = await orderModel.findById({ _id: req.query.Id });
-
   const completeData = await order.populate("products.item.productId");
-
   res.render("orderList", {
     order: completeData.products.item,
     session: req.session.user_id,
@@ -487,7 +485,66 @@ const salesReport = async (req, res) => {
   res.render("sales", { sale: counts });
 };
 
+const dateWiseReport = async (req,res)=>{
+
+  try {
+    const startdate = new Date(req.body.Startingdate)
+    const enddate = new Date(req.body.Endingdate)
+
+    const sales = await orderModel.aggregate([
+        {
+            $match:{
+                createdAt:{
+                    $gte: startdate,
+                    $lt: enddate
+                },
+                status:'Delivered',
+            },
+        },
+        {
+            $unwind:'$products.item',
+        },
+        {
+            $group:{
+                _id:'$products.item.productId',
+                totalSales:{ $sum: '$products.item.price'},
+                quantity:{ $sum: '$products.item.qty'}
+            },
+        },
+        {
+            $lookup:{
+                from:'products',
+                localField:'_id',
+                foreignField:'_id',
+                as:'product'
+            },
+        },
+        {
+            $unwind:'$product',
+        },
+        {
+            $project:{
+                _id:0,
+                name:'$product.name',
+                category:'$product.category',
+                price:'$product.price',
+                quantity:'$quantity',
+                sales:'$totalSales'
+            },
+        },
+    ])
+
+    console.log(sales)
+
+    res.render('datewiseReport',{sales:sales});
+} catch (error) {
+    console.log(error.message);
+}
+}
+
+
 module.exports = {
+  dateWiseReport,
   salesReport,
   addCoupon,
   loadCoupon,

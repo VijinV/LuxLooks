@@ -74,8 +74,10 @@
 										{{else if (eq status "ReturnRequestReceived")}}
 
                                         {{!-- <td class="column-6"><button class="btn btn-danger"><a class="aTag" href="/cancelOrder?id={{_id}}">Cancel</a></button></td> --}}
+										{{else if (eq status "Delivered")}}
 										{{else}}
                                         <td class="column-6"><button class="btn btn-danger"><a class="aTag" href="/cancelOrder?id={{_id}}">Cancel</a></button></td>
+
 										{{/if}}
 								</tr>
 
