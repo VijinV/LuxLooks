@@ -104,7 +104,7 @@
 				</div>
 			</div>
 
-			<div class="row isotope-grid" id="products-container">
+			<div class="row isotope-grid h-100" id="products-container">
 				{{#each product }}
 				{{#if isAvailable}}
                 <a class="aTag" href="/productDetails?id={{_id}}">
@@ -174,7 +174,7 @@
                     if (data.length > 0) {
                         console.log(data);
                         productsHtml = data.map(product =>
-						 `<div  class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women ">
+						 `<div  class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women h-100">
                            <div class="block2">
                                     <div class="block2-pic hov-img0">
 										<img src="admin/assets/img/products/${product.image[0]}" alt="IMG-PRODUCT">
@@ -230,7 +230,7 @@
                         console.log(data);
                         productsHtml = data.map(product => `
        
-                        <div  class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women ">
+                        <div  class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women h-100 ">
                            <div class="block2">
                                     <div class="block2-pic hov-img0">
 										<img src="admin/assets/img/products/${product.image[0]}" alt="IMG-PRODUCT">
@@ -290,7 +290,7 @@
                         console.log(data);
                         productsHtml = data.map(product => `
        
-                        <div  class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women ">
+                        <div  class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women h-100 ">
                            <div class="block2">
                                     <div class="block2-pic hov-img0">
 										<img src="admin/assets/img/products/${product.image[0]}" alt="IMG-PRODUCT">

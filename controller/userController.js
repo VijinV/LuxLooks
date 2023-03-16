@@ -228,24 +228,27 @@ loadLogin = (req, res) => {
 //   res.render("register", { login });
 // };
 
-loadProductDetails = async (req, res) => {
+loadProductDetails = async (req, res,next) => {
   login = false;
   try {
     const session = req.session.user_id;
-
     const coupon = await couponModel.find({});
+    const productId = req.query.id
+    
+    let product 
 
-    // console.log(req.query.id);
-
-    const product = await productModel.findById({ _id: req.query.id });
-
-    res.render("productDetails", {
-      product,
-      session,
-      login,
-      userImage: req.session.userImg,
-      coupon,
-    });
+    try {
+      product = await productModel.findById({ _id: req.query.id });
+      res.render("productDetails", {
+        product,
+        session,
+        login,
+        userImage: req.session.userImg,
+        coupon,
+      });
+    } catch (error) {
+      next(error)
+    }
   } catch (error) {
     console.log(error.message);
   }
@@ -748,155 +751,10 @@ const payment = async (req, res) => {
     res.json({ status: "success" });
   }
 
-  // instance.payments.capture(order._id, completeUser.cart.totalPrice * 100, {
-  //   currency: "INR"
-  // }, (err, payment) => {
-  //   if (err) {
-  //     res.json({ status: 'failed' });
-  //   } else {
-  //     console.log(payment);
-  //     res.json({ status: 'success' });
-  //   }
-  // });
 
-  // res.status(201).json({
-  //     success:true,
-  //     order,
-  // });
 };
 
-///!
 
-const razorpayCheckout = async (req, res) => {
-  try {
-    const paymentId = req.body.payment_id;
-    const orderId = req.body.razorpay_order_id;
-    const signature = req.body.razorpay_signature;
-    const userId = req.session.user_id;
-
-    var instance = new RazorPay({
-      key_id: process.env.key_id,
-      key_secret: process.env.key_secret,
-    });
-    // Fetch the order details from the database
-    const order = await Orders.findById(req.session.currentOrder).populate(
-      "products.item.productId"
-    );
-
-    // Check if the order exists and belongs to the current user
-    if (!order || order.userId.toString() !== userId) {
-      return res.status(400).send("Invalid order");
-    }
-
-    // Check if the payment was successful
-    const payment = await instance.payments.fetch(paymentId);
-    console.log(payment);
-    if (payment.status !== "captured") {
-      order.status = "Payment failed";
-      await order.save();
-      return res.redirect("/checkout");
-    }
-
-    // Update the order status and redirect to the success page
-    order.status = "Placed";
-    await order.save();
-
-    res.redirect("/success");
-  } catch (error) {
-    console.log(error.message);
-  }
-};
-
-const placeOrder01 = async (req, res) => {
-  userSession = req.session;
-  const userId = userSession.user_id;
-  const payment = req.body.payment;
-  const address_id = req.body.address_id;
-  let totalPrice;
-  const userData = await User.findById({ _id: userId });
-  const completeUser = await userData.populate("cart.item.productId");
-  const couponData = await Coupon.find({ usedBy: userId });
-
-  if (couponData) {
-    delete userSession.offer;
-    delete userSession.couponTotal;
-  }
-
-  totalPrice = userSession.couponTotal || completeUser.cart.totalprice;
-  let updatedTotal = totalPrice + 45;
-
-  userData.cart.totalprice = updatedTotal;
-  const updatedUserData = await userData.save();
-  console.log(completeUser.cart);
-
-  const offerName = userSession.offer ? userSession.offer.name : "None";
-  if (updatedTotal > 0) {
-    const order = new Orders({
-      userId: userId,
-      payment: payment,
-      addressId: address_id,
-      products: {
-        item: completeUser.cart.item,
-        totalPrice: updatedTotal,
-      },
-      offer: offerName,
-    });
-
-    let orderProductStatus = [];
-    for (let key of order.products.item) {
-      orderProductStatus.push(0);
-    }
-
-    order.productReturned = orderProductStatus;
-
-    const orderData = await order.save();
-    console.log(address_id);
-
-    userSession.currentOrder = orderData._id;
-    if (userSession.offer) {
-      const offerUpdate = await Coupon.updateOne(
-        { name: userSession.offer.name },
-        { $push: { usedBy: userId } }
-      );
-    }
-
-    if (req.body.payment == "Cash-On-Delivery") {
-      // If payment method is COD, set status to Placed and redirect to success page
-      orderData.status = "Placed";
-      await orderData.save();
-      res.redirect("/success");
-    } else if (req.body.payment == "RazorPay") {
-      try {
-        // If payment method is Razorpay, create a new order on Razorpay and render the checkout page
-        var instance = new RazorPay({
-          key_id: process.env.key_id,
-          key_secret: process.env.key_secret,
-        });
-        let razorpayOrder = await instance.orders.create({
-          amount: updatedTotal * 100, // Amount in paise
-          currency: "INR",
-          receipt: orderData._id.toString(),
-        });
-        res.render("razorpay", {
-          userId: userSession.user_id,
-          total: updatedTotal,
-          order_id: razorpayOrder.id,
-          key_id: process.env.key_id,
-          user: userData,
-        });
-      } catch (err) {
-        // If there is an error with the payment, update the order status to "Payment failed"
-        orderData.status = "Payment failed";
-        await orderData.save();
-        res.redirect("/payment-failed");
-      }
-    } else {
-      res.redirect("/collection");
-    }
-  } else {
-    res.redirect("/checkout");
-  }
-};
 
 const updateCartItem = async (req, res) => {
   try {

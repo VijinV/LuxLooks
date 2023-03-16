@@ -342,6 +342,7 @@ const viewOrder = async (req, res) => {
   const order = await orderModel.findById({ _id: req.query.Id });
   const completeData = await order.populate("products.item.productId");
   res.render("orderList", {
+    orderId:completeData,
     order: completeData.products.item,
     session: req.session.user_id,
   });
