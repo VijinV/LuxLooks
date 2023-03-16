@@ -671,7 +671,7 @@ const viewOrders = async (req, res) => {
   const order = await orderModel
     .findOne({ _id: req.query.id })
     .populate("products.item.productId");
-
+    
   res.render("orderlist", {
     order,
     session: req.session.user_id,

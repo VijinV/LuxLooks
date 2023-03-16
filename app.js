@@ -102,7 +102,7 @@ adminRouter.engine(
     },
 
     multi:function(val1,val2){
-      return val1*val2;
+      return  parseInt(val1)*parseInt(val2)
     }
 
     },limit:function(ary, max, options) {
@@ -113,6 +113,13 @@ adminRouter.engine(
       for(var i = 0; i < max && i < ary.length; ++i)
           result.push(options.fn(ary[i]));
       return result.join('');
+  },
+  isNANMulti:function(val1, val2) {
+    if (isNaN(parseFloat(val1)) || isNaN(parseFloat(val2))) {
+      return 'N/A';
+    } else {
+      return parseInt(val1) * parseInt(val2);
+    }
   }
   })
 );
