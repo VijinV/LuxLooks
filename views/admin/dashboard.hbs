@@ -323,6 +323,8 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
         <script>
+          const colors = ['#FF6333', '#36A2EB', '#FFCE56', '#8E44AD'];
+
           const ctx = document.getElementById('myChart');
           const name = document.getElementById('pname');
           const count = document.getElementById('ocount');
@@ -370,13 +372,14 @@
 
 
           new Chart(ctx1, {
-            type: 'doughnut',
+            type: 'pie',
             data: {
               labels: category,
               datasets: [{
                 label: 'sales',
                 data: countPie,
-                borderWidth: 5
+                borderWidth: 5,
+                backgroundColor: colors
               }]
             },
 
