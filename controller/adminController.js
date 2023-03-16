@@ -116,9 +116,11 @@ const addProduct = async (req, res, next) => {
       isAvailable: true,
     });
 
-    await product.save().then(() => console.log("Product Saved"));
+    await product.save().then(() => console.log("Product Saved")).then(()=>{
+      next();
+    })
 
-    next();
+   
   } catch (error) {
     console.log(error.message);
   }
